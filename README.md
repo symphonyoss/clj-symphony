@@ -8,7 +8,7 @@ For now clj-symphony is available in source form only, so fire up your favourite
 
 ## Usage
 
-The functionality is provided by the `clj-symphpny.api` namespace.
+The functionality is provided by the `clj-symphony.api` namespace.
 
 Require it in the REPL:
 
