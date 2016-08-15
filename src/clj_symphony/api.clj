@@ -20,11 +20,11 @@
   "Parses connection parameters, substituting a :pod-id for the default URLs, if present."
   [params]
   (if-let [pod-id (:pod-id params)]
-    (dissoc (assoc params
-                   :session-auth-url (str "https://" pod-id "-api.symphony.com/sessionauth")
-                   :key-auth-url     (str "https://" pod-id "-api.symphony.com/keyauth")
-                   :agent-api-url    (str "https://" pod-id "-api.symphony.com/agent")
-                   :pod-api-url      (str "https://" pod-id "-api.symphony.com/pod"))
+    (dissoc (merge { :session-auth-url (str "https://" pod-id "-api.symphony.com/sessionauth")
+                     :key-auth-url     (str "https://" pod-id "-api.symphony.com/keyauth")
+                     :agent-api-url    (str "https://" pod-id "-api.symphony.com/agent")
+                     :pod-api-url      (str "https://" pod-id "-api.symphony.com/pod") }
+                   params)
             :pod-id)
     params))
 
@@ -33,16 +33,16 @@
   that should be used in all subsequent API calls.
 
   params is a map containing:
-  :pod-id           The id of the pod to connect to - will result the 4 URLs to be autopopulated (only appropriate for simple / business tier deployments).
-  :session-auth-url The URL of the session authentication endpoint.
-  :key-auth-url     The URL of the key authentication endpoint.
-  :agent-api-url    The URL of the agent API.
-  :pod-api-url      The URL of the Pod API.
-  :trust-store      A pair of strings containing the path to the trust store and the password of the trust store (mandatory).
-  :user-cert        A pair of strings containing the path to the bot user's certificate and the password of that certificate (mandatory).
-  :user-email       The email address of the bot user (mandatory).
+  :pod-id           The id of the pod to connect to - will autopopulate whichever of the 4 URLs aren't provided. (optional - see below)
+  :session-auth-url The URL of the session authentication endpoint. (optional - see below)
+  :key-auth-url     The URL of the key authentication endpoint. (optional - see below)
+  :agent-api-url    The URL of the agent API. (optional - see below)
+  :pod-api-url      The URL of the Pod API. (optional - see below)
+  :trust-store      A pair of strings containing the path to the trust store and the password of the trust store. (mandatory)
+  :user-cert        A pair of strings containing the path to the bot user's certificate and the password of that certificate. (mandatory)
+  :user-email       The email address of the bot user. (mandatory)
 
-  Either :pod-id or (:session-auth-url and :key-auth-url and :agent-api-url and :pod-api-url) are mandatory."
+  Note: if :pod-id is not provided, :session-auth-url and :key-auth-url and :agent-api-url and :pod-api-url are all mandatory."
   [params]
   (let [params           (parse-params params)
         session-auth-url (:session-auth-url params)
