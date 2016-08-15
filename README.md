@@ -36,16 +36,16 @@ clj-symphony.api/connect
   that should be used in all subsequent API calls.
 
   params is a map containing:
-  :pod-id           The id of the pod to connect to - will result the 4 URLs to be autopopulated (only appropriate for simple / business tier deployments).
-  :session-auth-url The URL of the session authentication endpoint.
-  :key-auth-url     The URL of the key authentication endpoint.
-  :agent-api-url    The URL of the agent API.
-  :pod-api-url      The URL of the Pod API.
-  :trust-store      A pair of strings containing the path to the trust store and the password of the trust store (mandatory).
-  :user-cert        A pair of strings containing the path to the bot user's certificate and the password of that certificate (mandatory).
-  :user-email       The email address of the bot user (mandatory).
+  :pod-id           The id of the pod to connect to - will autopopulate whichever of the 4 URLs aren't provided. (optional - see below)
+  :session-auth-url The URL of the session authentication endpoint. (optional - see below)
+  :key-auth-url     The URL of the key authentication endpoint. (optional - see below)
+  :agent-api-url    The URL of the agent API. (optional - see below)
+  :pod-api-url      The URL of the Pod API. (optional - see below)
+  :trust-store      A pair of strings containing the path to the trust store and the password of the trust store. (mandatory)
+  :user-cert        A pair of strings containing the path to the bot user's certificate and the password of that certificate. (mandatory)
+  :user-email       The email address of the bot user. (mandatory)
 
-  Either :pod-id or (:session-auth-url and :key-auth-url and :agent-api-url and :pod-api-url) are mandatory.
+  Note: if :pod-id is not provided, :session-auth-url and :key-auth-url and :agent-api-url and :pod-api-url are all mandatory.
 nil
 user=> (doc clj-symphony.api/user-info)
 -------------------------
@@ -69,9 +69,9 @@ nil
 
 ## Developer Information
 
-[GitHub project](https://github.com/pmonks/clj-symphony)
+[GitHub project](https://github.com/symphonyoss/clj-symphony)
 
-[Bug Tracker](https://github.com/pmonks/clj-symphony/issues)
+[Bug Tracker](https://github.com/symphonyoss/clj-symphony/issues)
 
 ## License
 
