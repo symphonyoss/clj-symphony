@@ -68,10 +68,26 @@
   ([^org.symphonyoss.client.SymphonyClient session]               (.getLocalUser session))
   ([^org.symphonyoss.client.SymphonyClient session ^Long user-id] (.getUserFromId (.getUsersClient session) user-id)))
 
-(defn user-info
-  "Returns a map containing information about the given user, or the authenticated session user if a user id is not provided."
-  ([^org.symphonyoss.client.SymphonyClient session]               (mapify (user-obj session)))
-  ([^org.symphonyoss.client.SymphonyClient session ^Long user-id] (mapify (user-obj session user-id))))
+(defmulti user-info
+  "Returns a map containing information about the given user, or the authenticated session user if a user id is not provided.
+  User can be specified either as a user id (Long) or an email address (String).
+
+  Note: providing a user identifier requires calls to the server."
+  (fn
+    ([session]                 :current-user)
+    ([session user-identifier] (type user-identifier))))
+
+(defmethod user-info :current-user
+  [^org.symphonyoss.client.SymphonyClient session]
+  (mapify (user-obj session)))
+
+(defmethod user-info Long
+  [^org.symphonyoss.client.SymphonyClient session ^Long user-id]
+  (mapify (user-obj session user-id)))
+
+(defmethod user-info String
+  [^org.symphonyoss.client.SymphonyClient session ^String user-email-address]
+  (mapify (.getUserFromEmail (.getUsersClient session) user-email-address)))
 
 (defn user-presence
   "Returns the presence status of the given user, or all users."
