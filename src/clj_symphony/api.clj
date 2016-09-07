@@ -72,6 +72,8 @@
   "Returns a map containing information about the given user, or the authenticated session user if a user id is not provided.
   User can be specified either as a user id (Long) or an email address (String).
 
+  Returns nil if the user doesn't exist.
+
   Note: providing a user identifier requires calls to the server."
   (fn
     ([session]                 :current-user)
@@ -79,15 +81,21 @@
 
 (defmethod user-info :current-user
   [^org.symphonyoss.client.SymphonyClient session]
-  (mapify (user-obj session)))
+  (if-let [u (user-obj session)]
+    (mapify u)))
 
 (defmethod user-info Long
   [^org.symphonyoss.client.SymphonyClient session ^Long user-id]
-  (mapify (user-obj session user-id)))
+  (try
+    (if-let [u (user-obj session user-id)]
+      (mapify u))
+    (catch org.symphonyoss.symphony.pod.invoker.ApiException ae
+      nil)))
 
 (defmethod user-info String
   [^org.symphonyoss.client.SymphonyClient session ^String user-email-address]
-  (mapify (.getUserFromEmail (.getUsersClient session) user-email-address)))
+  (if-let [u (.getUserFromEmail (.getUsersClient session) user-email-address)]
+    (mapify u)))
 
 (defn user-presence
   "Returns the presence status of the given user, or all users."
