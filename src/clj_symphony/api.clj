@@ -64,12 +64,8 @@
   [x]
   (dissoc (bean x) :class))
 
-(defn- user-obj
-  ([^org.symphonyoss.client.SymphonyClient session]               (.getLocalUser session))
-  ([^org.symphonyoss.client.SymphonyClient session ^Long user-id] (.getUserFromId (.getUsersClient session) user-id)))
-
-(defmulti user-info
-  "Returns a map containing information about the given user, or the authenticated session user if a user id is not provided.
+(defmulti user
+  "Returns a user object for the given user, or the authenticated session user if a user id is not provided.
   User can be specified either as a user id (Long) or an email address (String).
 
   Returns nil if the user doesn't exist.
@@ -79,23 +75,31 @@
     ([session]                 :current-user)
     ([session user-identifier] (type user-identifier))))
 
-(defmethod user-info :current-user
+(defmethod user :current-user
   [^org.symphonyoss.client.SymphonyClient session]
-  (if-let [u (user-obj session)]
-    (mapify u)))
+  (.getLocalUser session))
 
-(defmethod user-info Long
+(defmethod user Long
   [^org.symphonyoss.client.SymphonyClient session ^Long user-id]
   (try
-    (if-let [u (user-obj session user-id)]
-      (mapify u))
+    (if-let [u (.getUserFromId (.getUsersClient session) user-id)]
+      u)
     (catch org.symphonyoss.symphony.pod.invoker.ApiException ae
       nil)))
 
-(defmethod user-info String
+(defmethod user String
   [^org.symphonyoss.client.SymphonyClient session ^String user-email-address]
-  (if-let [u (.getUserFromEmail (.getUsersClient session) user-email-address)]
-    (mapify u)))
+  (.getUserFromEmail (.getUsersClient session) user-email-address))
+
+(defn user-info
+  "Returns a map containing information about the given user, or the authenticated session user if a user id is not provided.
+  User can be specified either as a user id (Long) or an email address (String).
+
+  Returns nil if the user doesn't exist.
+
+  Note: providing a user identifier requires calls to the server."
+  ([session]                 (if-let [u (user session)]                 (mapify u)))
+  ([session user-identifier] (if-let [u (user session user-identifier)] (mapify u))))
 
 (defn user-presence
   "Returns the presence status of the given user, or all users."
@@ -104,5 +108,26 @@
 
 (defn get-chats
   "Returns a list of chats for the given user, or for the authenticated session user if a user id is not provided."
-  ([^org.symphonyoss.client.SymphonyClient session]               (map mapify (.getChats (.getChatService session) (user-obj session))))
-  ([^org.symphonyoss.client.SymphonyClient session ^Long user-id] (map mapify (.getChats (.getChatService session) (user-obj session user-id)))))
+  ([^org.symphonyoss.client.SymphonyClient session]               (map mapify (.getChats (.getChatService session) (user session))))
+  ([^org.symphonyoss.client.SymphonyClient session ^Long user-id] (map mapify (.getChats (.getChatService session) (user session user-id)))))
+
+(defn establish-chat
+  "Establishes a chat with the given user."
+  [^org.symphonyoss.client.SymphonyClient session user-identifier]
+  (let [recipient #{(user session user-identifier)}
+        chat      (org.symphonyoss.client.model.Chat.)
+        _         (.setLocalUser   chat (user session))
+        _         (.setRemoteUsers chat recipient)
+        _         (.setStream      chat (.getStream (.getStreamsClient session) ^java.util.Set recipient))]
+    chat))
+
+(defn send-message!
+  "Sends a message to the given chat.  Both text and MessageML messages are supported."
+  [^org.symphonyoss.client.SymphonyClient session ^org.symphonyoss.client.model.Chat chat ^String message]
+  (let [ms (org.symphonyoss.symphony.agent.model.MessageSubmission.)
+        _  (.setMessage ms message)]
+    (if (.startsWith message "<messageML>")
+      (.setFormat  ms org.symphonyoss.symphony.agent.model.MessageSubmission$FormatEnum/MESSAGEML)
+      (.setFormat  ms org.symphonyoss.symphony.agent.model.MessageSubmission$FormatEnum/TEXT))
+    (.sendMessage (.getMessageService session) chat ms)
+    nil))
