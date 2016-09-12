@@ -16,7 +16,7 @@
 
 (defproject foundation.symphony/clj-symphony "0.1.0-SNAPSHOT"
   :description        "A Clojure wrapper around the symphony-java-client library."
-  :url                "https://github.com/pmonks/clj-symphony"
+  :url                "https://github.com/symphonyoss/clj-symphony"
   :license            {:name "Apache License, Version 2.0"
                        :url  "http://www.apache.org/licenses/LICENSE-2.0"}
   :min-lein-version   "2.5.0"
