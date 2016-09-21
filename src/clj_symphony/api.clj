@@ -131,3 +131,4 @@
       (.setFormat  msg org.symphonyoss.symphony.clients.model.SymMessage$Format/TEXT))
     (.sendMessage (.getMessageService session) chat msg)
     nil))
+
