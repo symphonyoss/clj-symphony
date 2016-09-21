@@ -23,7 +23,7 @@
   :repositories       [["sonatype-snapshots" {:url "https://oss.sonatype.org/content/groups/public" :snapshots true}]]
   :dependencies       [
                         [org.clojure/clojure                      "1.8.0"]
-                        [org.symphonyoss.symphony/symphony-client "0.9.0"]
+                        [org.symphonyoss.symphony/symphony-client "0.9.1-SNAPSHOT"]
                         [io.swagger/swagger-core                  "1.5.9" :exclusions [com.fasterxml.jackson.core/jackson-core
                                                                                        com.fasterxml.jackson.core/jackson-databind
                                                                                        com.fasterxml.jackson.core/jackson-annotations

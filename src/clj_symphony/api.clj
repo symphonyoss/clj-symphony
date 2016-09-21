@@ -124,10 +124,10 @@
 (defn send-message!
   "Sends a message to the given chat.  Both text and MessageML messages are supported."
   [^org.symphonyoss.client.SymphonyClient session ^org.symphonyoss.client.model.Chat chat ^String message]
-  (let [ms (org.symphonyoss.symphony.agent.model.MessageSubmission.)
-        _  (.setMessage ms message)]
+  (let [msg (org.symphonyoss.symphony.clients.model.SymMessage.)
+        _  (.setMessage msg message)]
     (if (.startsWith message "<messageML>")
-      (.setFormat  ms org.symphonyoss.symphony.agent.model.MessageSubmission$FormatEnum/MESSAGEML)
-      (.setFormat  ms org.symphonyoss.symphony.agent.model.MessageSubmission$FormatEnum/TEXT))
-    (.sendMessage (.getMessageService session) chat ms)
+      (.setFormat  msg org.symphonyoss.symphony.clients.model.SymMessage$Format/MESSAGEML)
+      (.setFormat  msg org.symphonyoss.symphony.clients.model.SymMessage$Format/TEXT))
+    (.sendMessage (.getMessageService session) chat msg)
     nil))
