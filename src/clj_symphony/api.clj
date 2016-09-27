@@ -126,15 +126,40 @@
         _         (.setStream      chat (.getStream (.getStreamsClient session) ^java.util.Set recipient))]
     chat))
 
-(defn send-message!
-  "Sends a message to the given chat.  Both text and MessageML messages are supported."
-  [^org.symphonyoss.client.SymphonyClient session ^org.symphonyoss.client.model.Chat chat ^String message]
+(defmulti send-message!
+  "Sends a message to the given chat, room or stream.  Both text and MessageML messages are supported."
+  (fn [session target message] (type target)))
+
+(defn- build-sym-message
+  [^String message]
   (let [msg (org.symphonyoss.symphony.clients.model.SymMessage.)
         _  (.setMessage msg message)]
     (if (.startsWith message "<messageML>")
-      (.setFormat  msg org.symphonyoss.symphony.clients.model.SymMessage$Format/MESSAGEML)
-      (.setFormat  msg org.symphonyoss.symphony.clients.model.SymMessage$Format/TEXT))
-    (.sendMessage (.getMessageService session) chat msg)
+      (.setFormat msg org.symphonyoss.symphony.clients.model.SymMessage$Format/MESSAGEML)
+      (.setFormat msg org.symphonyoss.symphony.clients.model.SymMessage$Format/TEXT))
+    msg))
+
+(defmethod send-message! org.symphonyoss.client.model.Chat
+  [^org.symphonyoss.client.SymphonyClient session ^org.symphonyoss.client.model.Chat chat ^String message]
+  (.sendMessage (.getMessageService session)
+                chat
+                ^org.symphonyoss.symphony.clients.model.SymMessage (build-sym-message message))
+  nil)
+
+(defmethod send-message! org.symphonyoss.client.model.Room
+  [^org.symphonyoss.client.SymphonyClient session ^org.symphonyoss.client.model.Room room ^String message]
+  (.sendMessage (.getMessageService session)
+                room
+                ^org.symphonyoss.symphony.clients.model.SymMessage (build-sym-message message))
+  nil)
+
+(defmethod send-message! String
+  [^org.symphonyoss.client.SymphonyClient session ^String stream-id ^String message]
+  (let [stream (org.symphonyoss.symphony.pod.model.Stream.)
+        _      (.setId stream stream-id)]
+    (.sendMessage (.getMessagesClient session)
+                  stream
+                  ^org.symphonyoss.symphony.clients.model.SymMessage (build-sym-message message))
     nil))
 
 (defn register-message-listener
