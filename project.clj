@@ -23,7 +23,7 @@
   :repositories       [["sonatype-snapshots" {:url "https://oss.sonatype.org/content/groups/public" :snapshots true}]]
   :dependencies       [
                         [org.clojure/clojure                      "1.8.0"]
-                        [org.symphonyoss.symphony/symphony-client "0.9.1"]
+                        [org.symphonyoss.symphony/symphony-client "1.0.0-SNAPSHOT"]
                       ]
   :profiles           {:dev {:dependencies [[midje      "1.8.3"]]
                              :plugins      [[lein-midje "3.2"]]}   ; Don't remove this or travis-ci will assplode!
