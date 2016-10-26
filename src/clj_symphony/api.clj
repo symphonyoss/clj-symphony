@@ -53,13 +53,14 @@
         trust-store      (:trust-store      params)
         user-cert        (:user-cert        params)
         user-email       (:user-email       params)
-        auth-client      (org.symphonyoss.symphony.clients.AuthorizationClient. session-auth-url key-auth-url)
-        _                (.setKeystores auth-client (first trust-store) (second trust-store)
-                                                    (first user-cert)   (second user-cert))
+        http-client      (org.symphonyoss.client.impl.CustomHttpClient/getClient (first user-cert)   (second user-cert)
+                                                                                 (first trust-store) (second trust-store))
+        session          (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/BASIC)
+        _                (.setDefaultHttpClient session http-client)
+        auth-client      (org.symphonyoss.symphony.clients.AuthorizationClient. session-auth-url key-auth-url http-client)
         auth             (.authenticate auth-client)
-        symph-client     (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/BASIC)
-        _                (.init symph-client auth user-email agent-api-url pod-api-url)]
-      symph-client))
+        _                (.init session http-client auth user-email agent-api-url pod-api-url)]
+      session))
 
 (defn- mapify
   [x]
