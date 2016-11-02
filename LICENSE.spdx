@@ -1,0 +1,7 @@
+SPDXVersion: SPDX-2.0
+DataLicense: CC0-1.0
+Creator: Symphony Software Foundation
+PackageName: clj-symphony
+PackageOriginator: Symphony Software Foundation
+PackageHomePage: https://github.com/symphonyoss/clj-symphony
+PackageLicenseDeclared: Apache-2.0
