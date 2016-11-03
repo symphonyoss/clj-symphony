@@ -56,8 +56,13 @@ nil
 user=> (doc clj-symphony.api/user-info)
 -------------------------
 clj-symphony.api/user-info
-([session] [session user-id])
+([session] [session user-identifier])
   Returns a map containing information about the given user, or the authenticated session user if a user id is not provided.
+  User can be specified either as a user id (Long) or an email address (String).
+
+  Returns nil if the user doesn't exist.
+
+  Note: providing a user identifier requires calls to the server.
 nil
 user=> (doc clj-symphony.api/user-presence)
 -------------------------
@@ -71,7 +76,41 @@ clj-symphony.api/get-chats
 ([session] [session user-id])
   Returns a list of chats for the given user, or for the authenticated session user if a user id is not provided.
 nil
-```
+user=> (doc clj-symphony.api/establish-chat)
+-------------------------
+clj-symphony.api/establish-chat
+([session user-identifier])
+  Establishes a chat with the given user.
+nil
+user=> (doc clj-symphony.api/send-message!)
+-------------------------
+clj-symphony.api/send-message!
+  Sends a message to the given chat, room or stream.  Both text and MessageML messages are supported.
+nil
+user=> (doc clj-symphony.api/register-message-listener)
+-------------------------
+clj-symphony.api/register-message-listener
+([session f])
+  Registers f, a function of 7 parameters, as a message listener (callback), and returns a handle to that listener
+  so that it can be deregistered later on, if needed.  The 7 arguments passed to f are:
+
+     msg-id     - Identifier of the message
+     timestamp  - Timestamp the message was sent (as a string in ####???? format)
+     stream-id  - Identifier of the stream (chat or room) the message was sent to)
+     user-id    - Identifier of the user who sent the message
+     msg-format - Format of the message as a keyword (:messageml or :text)
+     msg-type   - ####????
+     msg        - Text of the message
+
+   The value returned by f (if any) is ignored.
+nil
+user=> (doc clj-symphony.api/deregister-message-listener)
+-------------------------
+clj-symphony.api/deregister-message-listener
+([session listener])
+  Deregisters a previously-registered message listener.  Once deregistered, a listener should be discarded.
+  Returns true if a valid message listener was deregistered, false otherwise.
+nil```
 
 ## Developer Information
 
