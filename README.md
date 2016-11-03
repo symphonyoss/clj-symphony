@@ -110,7 +110,8 @@ clj-symphony.api/deregister-message-listener
 ([session listener])
   Deregisters a previously-registered message listener.  Once deregistered, a listener should be discarded.
   Returns true if a valid message listener was deregistered, false otherwise.
-nil```
+nil
+```
 
 ## Developer Information
 
