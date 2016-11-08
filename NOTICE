@@ -1,2 +1,50 @@
 clj-symphony
 Copyright 2016 Symphony Software Foundation
+
+This product includes software developed at the Symphony Software Foundation (http://symphony.foundation).
+
+
+The following dependencies are provided under other licenses. See project links for details.
+
+
+========================================================================
+Common Development and Distribution License 1.0, 1.1 or 2.0
+========================================================================
+
+javax.annotation/javax.annotation-api - https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api
+javax.ws.rs/javax.ws.rs-api - https://mvnrepository.com/artifact/javax.ws.rs/javax.ws.rs-api
+org.glassfish.hk2.external/aopalliance-repackaged - https://mvnrepository.com/artifact/org.glassfish.hk2.external/aopalliance-repackaged
+org.glassfish.hk2.external/javax.inject - https://mvnrepository.com/artifact/org.glassfish.hk2.external/javax.inject
+org.glassfish.hk2/hk2-api - https://mvnrepository.com/artifact/org.glassfish.hk2/hk2-api
+org.glassfish.hk2/hk2-locator - https://mvnrepository.com/artifact/org.glassfish.hk2/hk2-locator
+org.glassfish.hk2/hk2-utils - https://mvnrepository.com/artifact/org.glassfish.hk2/hk2-utils
+org.glassfish.hk2/osgi-resource-locator - https://mvnrepository.com/artifact/org.glassfish.hk2/osgi-resource-locator
+org.glassfish.jersey.bundles.repackaged/jersey-guava - https://mvnrepository.com/artifact/org.glassfish.jersey.bundles.repackaged/jersey-guava
+org.glassfish.jersey.core/jersey-client - https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-client
+org.glassfish.jersey.core/jersey-common - https://mvnrepository.com/artifact/org.glassfish.jersey.core/jersey-common
+org.glassfish.jersey.ext/jersey-entity-filtering - https://mvnrepository.com/artifact/org.glassfish.jersey.ext/jersey-entity-filtering
+org.glassfish.jersey.media/jersey-media-json-jackson - https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-json-jackson
+org.glassfish.jersey.media/jersey-media-multipart - https://mvnrepository.com/artifact/org.glassfish.jersey.media/jersey-media-multipart
+org.jvnet.mimepull/mimepull - https://mvnrepository.com/artifact/org.jvnet.mimepull/mimepull
+
+
+========================================================================
+Eclipse Public License 1.0
+========================================================================
+
+clojure-complete - https://github.com/ninjudd/clojure-complete
+colorize - https://github.com/ibdknox/colorize
+environ - https://github.com/weavejester/environ
+flare - https://github.com/andersfurseth/flare
+junit - http://junit.org/junit4/
+ordered - https://github.com/amalloy/ordered
+org.clojure/clojure - https://github.com/clojure/clojure
+org.clojure/core.unify - https://github.com/clojure/core.unify
+org.clojure/math.combinatorics - https://github.com/clojure/math.combinatorics
+org.clojure/tools.macro - https://github.com/clojure/tools.macro
+org.clojure/tools.namespace - https://github.com/clojure/tools.namespace
+org.clojure/tools.nrepl - https://github.com/clojure/tools.nrepl
+org.tcrawley/dynapath - https://github.com/tobias/dynapath
+slingshot - https://github.com/scgilardi/slingshot
+swiss-arrows - https://github.com/rplevy/swiss-arrows
+
