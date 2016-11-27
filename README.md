@@ -124,3 +124,17 @@ nil
 Copyright © 2016 Symphony Software Foundation
 
 Distributed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
+
+### 3rd Party Licenses
+
+To see the list of licenses of the third party libraries used by this project, please run:
+
+```shell
+$ lein licenses :csv | cut -d , -f3 | sort | uniq
+```
+
+To see the dependencies and licenses in detail, run:
+
+```shell
+$ lein licenses
+```
