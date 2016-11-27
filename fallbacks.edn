@@ -1,0 +1,11 @@
+; lein-licenses configuration
+{
+  "ring" "EPL 1.0"
+  "javax.servlet/servlet-api" "CDDL"
+  "colorize" "EPL 1.0"
+  "mvxcvi/arrangement" "Unlicense"
+  "mvxcvi/whidbey" "Unlicense"
+  "mvxcvi/puget" "Unlicense"
+  "org.clojars.brenton/google-diff-match-patch" "Apache 2.0"
+  "com.rpl/specter" "Apache 2.0"
+}
