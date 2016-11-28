@@ -186,7 +186,7 @@
   #{"GNU Lesser General Public License v2.1 only"} "LGPL-2.1"
   #{"GNU Lesser General Public License v3.0 only"} "LGPL-3.0"
   #{"GNU Library General Public License v2 only"} "LGPL-2.0"
-  #{"GNU LESSER GENERAL PUBLIC LICENSE"} "LGPL-2.1+"
+  #{"GNU LESSER GENERAL PUBLIC LICENSE"} "LGPL-2.0+"
   #{"gnuplot License"} "gnuplot"
   #{"gSOAP Public License v1.3b"} "gSOAP-1.3b"
   #{"Haskell Language Report License"} "HaskellReport"
