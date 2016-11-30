@@ -21,6 +21,7 @@
                        :url  "http://www.apache.org/licenses/LICENSE-2.0"}
   :min-lein-version   "2.5.0"
   :repositories       [["sonatype-snapshots" {:url "https://oss.sonatype.org/content/groups/public" :snapshots true}]]
+  :plugins            [[lein-licenses "0.2.1"]]
   :dependencies       [
                         [org.clojure/clojure                      "1.8.0"]
                         [org.symphonyoss.symphony/symphony-client "1.0.0-SNAPSHOT"]
