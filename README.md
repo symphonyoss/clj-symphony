@@ -21,17 +21,26 @@ The latest version is:
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.symphonyoss/clj-symphony.svg)](https://clojars.org/org.symphonyoss/clj-symphony)
 
+### Trying it Out
+Alternatively, you may prefer to kick the library's tyres without creating a project.  This is a snap with the awesome [`lein try` plugin](https://github.com/rkneufeld/lein-try):
+
+```shell
+$ lein try org.symphonyoss/clj-symphony 0.1.0-SNAPSHOT
+```
+
+You will be dropped in a REPL with the library downloaded and ready for use.
+
 ## Usage
 
 The functionality is provided by the `clj-symphony.api` namespace.
 
-Require it in the REPL:
+Require it in the REPL (incl. a `lein try` REPL):
 
 ```clojure
 (require '[clj-symphony.api :as symph] :reload-all)
 ```
 
-Require it in your application:
+Require it in your project:
 
 ```clojure
 (ns my-app.core
