@@ -10,7 +10,16 @@ This WIP library is intended to be an idiomatic Clojure wrapper for the [symphon
 
 ## Installation
 
-For now clj-symphony is available in source form only, so fire up your favourite git client and get cloning!
+clj-symphony is available as a Maven artifact from [Clojars](https://clojars.org/org.symphonyoss/clj-symphony).
+Plonk the following in your project.clj :dependencies, `lein deps` and you should be good to go:
+
+```clojure
+[org.symphonyoss/clj-symphony "#.#.#"]   ; Where #.#.# is replaced with an actual version number
+```
+
+The latest version is:
+
+[![Clojars Project](https://img.shields.io/clojars/v/org.symphonyoss/clj-symphony.svg)](https://clojars.org/org.symphonyoss/clj-symphony)
 
 ## Usage
 
