@@ -37,5 +37,4 @@
                                        :username :env/clojars_username
                                        :password :env/clojars_password}]
                        ]
-  :lein-release        {:deploy-via :clojars}
   )
