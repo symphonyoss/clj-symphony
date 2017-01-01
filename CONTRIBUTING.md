@@ -10,7 +10,7 @@ contribution; they are commonly used in many open source projects.
 a [Foundation CLA](https://symphonyoss.atlassian.net/wiki/display/FM/Legal+Requirements#LegalRequirements-ContributorLicenseAgreement)
 in place, and there are [additional legal requirements](https://symphonyoss.atlassian.net/wiki/display/FM/Legal+Requirements) that must also be met.**
 
-Please do not contribute code (including PRs) to the clj-symphony project until you have a CLA in place with the Foundation.
+As a result, PRs submitted to the clj-symphony project cannot be accepted until you have a CLA in place with the Foundation.
 
 # Contributing Issues
 
