@@ -145,7 +145,7 @@ Distributed under the [Apache License, Version 2.0](http://www.apache.org/licens
 
 ### 3rd Party Licenses
 
-To see the list of licenses of the third party libraries used by this project, please run:
+To see the full list of licenses of all third party libraries used by this project, please run:
 
 ```shell
 $ lein licenses :csv | cut -d , -f3 | sort | uniq
