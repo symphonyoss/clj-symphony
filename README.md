@@ -47,91 +47,9 @@ Require it in your project:
   (:require [clj-symphony.api :as symph]))
 ```
 
-The library provides a number of methods:
+[Detailed API documentation is published here](https://symphonyoss.github.io/clj-symphony/).
 
-```
-user=> (require '[clj-symphony.api :as symph] :reload-all)
-nil
-user=> (doc clj-symphony.api/connect)
--------------------------
-clj-symphony.api/connect
-([params])
-  Connect to a Symphony pod as a given service account user.  Returns a 'session' object
-  that should be used in all subsequent API calls.
-
-  params is a map containing:
-  :pod-id           The id of the pod to connect to - will autopopulate whichever of the 4 URLs aren't provided. (optional - see below)
-  :session-auth-url The URL of the session authentication endpoint. (optional - see below)
-  :key-auth-url     The URL of the key authentication endpoint. (optional - see below)
-  :agent-api-url    The URL of the agent API. (optional - see below)
-  :pod-api-url      The URL of the Pod API. (optional - see below)
-  :trust-store      A pair of strings containing the path to the trust store and the password of the trust store. (mandatory)
-  :user-cert        A pair of strings containing the path to the bot user's certificate and the password of that certificate. (mandatory)
-  :user-email       The email address of the bot user. (mandatory)
-
-  Note: if :pod-id is not provided, :session-auth-url and :key-auth-url and :agent-api-url and :pod-api-url are all mandatory.
-nil
-user=> (doc clj-symphony.api/user-info)
--------------------------
-clj-symphony.api/user-info
-([session] [session user-identifier])
-  Returns a map containing information about the given user, or the authenticated session user if a user id is not provided.
-  User can be specified either as a user id (Long) or an email address (String).
-
-  Returns nil if the user doesn't exist.
-
-  Note: providing a user identifier requires calls to the server.
-nil
-user=> (doc clj-symphony.api/user-presence)
--------------------------
-clj-symphony.api/user-presence
-([session] [session user-id])
-  Returns the presence status of the given user, or all users.
-nil
-user=> (doc clj-symphony.api/get-chats)
--------------------------
-clj-symphony.api/get-chats
-([session] [session user-id])
-  Returns a list of chats for the given user, or for the authenticated session user if a user id is not provided.
-nil
-user=> (doc clj-symphony.api/establish-chat)
--------------------------
-clj-symphony.api/establish-chat
-([session user-identifier])
-  Establishes a chat with the given user.
-nil
-user=> (doc clj-symphony.api/send-message!)
--------------------------
-clj-symphony.api/send-message!
-  Sends a message to the given chat, room or stream.  Both text and MessageML messages are supported.
-nil
-user=> (doc clj-symphony.api/register-message-listener)
--------------------------
-clj-symphony.api/register-message-listener
-([session f])
-  Registers f, a function of 7 parameters, as a message listener (callback), and returns a handle to that listener
-  so that it can be deregistered later on, if needed.  The 7 arguments passed to f are:
-
-     msg-id     - Identifier of the message
-     timestamp  - Timestamp the message was sent (as a string in ####???? format)
-     stream-id  - Identifier of the stream (chat or room) the message was sent to)
-     user-id    - Identifier of the user who sent the message
-     msg-format - Format of the message as a keyword (:messageml or :text)
-     msg-type   - ####????
-     msg        - Text of the message
-
-   The value returned by f (if any) is ignored.
-nil
-user=> (doc clj-symphony.api/deregister-message-listener)
--------------------------
-clj-symphony.api/deregister-message-listener
-([session listener])
-  Deregisters a previously-registered message listener.  Once deregistered, a listener should be discarded.
-  Returns true if a valid message listener was deregistered, false otherwise.
-nil
-```
-
-## Developer Information
+## Contributor Information
 
 [GitHub project](https://github.com/symphonyoss/clj-symphony)
 
