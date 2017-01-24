@@ -35,14 +35,14 @@
                        ]
   :profiles            {
                         :dev     {:dependencies [[midje      "1.8.3"]]
-                                  :plugins      [[lein-midje "3.2"]]}   ; Don't remove this or travis-ci will assplode!
+                                  :plugins      [[lein-midje "3.2"]]}
                         :uberjar {:aot :all}
                        }
   :deploy-repositories [
-                         ["snapshots" {:url "https://clojars.org/repo"
+                         ["snapshots" {:url      "https://clojars.org/repo"
                                        :username :env/clojars_username
                                        :password :env/clojars_password}]
-                         ["releases"  {:url "https://clojars.org/repo"
+                         ["releases"  {:url      "https://clojars.org/repo"
                                        :username :env/clojars_username
                                        :password :env/clojars_password}]
                        ]
