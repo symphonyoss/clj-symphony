@@ -21,11 +21,10 @@
                         :url  "http://www.apache.org/licenses/LICENSE-2.0"}
   :min-lein-version    "2.5.0"
   :repositories     [["sonatype-snapshots" {:url "https://oss.sonatype.org/content/groups/public" :snapshots true}]
-                     ["jitpack"            {:url "https://jitpack.io"}]]
+                     ["jitpack"            {:url "https://jitpack.io" :snapshots true}]]
   :plugins             [[lein-licenses     "0.2.1"]
                         [lein-codox        "0.10.2"]
-;                        [katlex/github-cdn "0.1.4-SNAPSHOT"]                 ; Once https://github.com/katlex/github-cdn/pull/1 is merged and released
-                        [com.github.pmonks/github-cdn "-SNAPSHOT"]]   ; Until https://github.com/katlex/github-cdn/pull/1 is merged and released
+                        [katlex/github-cdn "0.1.4"]]
   :dependencies        [
                          [org.clojure/clojure                      "1.8.0"]
                          [org.symphonyoss.symphony/symphony-client "1.0.0-SNAPSHOT"]
