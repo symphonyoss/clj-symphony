@@ -20,18 +20,24 @@
   :license             {:name "Apache License, Version 2.0"
                         :url  "http://www.apache.org/licenses/LICENSE-2.0"}
   :min-lein-version    "2.5.0"
-  :repositories     [["sonatype-snapshots" {:url "https://oss.sonatype.org/content/groups/public" :snapshots true}]
-                     ["jitpack"            {:url "https://jitpack.io" :snapshots true}]]
-  :plugins             [[lein-licenses     "0.2.1"]
-                        [lein-codox        "0.10.2"]
-                        [katlex/github-cdn "0.1.4"]]
+  :repositories        [
+                         ["sonatype-snapshots" {:url "https://oss.sonatype.org/content/groups/public" :snapshots true}]
+                         ["jitpack"            {:url "https://jitpack.io"                             :snapshots true}]
+                       ]
+  :plugins             [
+                         [lein-licenses     "0.2.1"]
+                         [lein-codox        "0.10.2"]
+                         [katlex/github-cdn "0.1.4"]
+                       ]
   :dependencies        [
                          [org.clojure/clojure                      "1.8.0"]
                          [org.symphonyoss.symphony/symphony-client "1.0.0-SNAPSHOT"]
                        ]
-  :profiles            {:dev {:dependencies [[midje      "1.8.3"]]
-                              :plugins      [[lein-midje "3.2"]]}   ; Don't remove this or travis-ci will assplode!
-                        :uberjar {:aot :all}}
+  :profiles            {
+                        :dev     {:dependencies [[midje      "1.8.3"]]
+                                  :plugins      [[lein-midje "3.2"]]}   ; Don't remove this or travis-ci will assplode!
+                        :uberjar {:aot :all}
+                       }
   :deploy-repositories [
                          ["snapshots" {:url "https://clojars.org/repo"
                                        :username :env/clojars_username
