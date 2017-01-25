@@ -34,9 +34,9 @@
                          [org.symphonyoss.symphony/symphony-client "1.0.0-SNAPSHOT"]
                        ]
   :profiles            {
-                        :dev     {:dependencies [[midje      "1.8.3"]]
-                                  :plugins      [[lein-midje "3.2"]]}
-                        :uberjar {:aot :all}
+                         :dev     {:dependencies [[midje      "1.8.3"]]
+                                   :plugins      [[lein-midje "3.2"]]}
+                         :uberjar {:aot :all}
                        }
   :deploy-repositories [
                          ["snapshots" {:url      "https://clojars.org/repo"
