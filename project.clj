@@ -27,7 +27,6 @@
                          ["jitpack"            {:url "https://jitpack.io"                             :snapshots true}]
                        ]
   :plugins             [
-                         [lein-licenses     "0.2.1"]
                          [lein-codox        "0.10.2"]
                          [katlex/github-cdn "0.1.4"]
                        ]
@@ -36,8 +35,9 @@
                          [org.symphonyoss.symphony/symphony-client "1.0.0-SNAPSHOT"]
                        ]
   :profiles            {
-                         :dev     {:dependencies [[midje      "1.8.3"]]
-                                   :plugins      [[lein-midje "3.2"]]}
+                         :dev     {:dependencies [[midje         "1.8.3"]]
+                                   :plugins      [[lein-midje    "3.2.1"]      ; Don't remove these or travis-ci will assplode!
+                                                  [lein-licenses "0.2.1"]]}
                          :uberjar {:aot :all}
                        }
   :deploy-repositories [
