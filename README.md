@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/symphonyoss/clj-symphony.svg?branch=master)](https://travis-ci.org/symphonyoss/clj-symphony)
 [![Open Issues](https://img.shields.io/github/issues/symphonyoss/clj-symphony.svg)](https://github.com/symphonyoss/clj-symphony/issues)
+[![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/symphonyoss/clj-symphony.svg)](http://isitmaintained.com/project/symphonyoss/clj-symphony "Average time to resolve an issue")
 [![License](https://img.shields.io/github/license/symphonyoss/clj-symphony.svg)](https://github.com/symphonyoss/clj-symphony/blob/master/LICENSE)
 [![Dependency Status (JarKeeper)](http://jarkeeper.com/symphonyoss/clj-symphony/status.svg)](http://jarkeeper.com/symphonyoss/clj-symphony)
 [![Dependency Status (VersionEye)](https://www.versioneye.com/user/projects/588f210f683c11004fc6c8d7/badge.svg?style=flat-round)](https://www.versioneye.com/user/projects/588f210f683c11004fc6c8d7)
