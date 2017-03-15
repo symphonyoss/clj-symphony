@@ -36,10 +36,11 @@ To make review of PRs easier, please:
  * For documentation contributions, follow the general structure, language, and tone of the [existing docs](https://github.com/symphonyoss/clj-symphony/wiki).
  * Keep PRs small and cohesive - if you have multiple contributions, please submit them as independent PRs.
  * Reference issue #s if your PR has anything to do with an issue (even if it doesn't address it).
- * Minimise "spurious" changes (e.g. whitespace shenanigans).
+ * Minimise non-functional changes (e.g. whitespace shenanigans).
  * Ensure all new files include a header comment block containing the [Apache License v2.0 and your copyright information](http://www.apache.org/licenses/LICENSE-2.0#apply).
- * Add the copyright holder of your contribution to the [NOTICE file](https://github.com/symphonyoss/clj-symphony/blob/master/NOTICE)
- * If necessary (e.g. due to 3rd party dependency licensing requirements), update the [NOTICE file](https://github.com/symphonyoss/clj-symphony/blob/master/NOTICE) with any new attribution notices
+ * If necessary (e.g. due to 3rd party dependency licensing requirements), update the [NOTICE file](https://github.com/symphonyoss/clj-symphony/blob/master/NOTICE) with any new attribution or other notices
+ * If your contribution includes source code for any Category B-licensed dependencies, add an appropriate notice to this CONTRIBUTING file
+
 
 ## Commit and PR Messages
 
@@ -48,22 +49,19 @@ To make review of PRs easier, please:
 * Use the imperative mood ("Move button left..." not "Moves button left...")
 * Limit the first line to 72 characters or less
 * Please start the commit message with one or more applicable emoji:
-    * Frequently used:
-        * :bug: `:bug:` when fixing a bug
-        * :new: `:new:` when implementing an enhancement
-        * :ballot_box_with_check: `:ballot_box_with_check:` when completing a task
-        * :memo: `:memo:` when writing docs
-        * :racehorse: `:racehorse:` when improving performance
-        * :art: `:art:` when improving the format/structure of the code
-    * Infrequently used:
-        * :lock: `:lock:` when dealing with security
-        * :fire: `:fire:` when removing code or files
-        * :arrow_up: `:arrow_up:` when upgrading dependencies
-        * :arrow_down: `:arrow_down:` when downgrading dependencies
-        * :penguin: `:penguin:` when fixing something on Linux
-        * :apple: `:apple:` when fixing something on Mac OS
-        * :checkered_flag: `:checkered_flag:` when fixing something on Windows
-        * :white_check_mark: `:white_check_mark:` when adding tests
-        * :green_heart: `:green_heart:` when fixing the CI build
-    * Unlikely to ever be used in this project (but listed, just in case):
-        * :non-potable_water: `:non-potable_water:` when plugging memory leaks
+    * :bug: `:bug:` when fixing a bug
+    * :new: `:new:` when implementing an enhancement
+    * :ballot_box_with_check: `:ballot_box_with_check:` when completing a task
+    * :memo: `:memo:` when writing docs
+    * :racehorse: `:racehorse:` when improving performance
+    * :art: `:art:` when improving the format/structure of the code
+    * :lock: `:lock:` when dealing with security
+    * :fire: `:fire:` when removing code or files
+    * :arrow_up: `:arrow_up:` when upgrading dependencies
+    * :arrow_down: `:arrow_down:` when downgrading dependencies
+    * :penguin: `:penguin:` when fixing something on Linux
+    * :apple: `:apple:` when fixing something on Mac OS
+    * :checkered_flag: `:checkered_flag:` when fixing something on Windows
+    * :white_check_mark: `:white_check_mark:` when adding tests
+    * :green_heart: `:green_heart:` when fixing the CI build
+    * :non-potable_water: `:non-potable_water:` when plugging memory leaks
