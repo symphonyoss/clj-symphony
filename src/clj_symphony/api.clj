@@ -191,12 +191,11 @@
                            msg-type   (.getMessageType msg-t)
                            msg-text   (.getMessage     msg-t)]
                       (f msg-id timestamp stream-id user-id msg-format msg-type msg-text))))]
-    (.registerMessageListener (.getMessageService session) listener)
+    (.addMessageListener (.getMessageService session) listener)
     listener))
 
 (defn deregister-message-listener
   "Deregisters a previously-registered message listener.  Once deregistered, a listener should be discarded.
   Returns true if a valid message listener was deregistered, false otherwise."
   [^org.symphonyoss.client.SymphonyClient session ^org.symphonyoss.client.services.MessageListener listener]
-  ; #### WARNING: https://github.com/symphonyoss/symphony-java-client/issues/19
   (.removeMessageListener (.getMessageService session) listener))
