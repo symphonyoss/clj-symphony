@@ -18,115 +18,24 @@
 (ns clj-symphony.api
   (:require [clojure.string :as s]))
 
-(defn- parse-params
-  "Parses connection parameters, substituting a :pod-id for the default URLs, if present."
-  [params]
-  (if-let [pod-id (:pod-id params)]
-    (dissoc (merge { :session-auth-url (str "https://" pod-id "-api.symphony.com/sessionauth")
-                     :key-auth-url     (str "https://" pod-id "-api.symphony.com/keyauth")
-                     :agent-api-url    (str "https://" pod-id "-api.symphony.com/agent")
-                     :pod-api-url      (str "https://" pod-id "-api.symphony.com/pod") }
-                   params)
-            :pod-id)
-    params))
-
-(defn connect
-  "Connect to a Symphony pod as a given service account user.  Returns a 'session' object
-  that should be used in all subsequent API calls.
-
-  params is a map containing:
-  :pod-id           The id of the pod to connect to - will autopopulate whichever of the 4 URLs aren't provided. (optional - see below)
-  :session-auth-url The URL of the session authentication endpoint. (optional - see below)
-  :key-auth-url     The URL of the key authentication endpoint. (optional - see below)
-  :agent-api-url    The URL of the agent API. (optional - see below)
-  :pod-api-url      The URL of the Pod API. (optional - see below)
-  :trust-store      A pair of strings containing the path to the trust store and the password of the trust store. (mandatory)
-  :user-cert        A pair of strings containing the path to the bot user's certificate and the password of that certificate. (mandatory)
-  :user-email       The email address of the bot user. (mandatory)
-
-  Note: if :pod-id is not provided, :session-auth-url and :key-auth-url and :agent-api-url and :pod-api-url are all mandatory."
-  [params]
-  (let [params           (parse-params params)
-        session-auth-url (:session-auth-url params)
-        key-auth-url     (:key-auth-url     params)
-        agent-api-url    (:agent-api-url    params)
-        pod-api-url      (:pod-api-url      params)
-        trust-store      (:trust-store      params)
-        user-cert        (:user-cert        params)
-        user-email       (:user-email       params)
-        http-client      (org.symphonyoss.client.impl.CustomHttpClient/getClient (first user-cert)   (second user-cert)
-                                                                                 (first trust-store) (second trust-store))
-        session          (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/BASIC)
-        _                (.setDefaultHttpClient session http-client)
-        auth-client      (org.symphonyoss.symphony.clients.AuthorizationClient. session-auth-url key-auth-url http-client)
-        auth             (.authenticate auth-client)
-        _                (.init session http-client auth user-email agent-api-url pod-api-url)]
-      session))
-
 (defn- mapify
   [x]
   (dissoc (bean x) :class))
 
-(defmulti user
-  "Returns a user object for the given user, or the authenticated session user if a user id is not provided.
-  User can be specified either as a user id (Long) or an email address (String).
+;(defn get-chats
+;  "Returns a list of chats for the given user, or for the authenticated session user if a user id is not provided."
+;  ([^org.symphonyoss.client.SymphonyClient session]               (map mapify (.getChats (.getChatService session) (user session))))
+;  ([^org.symphonyoss.client.SymphonyClient session ^Long user-id] (map mapify (.getChats (.getChatService session) (user session user-id)))))
 
-  Returns nil if the user doesn't exist.
-
-  Note: providing a user identifier requires calls to the server."
-  (fn
-    ([session]                 :current-user)
-    ([session user-identifier] (type user-identifier))))
-
-(defmethod user :current-user
-  [^org.symphonyoss.client.SymphonyClient session]
-  (.getLocalUser session))
-
-(defmethod user nil
-  [^org.symphonyoss.client.SymphonyClient session user-id]
-  nil)
-
-(defmethod user Long
-  [^org.symphonyoss.client.SymphonyClient session ^Long user-id]
-  (try
-    (if-let [u (.getUserFromId (.getUsersClient session) user-id)]
-      u)
-    (catch org.symphonyoss.symphony.pod.invoker.ApiException ae
-      nil)))
-
-(defmethod user String
-  [^org.symphonyoss.client.SymphonyClient session ^String user-email-address]
-  (.getUserFromEmail (.getUsersClient session) user-email-address))
-
-(defn user-info
-  "Returns a map containing information about the given user, or the authenticated session user if a user id is not provided.
-  User can be specified either as a user id (Long) or an email address (String).
-
-  Returns nil if the user doesn't exist.
-
-  Note: providing a user identifier requires calls to the server."
-  ([session]                 (if-let [u (user session)]                 (mapify u)))
-  ([session user-identifier] (if-let [u (user session user-identifier)] (mapify u))))
-
-(defn user-presence
-  "Returns the presence status of the given user, or all users."
-  ([^org.symphonyoss.client.SymphonyClient session]               (map mapify (.getAllUserPresence (.getPresenceClient session))))
-  ([^org.symphonyoss.client.SymphonyClient session ^Long user-id] (mapify (.getUserPresence (.getPresenceClient session) user-id))))
-
-(defn get-chats
-  "Returns a list of chats for the given user, or for the authenticated session user if a user id is not provided."
-  ([^org.symphonyoss.client.SymphonyClient session]               (map mapify (.getChats (.getChatService session) (user session))))
-  ([^org.symphonyoss.client.SymphonyClient session ^Long user-id] (map mapify (.getChats (.getChatService session) (user session user-id)))))
-
-(defn establish-chat
-  "Establishes a chat with the given user."
-  [^org.symphonyoss.client.SymphonyClient session user-identifier]
-  (let [recipient #{(user session user-identifier)}
-        chat      (org.symphonyoss.client.model.Chat.)
-        _         (.setLocalUser   chat (user session))
-        _         (.setRemoteUsers chat recipient)
-        _         (.setStream      chat (.getStream (.getStreamsClient session) ^java.util.Set recipient))]
-    chat))
+;(defn establish-chat
+;  "Establishes a chat with the given user."
+;  [^org.symphonyoss.client.SymphonyClient session user-identifier]
+;  (let [recipient #{(user session user-identifier)}
+;        chat      (org.symphonyoss.client.model.Chat.)
+;        _         (.setLocalUser   chat (user session))
+;        _         (.setRemoteUsers chat recipient)
+;        _         (.setStream      chat (.getStream (.getStreamsClient session) ^java.util.Set recipient))]
+;    chat))
 
 (defmulti send-message!
   "Sends a message to the given chat, room or stream.  Both text and MessageML messages are supported."
