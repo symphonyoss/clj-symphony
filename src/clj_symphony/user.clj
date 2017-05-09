@@ -74,8 +74,15 @@
                           (.getAvatars user))
      })))
 
+(defn all-presence
+  "Returns the presence status of all users, as a seq of maps with keys :userId (value is a long) and :presence (value is a keyword)."
+  [^org.symphonyoss.client.SymphonyClient session]
+  (map #(hash-map :userId   (.getUid ^org.symphonyoss.symphony.pod.model.UserPresence %)
+                  :presence (keyword (str (.getCategory ^org.symphonyoss.symphony.pod.model.UserPresence %))))
+       (.getAllUserPresence (.getPresenceClient session))))
+
 (defmulti presence
-  "Returns the presence status of a user."
+  "Returns the presence status of a user, as a keyword."
   (fn
     ([session]                 :current-user)
     ([session user-identifier] (type user-identifier))))
@@ -100,9 +107,28 @@
   [session ^String user-email-address]
   (presence session (user session user-email-address)))
 
-(defn all-presence
-  "Returns the presence status of all users."
-  [^org.symphonyoss.client.SymphonyClient session]
-  (map #(hash-map :userId   (.getUid ^org.symphonyoss.symphony.pod.model.UserPresence %)
-                  :presence (keyword (str (.getCategory ^org.symphonyoss.symphony.pod.model.UserPresence %))))
-       (.getAllUserPresence (.getPresenceClient session))))
+(defmulti set-presence!
+  "Sets the presence status of a user."
+  (fn
+    ([session new-presence]                 :current-user)
+    ([session user-identifier new-presence] (type user-identifier))))
+
+(defmethod set-presence! :current-user
+  [session new-presence]
+  (set-presence! session (user session) new-presence))
+
+(defmethod set-presence! org.symphonyoss.symphony.clients.model.SymUser
+  [session ^org.symphonyoss.symphony.clients.model.SymUser user new-presence]
+  (set-presence! session (.getId user) new-presence))
+
+(defmethod set-presence! Long
+  [^org.symphonyoss.client.SymphonyClient session ^Long user-id new-presence]
+  (let [presence-enum (org.symphonyoss.symphony.pod.model.Presence$CategoryEnum/valueOf (name new-presence))
+        user-presence (doto (org.symphonyoss.symphony.pod.model.Presence.)
+                            (.setCategory presence-enum))]
+    (.setUserPresence (.getPresenceClient session) user-id user-presence)
+    nil))
+
+(defmethod set-presence! String
+  [session ^String user-email-address new-presence]
+  (set-presence! session (user session user-email-address) new-presence))
