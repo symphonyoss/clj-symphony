@@ -15,7 +15,8 @@
 ; limitations under the License.
 ;
 
-(ns clj-symphony.connect)
+(ns clj-symphony.connect
+  "Operations related to connections to a Symphony pod.")
 
 (defn- parse-params
   "Parses connection parameters, substituting a :pod-id for the default URLs, if present."
@@ -24,16 +25,15 @@
     (dissoc (merge { :session-auth-url (str "https://" pod-id "-api.symphony.com/sessionauth")
                      :key-auth-url     (str "https://" pod-id "-api.symphony.com/keyauth")
                      :agent-api-url    (str "https://" pod-id "-api.symphony.com/agent")
-                     :pod-api-url      (str "https://" pod-id "-api.symphony.com/pod") }
+                     :pod-api-url      (str "https://" pod-id ".symphony.com/pod") }   ; Note: not -api !
                    params)
             :pod-id)
     params))
 
 (defn connect
-  "Connect to a Symphony pod as a given service account user.  Returns a 'session' object
-  that should be used in all subsequent API calls.
+  "Connect to a Symphony pod as a given service account user.  Returns a 'connection' object that should be used in all subsequent API calls.
 
-  params is a map containing:
+params is a map containing:
   :pod-id           The id of the pod to connect to - will autopopulate whichever of the 4 URLs aren't provided. (optional - see below)
   :session-auth-url The URL of the session authentication endpoint. (optional - see below)
   :key-auth-url     The URL of the key authentication endpoint. (optional - see below)
@@ -43,7 +43,7 @@
   :user-cert        A pair of strings containing the path to the bot user's certificate and the password of that certificate. (mandatory)
   :user-email       The email address of the bot user. (mandatory)
 
-  Note: if :pod-id is not provided, :session-auth-url and :key-auth-url and :agent-api-url and :pod-api-url are all mandatory."
+Note: if :pod-id is not provided, :session-auth-url and :key-auth-url and :agent-api-url and :pod-api-url are all mandatory."
   [params]
   (let [params           (parse-params params)
         session-auth-url (:session-auth-url params)
@@ -55,14 +55,14 @@
         user-email       (:user-email       params)
         http-client      (org.symphonyoss.client.impl.CustomHttpClient/getClient (first user-cert)   (second user-cert)
                                                                                  (first trust-store) (second trust-store))
-        session          (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/BASIC)
-        _                (.setDefaultHttpClient session http-client)
+        connection       (doto (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/BASIC)
+                           (.setDefaultHttpClient http-client))
         auth-client      (org.symphonyoss.symphony.clients.AuthorizationClient. session-auth-url key-auth-url http-client)
         auth             (.authenticate auth-client)
-        _                (.init session http-client auth user-email agent-api-url pod-api-url)]
-      session))
+        _                (.init connection http-client auth user-email agent-api-url pod-api-url)]
+      connection))
 
 (defn disconnect
-  "Disconnect from a Symphony pod.  The 'session' object should be discarded after this method is called."
-  [^org.symphonyoss.client.SymphonyClient session]
-  (.shutdown session))
+  "Disconnect from a Symphony pod.  The 'connection' object should be discarded after this method is called."
+  [^org.symphonyoss.client.SymphonyClient connection]
+  (.shutdown connection))

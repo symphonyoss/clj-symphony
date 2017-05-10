@@ -32,7 +32,7 @@
                        ]
   :dependencies        [
                          [org.clojure/clojure                      "1.8.0"]
-                         [org.symphonyoss.symphony/symphony-client "1.0.1"]
+                         [org.symphonyoss.symphony/symphony-client "1.0.2-SNAPSHOT"]
                        ]
   :profiles            {
                          :dev     {:dependencies [[midje         "1.8.3"]]

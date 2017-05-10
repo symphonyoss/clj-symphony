@@ -23,23 +23,23 @@
   (dissoc (bean x) :class))
 
 ;(defn get-chats
-;  "Returns a list of chats for the given user, or for the authenticated session user if a user id is not provided."
-;  ([^org.symphonyoss.client.SymphonyClient session]               (map mapify (.getChats (.getChatService session) (user session))))
-;  ([^org.symphonyoss.client.SymphonyClient session ^Long user-id] (map mapify (.getChats (.getChatService session) (user session user-id)))))
+;  "Returns a list of chats for the given user, or for the authenticated connection user if a user id is not provided."
+;  ([^org.symphonyoss.client.SymphonyClient connection]               (map mapify (.getChats (.getChatService connection) (user connection))))
+;  ([^org.symphonyoss.client.SymphonyClient connection ^Long user-id] (map mapify (.getChats (.getChatService connection) (user connection user-id)))))
 
 ;(defn establish-chat
 ;  "Establishes a chat with the given user."
-;  [^org.symphonyoss.client.SymphonyClient session user-identifier]
-;  (let [recipient #{(user session user-identifier)}
+;  [^org.symphonyoss.client.SymphonyClient connection user-identifier]
+;  (let [recipient #{(user connection user-identifier)}
 ;        chat      (org.symphonyoss.client.model.Chat.)
-;        _         (.setLocalUser   chat (user session))
+;        _         (.setLocalUser   chat (user connection))
 ;        _         (.setRemoteUsers chat recipient)
-;        _         (.setStream      chat (.getStream (.getStreamsClient session) ^java.util.Set recipient))]
+;        _         (.setStream      chat (.getStream (.getStreamsClient connection) ^java.util.Set recipient))]
 ;    chat))
 
 (defmulti send-message!
   "Sends a message to the given chat, room or stream.  Both text and MessageML messages are supported."
-  (fn [session target message] (type target)))
+  (fn [connection target message] (type target)))
 
 (defn- build-sym-message
   [^String message]
@@ -51,24 +51,24 @@
     msg))
 
 (defmethod send-message! org.symphonyoss.client.model.Chat
-  [^org.symphonyoss.client.SymphonyClient session ^org.symphonyoss.client.model.Chat chat ^String message]
-  (.sendMessage (.getMessageService session)
+  [^org.symphonyoss.client.SymphonyClient connection ^org.symphonyoss.client.model.Chat chat ^String message]
+  (.sendMessage (.getMessageService connection)
                 chat
                 ^org.symphonyoss.symphony.clients.model.SymMessage (build-sym-message message))
   nil)
 
 (defmethod send-message! org.symphonyoss.client.model.Room
-  [^org.symphonyoss.client.SymphonyClient session ^org.symphonyoss.client.model.Room room ^String message]
-  (.sendMessage (.getMessageService session)
+  [^org.symphonyoss.client.SymphonyClient connection ^org.symphonyoss.client.model.Room room ^String message]
+  (.sendMessage (.getMessageService connection)
                 room
                 ^org.symphonyoss.symphony.clients.model.SymMessage (build-sym-message message))
   nil)
 
 (defmethod send-message! String
-  [^org.symphonyoss.client.SymphonyClient session ^String stream-id ^String message]
+  [^org.symphonyoss.client.SymphonyClient connection ^String stream-id ^String message]
   (let [stream (org.symphonyoss.symphony.pod.model.Stream.)
         _      (.setId stream stream-id)]
-    (.sendMessage (.getMessagesClient session)
+    (.sendMessage (.getMessagesClient connection)
                   stream
                   ^org.symphonyoss.symphony.clients.model.SymMessage (build-sym-message message))
     nil))
@@ -86,7 +86,7 @@
      msg        - Text of the message
 
    The value returned by f (if any) is ignored."
-  [^org.symphonyoss.client.SymphonyClient session f]
+  [^org.symphonyoss.client.SymphonyClient connection f]
   (let [listener (reify
                    org.symphonyoss.client.services.MessageListener
                    (onMessage [this msg]
@@ -100,11 +100,11 @@
                            msg-type   (.getMessageType msg-t)
                            msg-text   (.getMessage     msg-t)]
                       (f msg-id timestamp stream-id user-id msg-format msg-type msg-text))))]
-    (.addMessageListener (.getMessageService session) listener)
+    (.addMessageListener (.getMessageService connection) listener)
     listener))
 
 (defn deregister-message-listener
   "Deregisters a previously-registered message listener.  Once deregistered, a listener should be discarded.
   Returns true if a valid message listener was deregistered, false otherwise."
-  [^org.symphonyoss.client.SymphonyClient session ^org.symphonyoss.client.services.MessageListener listener]
-  (.removeMessageListener (.getMessageService session) listener))
+  [^org.symphonyoss.client.SymphonyClient connection ^org.symphonyoss.client.services.MessageListener listener]
+  (.removeMessageListener (.getMessageService connection) listener))
