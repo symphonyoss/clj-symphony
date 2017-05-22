@@ -22,7 +22,7 @@
 
 
 (defn chatobj->map
-  "Converts a Chat object into map."
+  "Converts a Chat object into a map."
   [^org.symphonyoss.client.model.Chat chat]
   (if chat
     {

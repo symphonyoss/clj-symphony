@@ -28,7 +28,7 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 
 
 (defn streamobj->map
-  "Converts a SymAdminStreamInfo object into map."
+  "Converts a SymAdminStreamInfo object into a map."
   [^org.symphonyoss.symphony.clients.model.SymAdminStreamInfo stream]
   (if stream
     {

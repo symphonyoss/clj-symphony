@@ -20,7 +20,7 @@
 
 
 (defn userobj->map
-  "Converts a SymUser object into map."
+  "Converts a SymUser object into a map."
   [^org.symphonyoss.symphony.clients.model.SymUser user]
   (if user
     {
