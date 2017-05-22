@@ -15,7 +15,8 @@
 ; limitations under the License.
 ;
 
-(ns clj-symphony.user)
+(ns clj-symphony.user
+  "Operations related to users.  A user can be either a human or a service account (bot).")
 
 
 (defn userobj->map

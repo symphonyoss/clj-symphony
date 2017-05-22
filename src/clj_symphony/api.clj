@@ -18,45 +18,6 @@
 (ns clj-symphony.api
   (:require [clojure.string :as s]))
 
-(defn- mapify
-  [x]
-  (dissoc (bean x) :class))
-
-(defmulti send-message!
-  "Sends a message to the given chat, room or stream.  Both text and MessageML messages are supported."
-  (fn [connection target message] (type target)))
-
-(defn- build-sym-message
-  [^String message]
-  (let [msg (org.symphonyoss.symphony.clients.model.SymMessage.)
-        _  (.setMessage msg message)]
-    (if (.startsWith message "<messageML>")
-      (.setFormat msg org.symphonyoss.symphony.clients.model.SymMessage$Format/MESSAGEML)
-      (.setFormat msg org.symphonyoss.symphony.clients.model.SymMessage$Format/TEXT))
-    msg))
-
-(defmethod send-message! org.symphonyoss.client.model.Chat
-  [^org.symphonyoss.client.SymphonyClient connection ^org.symphonyoss.client.model.Chat chat ^String message]
-  (.sendMessage (.getMessageService connection)
-                chat
-                ^org.symphonyoss.symphony.clients.model.SymMessage (build-sym-message message))
-  nil)
-
-(defmethod send-message! org.symphonyoss.client.model.Room
-  [^org.symphonyoss.client.SymphonyClient connection ^org.symphonyoss.client.model.Room room ^String message]
-  (.sendMessage (.getMessageService connection)
-                room
-                ^org.symphonyoss.symphony.clients.model.SymMessage (build-sym-message message))
-  nil)
-
-(defmethod send-message! String
-  [^org.symphonyoss.client.SymphonyClient connection ^String stream-id ^String message]
-  (let [stream (org.symphonyoss.symphony.pod.model.Stream.)
-        _      (.setId stream stream-id)]
-    (.sendMessage (.getMessagesClient connection)
-                  stream
-                  ^org.symphonyoss.symphony.clients.model.SymMessage (build-sym-message message))
-    nil))
 
 (defn register-message-listener
   "Registers f, a function of 7 parameters, as a message listener (callback), and returns a handle to that listener

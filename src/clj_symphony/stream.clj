@@ -15,7 +15,7 @@
 ; limitations under the License.
 ;
 
-(ns clj-symphony.streams
+(ns clj-symphony.stream
   "Operations related to 'streams'.  A 'stream' is the generic term for any kind of message channel in the Symphony platform, and come in several flavous:
 1. 1:1 chat
 2. M:M chat
@@ -70,6 +70,7 @@ WARNING: this method is expensive and inefficient!  Use it with caution!"
   [connection ^String stream-id]
   (first (filter #(= stream-id (.getId ^org.symphonyoss.symphony.clients.model.SymAdminStreamInfo %))
                  (get-streamobjs connection))))
+
 
 (defn get-stream
   "Returns the given stream, or nil if it doesn't exist / isn't accessible to the authenticated connection user.

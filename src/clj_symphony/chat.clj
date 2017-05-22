@@ -15,10 +15,10 @@
 ; limitations under the License.
 ;
 
-(ns clj-symphony.chats
+(ns clj-symphony.chat
   "Operations related to 'chats'.  A 'chat' may contain 2 or more participants from 1 or 2 pods, and are different to rooms in that their membership is fixed at creation team."
-  (:require [clj-symphony.user    :as syu]
-            [clj-symphony.streams :as sys]))
+  (:require [clj-symphony.user   :as syu]
+            [clj-symphony.stream :as sys]))
 
 
 (defn chatobj->map
@@ -26,10 +26,12 @@
   [^org.symphonyoss.client.model.Chat chat]
   (if chat
     {
-      :stream-id    (.getStreamId         chat)
+      :stream-id       (.getStreamId         chat)
 ;      :last-message (sym/messageobj->map   (.getLastMessage chat))  ; ####TODO: once messages namespace is developed
-      :users        (map syu/userobj->map (.getRemoteUsers chat))
+;      :other-users    (map userobj->map (.getRemoteUsers chat))
+      :other-user-ids (map #(.getId ^org.symphonyoss.symphony.clients.model.SymUser %) (.getRemoteUsers chat))
     }))
+
 
 (defn get-chatobjs
   "Returns all Chat objects for the given user.  If no user identifier is provided, returns the chats of the authenticated connection user."
@@ -38,10 +40,12 @@
     (let [user (syu/get-userobj connection user-id)]
       (.getChats (.getChatService connection) user))))
 
+
 (defn get-chats
   "Returns all chats for the given user.  If no user identifier is provided, returns the chats of the authenticated connection user."
   ([connection]         (get-chats connection (syu/get-user connection)))
   ([connection user-id] (map chatobj->map (get-chatobjs connection user-id))))
+
 
 (defmulti get-chatobj
   "Returns a Chat object for the given chat identifier (as a stream id or map containing a :stream-id).
@@ -65,17 +69,23 @@ Returns nil if the chat doesn't exist."
   (if stream-id
     (get-chatobj connection stream-id)))
 
+
 (defn get-chat
   "Returns a chat as a map for the given chat identifier.
 Returns nil if the chat doesn't exist."
   [connection chat-identifier]
   (chatobj->map (get-chatobj connection chat-identifier)))
 
+
 (defn start-chatobj!
-  "Starts an :IM or :MIM chat with the specified user(s), returning the new chat object."
+  "Starts an :IM or :MIM chat with the specified user(s), returning the new chat object.
+'users' can be either a single user-identifier (as described in clj-symphony.user/get-userobj) or
+a sequence or set of such identifiers."
   [^org.symphonyoss.client.SymphonyClient connection users]
   (let [user-objs    (map (partial syu/get-userobj connection) users)
-        remote-users (set (map syu/get-userobj users))
+        remote-users (if (or (sequential? users) (set? users))
+                       (set (map #(syu/get-userobj connection %) users))
+                       #{(syu/get-userobj connection users)})
         chat-obj     (doto
                        (org.symphonyoss.client.model.Chat.)
                        (.setLocalUser (syu/get-userobj connection))
@@ -83,19 +93,23 @@ Returns nil if the chat doesn't exist."
         _            (.addChat (.getChatService connection) chat-obj)]
     chat-obj))
 
+
 (defn start-chat!
-  "Starts an :IM or :MIM chat with the specified user(s), returning the new chat as a map."
+  "Starts an :IM or :MIM chat with the specified user(s), returning the new chat as a map.
+'users' can be either a single user-identifier (as described in clj-symphony.user/get-userobj) or
+a sequence or set of such identifiers."
   [connection users]
   (chatobj->map (start-chatobj! connection users)))
 
+
 (defn stop-chatobj!
-  "Stops a chat."
+  "Stops a chat.  Returns true if the chat was successfully stopped."
   [^org.symphonyoss.client.SymphonyClient connection ^org.symphonyoss.client.model.Chat chat]
   (if chat
     (.removeChat (.getChatService connection) chat)))
 
+
 (defn stop-chat!
-  "Stops a chat, identified by the given chat identifier."
+  "Stops a chat, identified by the given chat identifier (as described in get-chatobj).  Returns true if the chat was successfully stopped, nil if the chat identifier was invalid."
   [connection chat-identifier]
   (stop-chatobj! connection (get-chatobj connection chat-identifier)))
-
