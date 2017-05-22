@@ -27,7 +27,7 @@ The latest version is:
 Alternatively, you may prefer to kick the library's tyres without creating a project.  This is a snap with the awesome [`lein try` plugin](https://github.com/rkneufeld/lein-try):
 
 ```shell
-$ lein try org.symphonyoss/clj-symphony 0.1.0-SNAPSHOT
+$ lein try org.symphonyoss/clj-symphony 0.2.0-SNAPSHOT
 ```
 
 You will be dropped in a REPL with the library downloaded and ready for use.
@@ -39,14 +39,22 @@ The functionality is provided by the `clj-symphony.api` namespace.
 Require it in the REPL (incl. a `lein try` REPL):
 
 ```clojure
-(require '[clj-symphony.api :as symph] :reload-all)
+(require '[clj-symphony.connect :as syc]  :reload-all)
+(require '[clj-symphony.user    :as syu]  :reload-all)
+(require '[clj-symphony.stream  :as sys]  :reload-all)
+(require '[clj-symphony.chat    :as sych] :reload-all)
+(require '[clj-symphony.message :as sym]  :reload-all)
 ```
 
 Require it in your project:
 
 ```clojure
 (ns my-app.core
-  (:require [clj-symphony.api :as symph]))
+  (:require [clj-symphony.connect :as syc]
+            [clj-symphony.user    :as syu]
+            [clj-symphony.stream  :as sys]
+            [clj-symphony.chat    :as sych]
+            [clj-symphony.message :as sym]))
 ```
 
 [Detailed API documentation is published here](https://symphonyoss.github.io/clj-symphony/).
@@ -59,7 +67,7 @@ Require it in your project:
 
 ## License
 
-Copyright © 2016 Symphony Software Foundation
+Copyright © 2016, 2017 Symphony Software Foundation
 
 Distributed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
