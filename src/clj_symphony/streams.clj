@@ -16,13 +16,12 @@
 ;
 
 (ns clj-symphony.streams
-  "Operations related to 'streams'.  A 'stream' is the generic term for any kind of message channel in the Symphony platform, and
-comes in several flavous:
+  "Operations related to 'streams'.  A 'stream' is the generic term for any kind of message channel in the Symphony platform, and come in several flavous:
 1. 1:1 chat
 2. M:M chat
 3. room
 
-The primary difference between chats and rooms is that rooms have dynamic membership - the membership of a chat is fixed at creation time.
+The primary difference between chats and rooms is that rooms have dynamic membership whereas the membership of a chat is fixed at creation time.
 
 In addition, each type of stream can be 'internal' (intra-pod) or 'external' (include users from 1 other pod)."
   (:require [clj-symphony.user :as syu]))

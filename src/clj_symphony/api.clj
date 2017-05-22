@@ -22,21 +22,6 @@
   [x]
   (dissoc (bean x) :class))
 
-;(defn get-chats
-;  "Returns a list of chats for the given user, or for the authenticated connection user if a user id is not provided."
-;  ([^org.symphonyoss.client.SymphonyClient connection]               (map mapify (.getChats (.getChatService connection) (user connection))))
-;  ([^org.symphonyoss.client.SymphonyClient connection ^Long user-id] (map mapify (.getChats (.getChatService connection) (user connection user-id)))))
-
-;(defn establish-chat
-;  "Establishes a chat with the given user."
-;  [^org.symphonyoss.client.SymphonyClient connection user-identifier]
-;  (let [recipient #{(user connection user-identifier)}
-;        chat      (org.symphonyoss.client.model.Chat.)
-;        _         (.setLocalUser   chat (user connection))
-;        _         (.setRemoteUsers chat recipient)
-;        _         (.setStream      chat (.getStream (.getStreamsClient connection) ^java.util.Set recipient))]
-;    chat))
-
 (defmulti send-message!
   "Sends a message to the given chat, room or stream.  Both text and MessageML messages are supported."
   (fn [connection target message] (type target)))
