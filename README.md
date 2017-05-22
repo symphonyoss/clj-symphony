@@ -34,9 +34,9 @@ You will be dropped in a REPL with the library downloaded and ready for use.
 
 ## Usage
 
-The functionality is provided by the `clj-symphony.api` namespace.
+The functionality is provided by several `clj-symphony._____` namespaces.
 
-Require it in the REPL (incl. a `lein try` REPL):
+Require them in the REPL (incl. a `lein try` REPL):
 
 ```clojure
 (require '[clj-symphony.connect :as syc]  :reload-all)
@@ -46,7 +46,7 @@ Require it in the REPL (incl. a `lein try` REPL):
 (require '[clj-symphony.message :as sym]  :reload-all)
 ```
 
-Require it in your project:
+Require them in your project:
 
 ```clojure
 (ns my-app.core
