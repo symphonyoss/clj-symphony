@@ -16,7 +16,7 @@
 ;
 
 (ns clj-symphony.stream
-  "Operations related to 'streams'.  A 'stream' is the generic term for any kind of message channel in the Symphony platform, and come in several flavous:
+  "Operations related to 'streams'.  A 'stream' is the generic term for any kind of message channel in the Symphony platform, and come in several flavours:
 1. 1:1 chat
 2. M:M chat
 3. room
@@ -65,7 +65,7 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 ; Note: currently SJC doesn't seem to offer any way to get stream information
 ; for a single stream, so we emulate it here until such time as it does
 (defn get-streamobj
-  "Returns a single SymAdminStreamInfo as a map, identified by the given id.
+  "Returns the given stream as a SymAdminStreamInfo object, or nil if it doesn't exist / isn't accessible to the authenticated connection user.
 WARNING: this method is expensive and inefficient!  Use it with caution!"
   [connection ^String stream-id]
   (first (filter #(= stream-id (.getId ^org.symphonyoss.symphony.clients.model.SymAdminStreamInfo %))
@@ -73,7 +73,7 @@ WARNING: this method is expensive and inefficient!  Use it with caution!"
 
 
 (defn get-stream
-  "Returns the given stream, or nil if it doesn't exist / isn't accessible to the authenticated connection user.
+  "Returns the given stream as a map, or nil if it doesn't exist / isn't accessible to the authenticated connection user.
 WARNING: this method is expensive and inefficient!  Use it with caution!"
   [connection stream-id]
   (streamobj->map (get-streamobj connection stream-id)))
