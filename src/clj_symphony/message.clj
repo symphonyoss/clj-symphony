@@ -31,14 +31,14 @@
   [^org.symphonyoss.symphony.clients.model.SymMessage message]
   (if message
     {
-      :message-id (.getId          message)
-      :timestamp  (java.util.Date. (Long/valueOf (.getTimestamp message)))
-      :stream-id  (.getStreamId    message)
-      :user-id    (.getFromUserId  message)
-      :format     (when-not (nil? (.getFormat message))
-                    (keyword (str (.getFormat message))))
-      :type       (.getMessageType message)   ; This seems to be null or blank most of the time...
-      :text       (.getMessage     message)
+      :message-id     (.getId          message)
+      :timestamp      (java.util.Date. (Long/valueOf (.getTimestamp message)))
+      :stream-id      (.getStreamId    message)
+      :user-id        (.getFromUserId  message)
+      :message-format (when-not (nil? (.getFormat message))
+                        (keyword (str (.getFormat message))))
+      :type           (.getMessageType message)   ; This seems to be null or blank most of the time...
+      :text           (.getMessage     message)
     }))
 
 
