@@ -27,37 +27,49 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
   (:require [clj-symphony.user :as syu]))
 
 
+(def stream-types
+  "The set of possible stream types in Symphony, as keywords."
+  (set (map #(keyword (str %)) (org.symphonyoss.symphony.clients.model.SymStreamType$Type/values))))
+
+
 (defn streamobj->map
-  "Converts a SymAdminStreamInfo object into a map."
-  [^org.symphonyoss.symphony.clients.model.SymAdminStreamInfo stream]
+  "Converts a SymStreamAttributes object into a map."
+  [^org.symphonyoss.symphony.clients.model.SymStreamAttributes stream]
   (if stream
     {
       :stream-id          (.getId               stream)
-      :created-by-user-id (.getCreatedByUserId  (.getAttributes stream))
-      :created-date       (.getCreatedDate      (.getAttributes stream))
-      :modified-date      (.getLastModifiedDate (.getAttributes stream))
-      :name               (.getRoomName         (.getAttributes stream))
-      :origin-company     (.getOriginCompany    (.getAttributes stream))
-      :origin-company-id  (.getOriginCompanyId  (.getAttributes stream))
-      :external           (.getIsExternal       stream)
-      :public             (.getIsPublic         stream)
-      :active             (.getIsActive         stream)
-      :type               (keyword (.getType    stream))
-      :members-count      (.getMembersCount     (.getAttributes stream))
-      :member-user-ids    (.getMembers          (.getAttributes stream))
+      :name               (if-let [room-attrs (.getSymRoomSpecificStreamAttributes stream)] (.getName room-attrs))
+      :active             (.getActive           stream)
+      :type               (when-not (nil? (.getSymStreamType stream))
+                            (keyword (str (.getType (.getSymStreamType stream)))))
+      :cross-pod          (.getCrossPod         stream)
+
+;      :created-by-user-id (.getCreatedByUserId  (.getAttributes stream))
+;      :created-date       (.getCreatedDate      (.getAttributes stream))
+;      :modified-date      (.getLastModifiedDate (.getAttributes stream))
+;      :name               (.getRoomName         (.getAttributes stream))
+;      :origin-company     (.getOriginCompany    (.getAttributes stream))
+;      :origin-company-id  (.getOriginCompanyId  (.getAttributes stream))
+;      :external           (.getIsExternal       stream)
+;      :public             (.getIsPublic         stream)
+;      :active             (.getIsActive         stream)
+;      :type               (keyword (.getType    stream))
+;      :members-count      (.getMembersCount     (.getAttributes stream))
+;      :member-user-ids    (.getMembers          (.getAttributes stream))
     }))
 
 
 (defn get-streamobjs
-  "Returns all SymAdminStreamInfo objects visible to the authenticated connection user."
+  "Returns a list of SymStreamAttributes objects visible to the authenticated connection user."
   [^org.symphonyoss.client.SymphonyClient connection]
-  (.getStreams (.getStreams (.getStreamsClient connection)
-                            nil
-                            nil
-                            (org.symphonyoss.symphony.clients.model.SymAdminStreamFilter.))))
+  (.getStreams (.getStreamsClient connection)
+               nil
+               nil
+               (org.symphonyoss.symphony.clients.model.SymStreamFilter.)))
+
 
 (defn get-streams
-  "Returns all streams visible to the authentication connection user."
+  "Returns all streams visible to the authenticated connection user."
   [connection]
   (map streamobj->map (get-streamobjs connection)))
 
@@ -65,10 +77,10 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 ; Note: currently SJC doesn't seem to offer any way to get stream information
 ; for a single stream, so we emulate it here until such time as it does
 (defn get-streamobj
-  "Returns the given stream as a SymAdminStreamInfo object, or nil if it doesn't exist / isn't accessible to the authenticated connection user.
+  "Returns the given stream as a SymStreamAttributes object, or nil if it doesn't exist / isn't accessible to the authenticated connection user.
 WARNING: this method is expensive and inefficient!  Use it with caution!"
   [connection ^String stream-id]
-  (first (filter #(= stream-id (.getId ^org.symphonyoss.symphony.clients.model.SymAdminStreamInfo %))
+  (first (filter #(= stream-id (.getId ^org.symphonyoss.symphony.clients.model.SymStreamAttributes %))
                  (get-streamobjs connection))))
 
 

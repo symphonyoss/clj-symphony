@@ -22,8 +22,7 @@
   3. MessageMLv2 (coming soon - stay tuned!)"
   (:require [clojure.string      :as s]
             [clj-symphony.user   :as syu]
-            [clj-symphony.stream :as sys]
-            [clj-symphony.chat   :as sych]))
+            [clj-symphony.stream :as sys]))
 
 
 (defn msgobj->map

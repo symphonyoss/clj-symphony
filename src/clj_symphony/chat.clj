@@ -17,8 +17,9 @@
 
 (ns clj-symphony.chat
   "Operations related to 'chats'.  A 'chat' may contain 2 or more participants from 1 or 2 pods, and are different to rooms in that their membership is fixed at creation time."
-  (:require [clj-symphony.user   :as syu]
-            [clj-symphony.stream :as sys]))
+  (:require [clj-symphony.user    :as syu]
+            [clj-symphony.stream  :as sys]
+            [clj-symphony.message :as sym]))
 
 
 (defn chatobj->map
@@ -26,10 +27,9 @@
   [^org.symphonyoss.client.model.Chat chat]
   (if chat
     {
-      :stream-id       (.getStreamId         chat)
-;      :last-message (sym/messageobj->map   (.getLastMessage chat))  ; ####TODO: once messages namespace is developed
-;      :other-users    (map userobj->map (.getRemoteUsers chat))
-      :other-user-ids (map #(.getId ^org.symphonyoss.symphony.clients.model.SymUser %) (.getRemoteUsers chat))
+      :stream-id    (.getStreamId         chat)
+      :last-message (sym/msgobj->map      (.getLastMessage chat))
+      :other-users  (map syu/userobj->map (.getRemoteUsers chat))
     }))
 
 
