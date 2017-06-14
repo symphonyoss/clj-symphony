@@ -24,7 +24,7 @@
   (if-let [pod-id (:pod-id params)]
     (dissoc (merge { :session-auth-url (str "https://" pod-id "-api.symphony.com/sessionauth")
                      :key-auth-url     (str "https://" pod-id "-api.symphony.com/keyauth")
-                     :agent-api-url    (str "https://" pod-id "-api.symphony.com/agent")
+                     :agent-api-url    (str "https://" pod-id ".symphony.com/agent")   ; Note: no -api as of v1.46
                      :pod-api-url      (str "https://" pod-id ".symphony.com/pod") }   ; Note: not -api !
                    params)
             :pod-id)

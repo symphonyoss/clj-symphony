@@ -103,13 +103,13 @@ The value returned by f (if any) is ignored."
   (let [listener (reify
                    org.symphonyoss.client.services.MessageListener
                    (onMessage [this msg]
-                    (f (msgobj->map msg))))]
+                     (f (msgobj->map msg))))]
     (.addMessageListener (.getMessageService connection) listener)
     listener))
 
 
 (defn deregister-listener
-  "Deregisters a previously-registered message listener.  Once deregistered, a listener should be discarded (they cannot be used again).
+  "Deregisters a previously-registered message listener.  Once deregistered, a listener should be discarded (they cannot be reused).
 Returns true if a valid message listener was deregistered, false otherwise."
   [^org.symphonyoss.client.SymphonyClient connection ^org.symphonyoss.client.services.MessageListener listener]
   (.removeMessageListener (.getMessageService connection) listener))
