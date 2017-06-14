@@ -55,6 +55,7 @@
 
 (defmulti send-message!
   "Sends the given message (a String) to the given target (chat, room, or stream)."
+  {:arglists '([connection target message])}
   (fn [connection target message] (type target)))
 
 (defmethod send-message! nil

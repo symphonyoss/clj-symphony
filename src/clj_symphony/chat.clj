@@ -50,6 +50,7 @@
 (defmulti get-chatobj
   "Returns a Chat object for the given chat identifier (as a stream id or map containing a :stream-id).
 Returns nil if the chat doesn't exist."
+  {:arglists '([connection chat-identifier])}
   (fn [connection chat-identifier] (type chat-identifier)))
 
 (defmethod get-chatobj nil

@@ -57,6 +57,8 @@ User can be specified either as a user id (Long) or an email address (String).
 Returns nil if the user doesn't exist.
 
 Note: providing a user identifier requires calls to the server."
+  {:arglists '([connection]
+               [connection user-identifier])}
   (fn
     ([connection]                 :current-user)
     ([connection user-identifier] (type user-identifier))))
@@ -95,18 +97,18 @@ Note: providing a user identifier requires calls to the server."
 
 (defn get-user
   "Returns a user for the given user identifier, or the authenticated connection user if a user id is not provided."
-  ([connection]   (userobj->map (get-userobj connection)))
-  ([connection u] (userobj->map (get-userobj connection u))))
+  ([connection]                 (userobj->map (get-userobj connection)))
+  ([connection user-identifier] (userobj->map (get-userobj connection  user-identifier))))
 
 
 (defn get-userobj-by-username
-  "Returns a SymUser object for the given a username, or nil if the user doesn't exist."
+  "Returns a SymUser object for the given username, or nil if the user doesn't exist."
   [^org.symphonyoss.client.SymphonyClient connection ^String username]
   (.getUserFromName (.getUsersClient connection) username))
 
 
 (defn get-user-by-username
-  "Returns a user for the given a username, or nil if the user doesn't exist."
+  "Returns a user for the given username, or nil if the user doesn't exist."
   [connection username]
   (userobj->map (get-userobj-by-username connection username)))
 
@@ -126,6 +128,8 @@ Note: providing a user identifier requires calls to the server."
 
 (defmulti presence
   "Returns the presence status of a single user, as a keyword.  If no user identifier is provided, returns the presence status of the authenticated connection user."
+  {:arglists '([connection]
+               [connection user-identifier])}
   (fn
     ([connection]                 :current-user)
     ([connection user-identifier] (type user-identifier))))
@@ -158,6 +162,8 @@ Note: providing a user identifier requires calls to the server."
 
 (defmulti set-presence!
   "Sets the presence status of the given user, or the authenticated connection user if not provided.  new-presence must be one of presence-states."
+  {:arglists '([connection new-presence]
+               [connection user-identifier new-presence])}
   (fn
     ([connection new-presence]                 :current-user)
     ([connection user-identifier new-presence] (type user-identifier))))

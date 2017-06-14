@@ -81,6 +81,7 @@ WARNING: this method is expensive and inefficient!  Use it with caution!"
 
 (defmulti get-userobjs-from-stream
   "Returns all SymUser objects participating in the given stream."
+  {:arglists '([connection stream-identifier])}
   (fn [connection stream-id] (type stream-id)))
 
 (defmethod get-userobjs-from-stream String
