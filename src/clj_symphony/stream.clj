@@ -38,24 +38,14 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
   (if stream
     {
       :stream-id          (.getId               stream)
-      :name               (if-let [room-attrs (.getSymRoomSpecificStreamAttributes stream)] (.getName room-attrs))
+      :name               (if-let [room-attrs (.getSymRoomSpecificStreamAttributes stream)]
+                            (.getName room-attrs))
       :active             (.getActive           stream)
       :type               (when-not (nil? (.getSymStreamType stream))
                             (keyword (str (.getType (.getSymStreamType stream)))))
       :cross-pod          (.getCrossPod         stream)
-
-;      :created-by-user-id (.getCreatedByUserId  (.getAttributes stream))
-;      :created-date       (.getCreatedDate      (.getAttributes stream))
-;      :modified-date      (.getLastModifiedDate (.getAttributes stream))
-;      :name               (.getRoomName         (.getAttributes stream))
-;      :origin-company     (.getOriginCompany    (.getAttributes stream))
-;      :origin-company-id  (.getOriginCompanyId  (.getAttributes stream))
-;      :external           (.getIsExternal       stream)
-;      :public             (.getIsPublic         stream)
-;      :active             (.getIsActive         stream)
-;      :type               (keyword (.getType    stream))
-;      :members-count      (.getMembersCount     (.getAttributes stream))
-;      :member-user-ids    (.getMembers          (.getAttributes stream))
+      :member-user-ids    (if-let [chat-attrs (.getSymChatSpecificStreamAttributes stream)]
+                            (.getMembers chat-attrs))
     }))
 
 
