@@ -45,7 +45,7 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
                             (keyword (str (.getType (.getSymStreamType stream)))))
       :cross-pod          (.getCrossPod         stream)
       :member-user-ids    (if-let [chat-attrs (.getSymChatSpecificStreamAttributes stream)]
-                            (.getMembers chat-attrs))
+                            (vec (.getMembers chat-attrs)))
     }))
 
 
