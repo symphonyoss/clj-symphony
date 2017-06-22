@@ -79,14 +79,14 @@ Note: providing a user identifier requires calls to the server."
   [^org.symphonyoss.client.SymphonyClient connection ^Long user-id]
   (try
     (.getUserFromId (.getUsersClient connection) user-id)
-    (catch org.symphonyoss.exceptions.UserNotFoundException unfe
+    (catch org.symphonyoss.client.exceptions.UserNotFoundException unfe
       nil)))
 
 (defmethod get-userobj String
   [^org.symphonyoss.client.SymphonyClient connection ^String user-email-address]
   (try
     (.getUserFromEmail (.getUsersClient connection) user-email-address)
-    (catch org.symphonyoss.exceptions.UserNotFoundException unfe
+    (catch org.symphonyoss.client.exceptions.UserNotFoundException unfe
       nil)))
 
 (defmethod get-userobj java.util.Map
@@ -118,13 +118,14 @@ Note: providing a user identifier requires calls to the server."
   (set (map #(keyword (str %)) (org.symphonyoss.symphony.pod.model.Presence$CategoryEnum/values))))
 
 
+(comment   ; Frank was asked to remove this from SJC circa v1.0.2...
 (defn presences
   "Returns the presence status of all users visible to the authenticated connection user, as a seq of maps with keys :user-id (value is a long) and :presence (value is a keyword)."
   [^org.symphonyoss.client.SymphonyClient connection]
   (map #(hash-map :user-id   (.getUid ^org.symphonyoss.symphony.pod.model.UserPresence %)
                   :presence (keyword (str (.getCategory ^org.symphonyoss.symphony.pod.model.UserPresence %))))
        (.getAllUserPresence (.getPresenceService connection))))
-
+)
 
 (defmulti presence
   "Returns the presence status of a single user, as a keyword.  If no user identifier is provided, returns the presence status of the authenticated connection user."
@@ -148,7 +149,7 @@ Note: providing a user identifier requires calls to the server."
 
 (defmethod presence Long
   [^org.symphonyoss.client.SymphonyClient connection ^Long user-id]
-  (keyword (str (.getCategory (.getUserPresence (.getPresenceService connection) user-id)))))
+  (keyword (str (.getCategory (.getUserPresence (.getPresenceClient connection) user-id)))))
 
 (defmethod presence String
   [connection ^String user-email-address]
