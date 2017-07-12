@@ -20,6 +20,7 @@
 1. 1:1 chat
 2. M:M chat
 3. room
+4. wall post
 
 The primary difference between chats and rooms is that rooms have dynamic membership whereas the membership of a chat is fixed at creation time.
 
