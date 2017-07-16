@@ -41,6 +41,11 @@
     }))
 
 
+(def message-formats
+  "The set of possible message formats in Symphony, as keywords."
+  (set (map #(keyword (str %)) (org.symphonyoss.symphony.clients.model.SymMessage$Format/values))))
+
+
 (defn- ^org.symphonyoss.symphony.clients.model.SymMessage build-sym-message
   [^String message]
   (let [msg (doto
