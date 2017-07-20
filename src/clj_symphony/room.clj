@@ -76,7 +76,7 @@
 
 
 (defn roomobjs
-  "Returns all SymRoomDetail objects for the authenticated connection user.
+  "Returns a lazy sequence containing all SymRoomDetail objects for the authenticated connection user.
 
 WARNING: this methods results in many calls to the server.  Use with caution!"
   [connection]
@@ -85,10 +85,11 @@ WARNING: this methods results in many calls to the server.  Use with caution!"
 
 
 (defn rooms
-  "Returns all rooms (as maps) for the authenticated connection user.
+  "Returns a lazy sequence containing all rooms (as maps) for the authenticated connection user.
 
 WARNING: this methods results in many calls to the server.  Use with caution!"
-  [connection] (map roomobj->map (roomobjs connection)))
+  [connection]
+  (map roomobj->map (roomobjs connection)))
 
 
 (defn room-members
@@ -153,7 +154,8 @@ WARNING: this methods results in many calls to the server.  Use with caution!"
 (defn deactivate-room!
   "Deactivates the given room."
   [^org.symphonyoss.client.SymphonyClient connection room]
-  (.deactivateRoom (.getStreamsClient connection) (sys/stream-id room)))
+  (.deactivateRoom (.getStreamsClient connection) (sys/stream-id room))
+  nil)
 
 
 (defn add-user-to-room!
@@ -163,13 +165,15 @@ WARNING: this methods results in many calls to the server.  Use with caution!"
         user-id   (if (instance? String user)
                     (syu/user-id (syu/user connection user))
                     (syu/user-id user))]
-    (.addMemberToRoom (.getRoomMembershipClient connection) stream-id user-id)))
+    (.addMemberToRoom (.getRoomMembershipClient connection) stream-id user-id)
+    nil))
 
 
 (defn add-users-to-room!
-  "Add all of the users to the given room."
+  "Add all of the provided users to the given room."
   [connection room users]
-  (map (partial add-user-to-room! connection room) users))
+  (doall (map (partial add-user-to-room! connection room) users))
+  nil)
 
 
 (defn remove-user-from-room!
@@ -179,10 +183,12 @@ WARNING: this methods results in many calls to the server.  Use with caution!"
         user-id   (if (instance? String user)
                     (syu/user-id (syu/user connection user))
                     (syu/user-id user))]
-    (.removeMemberFromRoom (.getRoomMembershipClient connection) stream-id user-id)))
+    (.removeMemberFromRoom (.getRoomMembershipClient connection) stream-id user-id)
+    nil))
 
 
-(defn remove-users-from-room
-  "Remove all of the users from the given room."
+(defn remove-users-from-room!
+  "Remove all of the provided users from the given room."
   [connection room users]
-  (map (partial remove-user-from-room! connection room) users))
+  (doall (map (partial remove-user-from-room! connection room) users))
+  nil)

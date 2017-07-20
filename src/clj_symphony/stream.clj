@@ -30,7 +30,7 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 
 (def stream-types
   "The set of possible stream types in Symphony, as keywords."
-  (set (map #(keyword (str %)) (org.symphonyoss.symphony.clients.model.SymStreamType$Type/values))))
+  (set (map #(keyword (str %)) (org.symphonyoss.symphony.clients.model.SymStreamTypes$Type/values))))
 
 
 (defn streamobj->map
@@ -42,8 +42,8 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
       :name               (if-let [room-attrs (.getSymRoomSpecificStreamAttributes stream)]
                             (.getName room-attrs))
       :active             (.getActive           stream)
-      :type               (when-not (nil? (.getSymStreamType stream))
-                            (keyword (str (.getType (.getSymStreamType stream)))))
+      :type               (when-not (nil? (.getSymStreamTypes stream))
+                            (keyword (str (.getType (.getSymStreamTypes stream)))))
       :cross-pod          (.getCrossPod         stream)
       :member-user-ids    (if-let [chat-attrs (.getSymChatSpecificStreamAttributes stream)]
                             (vec (.getMembers chat-attrs)))
