@@ -55,7 +55,7 @@ Note: if :pod-id is not provided, :session-auth-url and :key-auth-url and :agent
         user-email       (:user-email       params)
         http-client      (org.symphonyoss.client.impl.CustomHttpClient/getClient (first user-cert)   (second user-cert)
                                                                                  (first trust-store) (second trust-store))
-        connection       (doto (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/BASIC)
+        connection       (doto (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/V4)
                            (.setDefaultHttpClient http-client))
         auth-client      (org.symphonyoss.symphony.clients.AuthorizationClient. session-auth-url key-auth-url http-client)
         auth             (.authenticate auth-client)
