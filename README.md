@@ -39,22 +39,26 @@ The functionality is provided by several `clj-symphony._____` namespaces.
 Require them in the REPL (incl. a `lein try` REPL):
 
 ```clojure
-(require '[clj-symphony.connect :as syc]  :reload-all)
-(require '[clj-symphony.user    :as syu]  :reload-all)
-(require '[clj-symphony.stream  :as sys]  :reload-all)
-(require '[clj-symphony.chat    :as sych] :reload-all)
-(require '[clj-symphony.message :as sym]  :reload-all)
+(require '[clj-symphony.connect         :as syc]  :reload-all)
+(require '[clj-symphony.user            :as syu]  :reload-all)
+(require '[clj-symphony.stream          :as sys]  :reload-all)
+(require '[clj-symphony.chat            :as sych] :reload-all)
+(require '[clj-symphony.room            :as syrm] :reload-all)
+(require '[clj-symphony.message         :as sym]  :reload-all)
+(require '[clj-symphony.user-connection :as syuc] :reload-all)
 ```
 
 Require them in your project:
 
 ```clojure
 (ns my-app.core
-  (:require [clj-symphony.connect :as syc]
-            [clj-symphony.user    :as syu]
-            [clj-symphony.stream  :as sys]
-            [clj-symphony.chat    :as sych]
-            [clj-symphony.message :as sym]))
+  (:require [clj-symphony.connect         :as syc]
+            [clj-symphony.user            :as syu]
+            [clj-symphony.stream          :as sys]
+            [clj-symphony.chat            :as sych]
+            [clj-symphony.room            :as syrm]
+            [clj-symphony.message         :as sym]
+            [clj-symphony.user-connection :as syuc]))
 ```
 
 [Detailed API documentation is published here](https://symphonyoss.github.io/clj-symphony/).
