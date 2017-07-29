@@ -17,7 +17,7 @@
 ;
 
 (ns clj-symphony.user-connection
-  "Operations related to user connections, which are user relationships that may cross pod boundaries, and requests for user connections."
+  "Operations related to user connections and requests for those connections.  In Symphony, a user connection is an explicitly established relationship between users in different pods."
   (:require [clj-symphony.user :as syu]))
 
 
