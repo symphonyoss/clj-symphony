@@ -29,7 +29,7 @@ deploy:
     skip_cleanup: true
     github_token: $GITHUB_TOKEN
     email: travis+clj-symphony@symphony.foundation
-    name: TravisCI - Symphony Software Foundation
+    name: Travis CI - Symphony Software Foundation
     local_dir: target/doc
     on:
       branch: master
