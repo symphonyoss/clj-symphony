@@ -5,7 +5,7 @@ jdk:
 lein: lein2
 script: lein2 check
 
-after_success: lein2 deploy
+after_success: lein2 do deploy, codox, github-cdn
 
 notifications:
   webhooks: https://foundation.symphony.com/integration/v1/whi/simpleWebHookIntegration/58ae440fe4b0d18517ab5177/58af9f79e4b0d18517ab51a9
