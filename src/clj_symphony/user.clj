@@ -40,7 +40,7 @@
 
 
 (defmulti user-id
-  "Returns the user id of the given item."
+  "Returns the id (a Long) of the given user."
   {:arglists '([user])}
   (fn ([user] (type user))))
 
@@ -62,7 +62,7 @@
 
 
 (defn userobjs
-  "Returns all users in the pod, as SymUser objects.  Will throw an exception if the authenticated connection user doesn't have sufficient permissions."
+  "Returns all users in the pod, as org.symphonyoss.symphony.clients.model.SymUser objects.  Will throw an exception if the authenticated connection user doesn't have sufficient permissions."
   [^org.symphonyoss.client.SymphonyClient connection]
   (.getAllUsers (.getUsersClient connection)))
 
@@ -73,9 +73,8 @@
   (map userobj->map (userobjs connection)))
 
 
-
 (defmulti userobj
-  "Returns a SymUser object for the given user identifier, or the authenticated connection user if a user id is not provided. User can be specified either as a user id (Long) or an email address (String). Returns nil if the user doesn't exist.
+  "Returns a org.symphonyoss.symphony.clients.model.SymUser object for the given user identifier, or the authenticated connection user if a user id is not provided. User can be specified either as a user id (Long) or an email address (String). Returns nil if the user doesn't exist.
 
 Note: providing a user identifier requires calls to the server."
   {:arglists '([connection]
@@ -123,7 +122,7 @@ Note: providing a user identifier requires calls to the server."
 
 
 (defn userobj-by-username
-  "Returns a SymUser object for the given username, or nil if the user doesn't exist."
+  "Returns a org.symphonyoss.symphony.clients.model.SymUser object for the given username, or nil if the user doesn't exist."
   [^org.symphonyoss.client.SymphonyClient connection ^String username]
   (.getUserFromName (.getUsersClient connection) username))
 
@@ -132,6 +131,22 @@ Note: providing a user identifier requires calls to the server."
   "Returns a user for the given username, or nil if the user doesn't exist."
   [connection username]
   (userobj->map (userobj-by-username connection username)))
+
+
+(defn same-pod?
+  "Returns true if the given user is in the same pod as the authenticated connection user, or nil if the user doesn't exist."
+  [connection user-identifier]
+  (let [me (user connection)]
+    (if-let [them (user connection user-identifier)]
+      (= (:company me) (:company them)))))
+
+
+(defn cross-pod?
+  "Returns true if the given user is in a different pod to the authenticated connection user, or nil if the user doesn't exist."
+  [connection user-identifier]
+  (let [me (user connection)]
+    (if-let [them (user connection user-identifier)]
+      (not= (:company me) (:company them)))))
 
 
 (def presence-states
