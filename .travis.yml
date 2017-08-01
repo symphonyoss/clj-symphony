@@ -11,14 +11,25 @@ env:
 
 script: lein2 check
 
-after_success: lein2 do deploy, codox
-
 deploy:
-  provider: pages
-  skip_cleanup: true
-  github_token: $GITHUB_TOKEN
-  email: travis+clj-symphony@symphony.foundation
-  name: TravisCI - Symphony Software Foundation
-  local_dir: target/doc
-  on:
-    branch: master
+  # Deploy binaries to Clojars
+  - provider: script
+    skip_cleanup: true
+    script: lein2 deploy
+    on:
+      branch: master
+  # Generate documentation
+  - provider: script
+    skip_cleanup: true
+    script: lein2 codox
+    on:
+      branch: master
+  # Deploy documentation
+  - provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    email: travis+clj-symphony@symphony.foundation
+    name: TravisCI - Symphony Software Foundation
+    local_dir: target/doc
+    on:
+      branch: master
