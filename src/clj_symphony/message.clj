@@ -49,10 +49,11 @@
 
 
 (defn- ^org.symphonyoss.symphony.clients.model.SymMessage build-sym-message
-  [^String message]
+  [^String message ^String entity-data]
   (let [msg (doto
               (org.symphonyoss.symphony.clients.model.SymMessage.)
-              (.setMessage message))]
+              (.setMessage    message)
+              (.setEntityData entity-data))]
     (if (.startsWith message "<messageML>")
       (.setFormat msg org.symphonyoss.symphony.clients.model.SymMessage$Format/MESSAGEML)
       (.setFormat msg org.symphonyoss.symphony.clients.model.SymMessage$Format/TEXT))
@@ -60,15 +61,20 @@
 
 
 (defn send-message!
-  "Sends the given message (a String) to the given target (chat, room, or stream)."
-  [^org.symphonyoss.client.SymphonyClient connection target ^String message]
-  (let [stream-id (sys/stream-id target)
-        stream    (doto (org.symphonyoss.symphony.pod.model.Stream.)
-                    (.setId stream-id))]
-    (.sendMessage (.getMessagesClient connection)
-                  stream
-                  (build-sym-message message))
-    nil))
+  "Sends the given message (a String), optionally including entity data (a String containing JSON) to the given target (chat, room, or stream).
+
+See:
+  * https://rest-api.symphony.com/docs/messagemlv2 for details on MessageMLv2's formatting capabilities
+  * https://rest-api.symphony.com/v1.46/docs/objects for details on MessageMLv2's entity data capabilities"
+  ([connection target message] (send-message! connection target message nil))
+  ([^org.symphonyoss.client.SymphonyClient connection target ^String message ^String entity-data]
+   (let [stream-id (sys/stream-id target)
+         stream    (doto (org.symphonyoss.symphony.pod.model.Stream.)
+                     (.setId stream-id))]
+     (.sendMessage (.getMessagesClient connection)
+                   stream
+                   (build-sym-message message entity-data))
+     nil)))
 
 
 (defn register-listener
