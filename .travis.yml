@@ -6,21 +6,19 @@ lein: lein2
 
 env:
   global:
-    # - travis encrypt GIT_TOKEN=...
-    - secure: "faKmhilhriICen4xQeQukU5Xr2suCZ8KQMFyBfURdaYLHhs8LliDxMJCbQPwOwo0UkQ8rYIVBM+r2VOK6xQitiNNpe+nPgbCA7ku/QNk+1sy4oCfqJWo1mo/2xNMNgkFpTLxKz/qev0TwHrYlIbCNbHErmAtWXv4+x2pQMqd5gi75vJj+BaqXVOukwfAnLLp4MAPFDLPWKLcNCWpw5gaEPyxmmEt2kw4ejDMGCb0CS956u2LvTJpY8JEx2cX9oqQkTFM7Qv3rSvKchJtdPKrmfw0e1XhGnvkErwxDGRJYYHHueg717PzQMziu4A+Sb4jZLCZdLv2OnMuiyT0AWolqlmVquOCvRSRljjmTyst9TMaxJQku0Q++J3M0SnNYJLIHPNjzbTI75LIKN0HiPMLJr+5eeyULqShSms02aioO3DeVE42XbWMUi2ejLPoLJzlDdtJyQl1kU59gbOh4IYllUKdlzqGqwHJHRO7ex2UIzqtYiqAH3jL+65pBRKNELf46Kf0n4C/kM1EWx7NQfnE1lJLXUbQqfMXT7S3wSlPJezp44frIKCbdueWxbIHxsoqk/E7JIEnKsK8shf5g4NXw8XIP9FTx2Kk/gT8q8YpbENd2cx96hvI3FDQz9jd6Hz/L/Nn/xBr8G/FV7EyEhWtuIWFUIVJ3MkPTwaWaTuyV24="
-    - GIT_ORG: symphonyoss
-    - GIT_REPO: clj-symphony
-    - GIT_BRANCH: gh-pages
-    - GIT_USER_NAME: Travis CI Foundation
-    - GIT_USER_EMAIL: travis+clj-symphony@symphony.foundation
-    - FILES_TO_PUSH: target/doc
+    # Encrypted GITHUB_TOKEN for gh-pages deployment
+    - secure: "DyEoEUrxq3axPX6cX1zUqgdlcpXtA8YG56QuNWtFRtAIwYwyAe47owUQJrAFHFPNmuLUhAlQnC9Lb+MzkR187dsKLoNb4/mJP50PZdPqDAo1XYZIfZXQc6CXjq0UV4B1I2P2TKnur5QcIk5SaFuoePzqudyow1c0b8PHg9jLb6U5NPUs4bzVQ0ntuqok+5IiHKsS2xUUGn1jRYSYUZkEQDjya9XOFW+7hPbGaSb3n7c1a/CbsTeRW0mxHWxMwm8qMF7up9s+ApByqqWVnTng+ce+qYaoMNAQDHe+Sp3A7E2tnwK61qvlsbiYij8FP+MLURBijcrshcheDHikl5NhOZofrD0Bgx+PWtzyOeAcIZ38Ubqx6SYbYHkKnms+btRn0p7F+ClKDThebPcnFvlQWnUTLhVjXPQqIOBQOjOtmmE3eD2dAREcbre0mzLKObGa+IscZZ72rqtzSNyzDcgyqyzg/wYqw7POefGngI6y6qOsRHwrMRhAKx5A238KHgH4Wh3H1sgiwxsF7P0HGqmPGes9F65mzF3fV3el8HGsjE3oMYhViImyhiN37ONE1rDfuL6f0VGnZFDkV4zP7tySq+UKThjCkGmXhmrP2gHo6n8LDiA4tD0VMmSY4Hn8l8wbIYTlMMgVX5wisQ8Cy6vSZfBNcVR/WNpOoh4644W6isA="
 
 script: lein2 check
 
-after_success: lein2 do deploy, codox && "curl -L https://raw.githubusercontent.com/symphonyoss/contrib-toolbox/master/scripts/push-to-git.sh | bash"
+after_success: lein2 do deploy, codox
 
-# Notifies the Foundation pod, but it's a little noisy so it's suppressed (for now)
-#notifications:
-#  webhooks: https://foundation.symphony.com/integration/v1/whi/simpleWebHookIntegration/58ae440fe4b0d18517ab5177/58af9f79e4b0d18517ab51a9
-
-
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  email: travis+clj-symphony@symphony.foundation
+  name: TravisCI - Symphony Software Foundation
+  local_dir: target/doc
+  on:
+    branch: master
