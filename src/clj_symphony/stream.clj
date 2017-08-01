@@ -34,7 +34,7 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 
 
 (defn streamobj->map
-  "Converts a SymStreamAttributes object into a map."
+  "Converts a org.symphonyoss.symphony.clients.model.SymStreamAttributes object into a map."
   [^org.symphonyoss.symphony.clients.model.SymStreamAttributes stream]
   (if stream
     {
@@ -85,7 +85,7 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 
 
 (defn streamobjs
-  "Returns a list of SymStreamAttributes objects visible to the authenticated connection user."
+  "Returns a list of org.symphonyoss.symphony.clients.model.SymStreamAttributes objects visible to the authenticated connection user."
   [^org.symphonyoss.client.SymphonyClient connection]
   (.getStreams (.getStreamsClient connection)
                nil
@@ -94,7 +94,7 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 
 
 (defn streams
-  "Returns all streams visible to the authenticated connection user."
+  "Returns a lazy sequence of streams visible to the authenticated connection user."
   [connection]
   (map streamobj->map (streamobjs connection)))
 
@@ -102,7 +102,7 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 ; Note: currently SJC doesn't seem to offer any way to get stream information
 ; for a single stream, so we emulate it here until such time as it does
 (defn streamobj
-  "Returns the given stream as a SymStreamAttributes object, or nil if it doesn't exist / isn't accessible to the authenticated connection user.
+  "Returns the given stream as a org.symphonyoss.symphony.clients.model.SymStreamAttributes object, or nil if it doesn't exist / isn't accessible to the authenticated connection user.
 WARNING: this method is expensive and inefficient!  Use it with caution!"
   [connection ^String stream-id]
   (first (filter #(= stream-id (.getId ^org.symphonyoss.symphony.clients.model.SymStreamAttributes %))
@@ -117,12 +117,12 @@ WARNING: this method is expensive and inefficient!  Use it with caution!"
 
 
 (defn usersobjs-from-stream
-  "Returns all SymUser objects participating in the given stream."
+  "Returns all org.symphonyoss.symphony.clients.model.SymUser objects participating in the given stream."
   [^org.symphonyoss.client.SymphonyClient connection stream]
   (.getUsersFromStream (.getUsersClient connection) (stream-id stream)))
 
 
 (defn users-from-stream
-  "Returns all users participating in the given stream."
+  "Returns all users participating in the given stream, as maps (see clj-symphony.user/userobj->map for details)."
   [connection stream]
   (map syu/userobj->map (usersobjs-from-stream connection stream)))

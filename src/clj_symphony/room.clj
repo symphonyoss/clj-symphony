@@ -108,7 +108,7 @@ WARNING: this methods results in many calls to the server.  Use with caution!"
   :discoverable       Boolean indicating whether the room is discoverable (searchable).
   :copy-protected     Boolean indicating whether the room is copy protected.
   :can-members-invite Boolean indicating whether members can invite others to the room.
-  :keywords           A map containing 'keywords' (key/value pairs) for the room.
+  :keywords           A map containing 'keywords' (key/value pairs, both of which must be strings) for the room.
 
 :name is mandatory (it must be present and cannot be nil)."
   {:arglists '([connection room-details])}
