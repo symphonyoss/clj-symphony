@@ -27,8 +27,7 @@
                          ["jitpack"            {:url "https://jitpack.io"                             :snapshots true}]
                        ]
   :plugins             [
-                         [lein-codox        "0.10.3"]
-                         [katlex/github-cdn "0.1.4"]
+                         [lein-codox "0.10.3"]
                        ]
   :dependencies        [
                          [org.clojure/clojure                      "1.8.0"]
@@ -52,5 +51,4 @@
                          :source-uri "https://github.com/symphonyoss/clj-symphony/blob/master/{filepath}#L{line}"
 ;                         :source-uri "https://github.com/symphonyoss/clj-symphony/blob/{version}/{filepath}#L{line}"
 ;                         :metadata   {:doc/format :markdown}
-                       }
-  :github-cdn          {:dir "target/doc/"})
+                       })

@@ -3,9 +3,24 @@ sudo: false
 jdk:
   - oraclejdk8
 lein: lein2
+
+env:
+  global:
+    # - travis encrypt GIT_TOKEN=...
+    - secure: "faKmhilhriICen4xQeQukU5Xr2suCZ8KQMFyBfURdaYLHhs8LliDxMJCbQPwOwo0UkQ8rYIVBM+r2VOK6xQitiNNpe+nPgbCA7ku/QNk+1sy4oCfqJWo1mo/2xNMNgkFpTLxKz/qev0TwHrYlIbCNbHErmAtWXv4+x2pQMqd5gi75vJj+BaqXVOukwfAnLLp4MAPFDLPWKLcNCWpw5gaEPyxmmEt2kw4ejDMGCb0CS956u2LvTJpY8JEx2cX9oqQkTFM7Qv3rSvKchJtdPKrmfw0e1XhGnvkErwxDGRJYYHHueg717PzQMziu4A+Sb4jZLCZdLv2OnMuiyT0AWolqlmVquOCvRSRljjmTyst9TMaxJQku0Q++J3M0SnNYJLIHPNjzbTI75LIKN0HiPMLJr+5eeyULqShSms02aioO3DeVE42XbWMUi2ejLPoLJzlDdtJyQl1kU59gbOh4IYllUKdlzqGqwHJHRO7ex2UIzqtYiqAH3jL+65pBRKNELf46Kf0n4C/kM1EWx7NQfnE1lJLXUbQqfMXT7S3wSlPJezp44frIKCbdueWxbIHxsoqk/E7JIEnKsK8shf5g4NXw8XIP9FTx2Kk/gT8q8YpbENd2cx96hvI3FDQz9jd6Hz/L/Nn/xBr8G/FV7EyEhWtuIWFUIVJ3MkPTwaWaTuyV24="
+    - GIT_ORG: symphonyoss
+    - GIT_REPO: clj-symphony
+    - GIT_BRANCH: gh-pages
+    - GIT_USER_NAME: Travis CI Foundation
+    - GIT_USER_EMAIL: travis+clj-symphony@symphony.foundation
+    - FILES_TO_PUSH: target/doc
+
 script: lein2 check
 
-after_success: lein2 do deploy, codox, github-cdn
+after_success: lein2 do deploy, codox && "curl -L https://raw.githubusercontent.com/symphonyoss/contrib-toolbox/master/scripts/push-to-git.sh | bash"
 
-notifications:
-  webhooks: https://foundation.symphony.com/integration/v1/whi/simpleWebHookIntegration/58ae440fe4b0d18517ab5177/58af9f79e4b0d18517ab51a9
+# Notifies the Foundation pod, but it's a little noisy so it's suppressed (for now)
+#notifications:
+#  webhooks: https://foundation.symphony.com/integration/v1/whi/simpleWebHookIntegration/58ae440fe4b0d18517ab5177/58af9f79e4b0d18517ab51a9
+
+
