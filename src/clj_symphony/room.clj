@@ -23,7 +23,7 @@
 
 
 (defn roomobj->map
-  "Converts a Room object into a map."
+  "Converts a org.symphonyoss.symphony.clients.model.SymRoomDetail object into a map."
   [^org.symphonyoss.symphony.clients.model.SymRoomDetail room]
   (if room
     (let [sys-info (.getRoomSystemInfo room)
@@ -47,7 +47,7 @@
 
 
 (defmulti roomobj
-  "Returns a SymRoomDetail object for the given room identifier (as a stream id or map containing a :stream-id). Returns nil if the room doesn't exist."
+  "Returns a org.symphonyoss.symphony.clients.model.SymRoomDetail object for the given room identifier (as a stream id or map containing a :stream-id). Returns nil if the room doesn't exist."
   {:arglists '([connection room-identifier])}
   (fn [connection room-identifier] (type room-identifier)))
 
@@ -76,7 +76,7 @@
 
 
 (defn roomobjs
-  "Returns a lazy sequence containing all SymRoomDetail objects for the authenticated connection user.
+  "Returns a lazy sequence containing all org.symphonyoss.symphony.clients.model.SymRoomDetail objects for the authenticated connection user.
 
 WARNING: this methods results in many calls to the server.  Use with caution!"
   [connection]
@@ -99,8 +99,36 @@ WARNING: this methods results in many calls to the server.  Use with caution!"
 ;  (.getRoomMembership (.getRoomMembershipClient connection) (sys/stream-id room))
 
 
-(defmulti create-room-obj!
-  "Creates a new room and returns the SymRoomDetail object for it. The details of the room can be provided as a org.symphonyoss.symphony.clients.model.SymRoomAttributes object, or a map with these keys:
+(defn- build-sym-room-attributes-obj
+  [mode {:keys [name
+                description
+                public
+                read-only
+                discoverable
+                copy-protected
+                can-members-invite
+                keywords]}]
+  (let [keywords-obj (if keywords
+                       (map #(doto (org.symphonyoss.symphony.clients.model.SymRoomTag.)
+                               (.setKey   (clojure.core/name (first %)))
+                               (.setValue (str (second %))))
+                            keywords))
+        result       (doto (org.symphonyoss.symphony.clients.model.SymRoomAttributes.)
+                       (.setName             name)
+                       (.setDescription      description)
+                       (.setKeywords         keywords-obj)
+                       (.setDiscoverable     discoverable)
+                       (.setCopyProtected    copy-protected)
+                       (.setMembersCanInvite can-members-invite))]
+    (if (= :create mode)   ; Set creation-only properties - these ones can't be changed post-creation
+      (doto result
+        (.setPublic   public)
+        (.setReadOnly read-only))
+      result)))
+
+
+(defmulti create-roomobj!
+  "Creates a new room and returns the org.symphonyoss.symphony.clients.model.SymRoomDetail object for it. The details of the room can be provided as a org.symphonyoss.symphony.clients.model.SymRoomAttributes object, or a map with these keys:
   :name               Name of the room.
   :description        Description of the room.
   :public             Boolean indicating whether the room is 'public' (i.e. cross-pod enabled).
@@ -114,41 +142,34 @@ WARNING: this methods results in many calls to the server.  Use with caution!"
   {:arglists '([connection room-details])}
   (fn [connection room-details] (type room-details)))
 
-(defmethod create-room-obj! org.symphonyoss.symphony.clients.model.SymRoomAttributes
+(defmethod create-roomobj! org.symphonyoss.symphony.clients.model.SymRoomAttributes
   [^org.symphonyoss.client.SymphonyClient                    connection
    ^org.symphonyoss.symphony.clients.model.SymRoomAttributes room-details]
   (.createChatRoom (.getStreamsClient connection) room-details))
 
-(defmethod create-room-obj! java.util.Map
-  [connection {:keys [name
-                      description
-                      public
-                      read-only
-                      discoverable
-                      copy-protected
-                      can-members-invite
-                      keywords]}]
-  (let [keywords-obj (if keywords
-                       (map #(doto (org.symphonyoss.symphony.clients.model.SymRoomTag.)
-                               (.setKey   (clojure.core/name (first %)))
-                               (.setValue (str (second %))))
-                            keywords))
-        room-details (doto (org.symphonyoss.symphony.clients.model.SymRoomAttributes.)
-                       (.setName             name)
-                       (.setDescription      description)
-                       (.setPublic           public)
-                       (.setReadOnly         read-only)
-                       (.setDiscoverable     discoverable)
-                       (.setCopyProtected    copy-protected)
-                       (.setMembersCanInvite can-members-invite)
-                       (.setKeywords         keywords-obj))]
-    (create-room-obj! connection room-details)))
+(defmethod create-roomobj! java.util.Map
+  [connection room-details-map]
+  (create-roomobj! connection (build-sym-room-attributes-obj :create room-details-map)))
 
 
 (defn create-room!
-  "Create a new room, returning it as a map.  See clj-symphony.room/create-room-obj! for details on 'room-details'."
+  "Create a new room, returning it as a map.  See clj-symphony.room/create-roomobj! for details on 'room-details'."
   [connection room-details]
-  (roomobj->map (create-room-obj! connection room-details)))
+  (roomobj->map (create-roomobj! connection room-details)))
+
+
+(defn update-room!
+  "Updates the details of an existing room, returning the it as a map. room-details is a map with these keys (the additional flags available during creation cannot be modified):
+  :stream-id          The stream id of the room.
+  :name               The new name for the room.
+  :description        The new description of the room.
+  :discoverable       Boolean indicating whether the room is to become discoverable (searchable).
+  :copy-protected     Boolean indicating whether the room is to become copy protected.
+  :can-members-invite Boolean indicating whether members will be allowed to invite others to the room.
+  :keywords           A map containing the new 'keywords' (key/value pairs, both of which must be strings) for the room."
+  [^org.symphonyoss.client.SymphonyClient connection room-details]
+  (if-let [stream-id (:stream-id room-details)]
+    (roomobj->map (.updateChatRoom (.getStreamsClient connection) stream-id (build-sym-room-attributes-obj :update room-details)))))
 
 
 (defn deactivate-room!
