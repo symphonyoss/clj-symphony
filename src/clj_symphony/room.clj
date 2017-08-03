@@ -159,7 +159,7 @@ WARNING: this methods results in many calls to the server.  Use with caution!"
 
 
 (defn update-room!
-  "Updates the details of an existing room, returning the it as a map. room-details is a map with these keys (the additional flags available during creation cannot be modified):
+  "Updates the details of an existing room, returning it as a map. room-details is a map with these keys (the additional flags available during creation cannot be modified):
   :stream-id          The stream id of the room.
   :name               The new name for the room.
   :description        The new description of the room.
