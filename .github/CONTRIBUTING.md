@@ -39,7 +39,6 @@ To make review of PRs easier, please:
  * Minimise non-functional changes (e.g. whitespace shenanigans).
  * Ensure all new files include a header comment block containing the [Apache License v2.0 and your copyright information](http://www.apache.org/licenses/LICENSE-2.0#apply).
  * If necessary (e.g. due to 3rd party dependency licensing requirements), update the [NOTICE file](https://github.com/symphonyoss/clj-symphony/blob/master/NOTICE) with any new attribution or other notices
- * If your contribution includes source code for any Category B-licensed dependencies, add an appropriate notice to this CONTRIBUTING file
 
 
 ## Commit and PR Messages
