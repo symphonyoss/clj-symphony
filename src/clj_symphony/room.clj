@@ -123,8 +123,8 @@ WARNING: this methods results in many calls to the server.  Use with caution!"
     (if (= :create mode)   ; Set creation-only properties - these ones can't be changed post-creation
       (doto result
         (.setPublic   public)
-        (.setReadOnly read-only))
-      result)))
+        (.setReadOnly read-only)))
+    result))
 
 
 (defmulti create-roomobj!
