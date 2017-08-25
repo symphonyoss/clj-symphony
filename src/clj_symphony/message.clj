@@ -39,7 +39,7 @@
       :type           (.getMessageType message)   ; This seems to be null or blank most of the time...
       :text           (.getMessage     message)
       :attachment     (.getAttachment  message)
-      :entity-date    (.getEntityData  message)
+      :entity-data    (.getEntityData  message)
     }))
 
 
