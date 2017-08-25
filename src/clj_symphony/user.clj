@@ -133,6 +133,61 @@ Note: providing a user identifier requires calls to the server."
   (userobj->map (userobj-by-username connection username)))
 
 
+(defn- build-sym-user-obj
+  [mode {:keys [username
+                email-address
+                title
+                first-name
+                last-name
+                display-name
+                company
+                location
+                avatars]}]
+  (let [avatars-obj (if avatars
+                       (map #(doto (org.symphonyoss.symphony.clients.model.SymAvatar.)
+                               (.setSize (:size %))
+                               (.setUrl  (:url  %)))
+                            avatars))
+        result       (doto (org.symphonyoss.symphony.clients.model.SymUser.)
+                       (.setUsername     username)
+                       (.setEmailAddress email-address)
+                       (.setTitle        title)
+                       (.setFirstName    first-name)
+                       (.setLastName     last-name)
+                       (.setDisplayName  display-name)
+                       (.setCompany      company)
+                       (.setLocation     location)
+                       (.setAvatars      avatars-obj))]
+    (if (= :create mode)   ; Set creation-only properties - these ones can't be changed post-creation
+      (comment
+      (doto result
+;        (.setPublic   public)
+;        (.setReadOnly read-only)
+      )
+      ))
+    result))
+
+
+(defn update-user!
+  "Updates the details of an existing user, returning it as a map. user-details is a map with these keys:
+  :user-id       The id of the user to update.
+  :username      The new username of the user.  #### This might be create-only?
+  :email-address The new email address of the user.
+  :title         The new title of the user.
+  :first-name    The new first name of the user.
+  :last-name     The new last name of the user.
+  :display-name  The new display name of the user.
+  :company       The new company of the user.  #### This might be read-only?
+  :location      The new location of the user.
+  :avatars       A sequence of avatar maps, each of which contains these keys:
+    :size        The 'size string' of the avatar (e.g. 'small', 'original')
+    :url         The URL of the new avatar image file.
+Note: calling this method requires the user administration entitlement."
+  [^org.symphonyoss.client.SymphonyClient connection user-details]
+  (if-let [user-id (:user-id user-details)]
+    (userobj->map (.updateUser (.getUsersClient connection) user-id (build-sym-user-obj :update user-details)))))
+
+
 (defn same-pod?
   "Returns true if the given user is in the same pod as the authenticated connection user, or nil if the user doesn't exist."
   [connection user-identifier]
