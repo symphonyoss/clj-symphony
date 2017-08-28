@@ -11,6 +11,8 @@ env:
 
 script: lein check
 
+after_success: lein pom && mvn org.whitesource:whitesource\-maven\-plugin:3.2.9:update -Dorg.whitesource.orgToken=$WHITESOURCE_TOKEN
+
 deploy:
   # Deploy binaries to Clojars
   - provider: script
