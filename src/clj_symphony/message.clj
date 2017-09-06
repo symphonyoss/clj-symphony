@@ -65,7 +65,7 @@
 
 See:
   * https://rest-api.symphony.com/docs/messagemlv2 for details on MessageMLv2's formatting capabilities
-  * https://rest-api.symphony.com/v1.46/docs/objects for details on MessageMLv2's entity data capabilities"
+  * https://rest-api.symphony.com/docs/objects for details on MessageMLv2's entity data capabilities"
   ([connection target message] (send-message! connection target message nil))
   ([^org.symphonyoss.client.SymphonyClient connection target ^String message ^String entity-data]
    (let [stream-id (sys/stream-id target)
