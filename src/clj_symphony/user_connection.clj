@@ -131,12 +131,12 @@
 
 
 (defn accept-all-connection-requests!
-  "Convenience method that unconditionally accepts all connection requests."
+  "Convenience method that unconditionally accepts all incoming user connection requests."
   [^org.symphonyoss.client.SymphonyClient connection]
   (doall (map (partial accept-connection-request! connection) (incoming-requests connection))))
 
 
 (defn reject-all-connection-requests!
-  "Convenience method that unconditionally rejects all connection requests."
+  "Convenience method that unconditionally rejects all incoming user connection requests."
   [^org.symphonyoss.client.SymphonyClient connection]
   (doall (map (partial reject-connection-request! connection) (incoming-requests connection))))
