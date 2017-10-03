@@ -102,18 +102,15 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 ; Note: currently SJC doesn't seem to offer any way to get stream information
 ; for a single stream, so we emulate it here until such time as it does
 (defn streamobj
-  "Returns the given stream as a org.symphonyoss.symphony.clients.model.SymStreamAttributes object, or nil if it doesn't exist / isn't accessible to the authenticated connection user.
-WARNING: this method is expensive and inefficient!  Use it with caution!"
-  [connection ^String stream-id]
-  (first (filter #(= stream-id (.getId ^org.symphonyoss.symphony.clients.model.SymStreamAttributes %))
-                 (streamobjs connection))))
+  "Returns the given stream identifier as a org.symphonyoss.symphony.clients.model.SymStreamAttributes object, or nil if it doesn't exist / isn't accessible to the authenticated connection user."
+  [^org.symphonyoss.client.SymphonyClient connection stream]
+  (.getStreamAttributes (.getStreamsClient connection) (stream-id stream)))
 
 
 (defn stream
-  "Returns the given stream as a map, or nil if it doesn't exist / isn't accessible to the authenticated connection user.
-WARNING: this method is expensive and inefficient!  Use it with caution!"
-  [connection stream-id]
-  (streamobj->map (streamobj connection stream-id)))
+  "Returns the given stream identifier as a map, or nil if it doesn't exist / isn't accessible to the authenticated connection user."
+  [connection stream]
+  (streamobj->map (streamobj connection stream)))
 
 
 (defn usersobjs-from-stream
