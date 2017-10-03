@@ -48,6 +48,13 @@
   (set (map #(keyword (str %)) (org.symphonyoss.symphony.clients.model.SymMessage$Format/values))))
 
 
+(defn escape
+  "Escapes the given string for MessageML."
+  [^String s]
+  (when s
+    (org.apache.commons.lang3.StringEscapeUtils/escapeXml11 s)))
+
+
 (defn- ^org.symphonyoss.symphony.clients.model.SymMessage build-sym-message
   [^String message ^String entity-data]
   (let [msg (doto
