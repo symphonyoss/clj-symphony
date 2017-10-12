@@ -31,7 +31,7 @@
                        ]
   :dependencies        [
                          [org.clojure/clojure                      "1.8.0"]
-                         [org.symphonyoss.symphony/symphony-client "1.0.3"]
+                         [org.symphonyoss.symphony/symphony-client "1.1.0-SNAPSHOT"]
                          [org.apache.commons/commons-lang3         "3.6"]
                        ]
   :profiles            {

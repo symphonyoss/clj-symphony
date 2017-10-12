@@ -34,8 +34,9 @@
       :timestamp      (java.util.Date. (Long/valueOf (.getTimestamp message)))
       :stream-id      (.getStreamId    message)
       :user-id        (.getFromUserId  message)
-      :message-format (when-not (nil? (.getFormat message))
-                        (keyword (str (.getFormat message))))
+; "Formats are being phased out by Symphony."
+;      :message-format (when-not (nil? (.getFormat message))
+;                        (keyword (str (.getFormat message))))
       :type           (.getMessageType message)   ; This seems to be null or blank most of the time...
       :text           (.getMessage     message)
       :attachment     (.getAttachment  message)
@@ -43,10 +44,11 @@
     }))
 
 
+(comment "Formats are being phased out by Symphony."
 (def message-formats
   "The set of possible message formats in Symphony, as keywords."
   (set (map #(keyword (str %)) (org.symphonyoss.symphony.clients.model.SymMessage$Format/values))))
-
+)
 
 (defn escape
   "Escapes the given string for MessageML."
@@ -61,9 +63,11 @@
               (org.symphonyoss.symphony.clients.model.SymMessage.)
               (.setMessage    message)
               (.setEntityData entity-data))]
+(comment "Formats are being phased out by Symphony."
     (if (.startsWith message "<messageML>")
       (.setFormat msg org.symphonyoss.symphony.clients.model.SymMessage$Format/MESSAGEML)
       (.setFormat msg org.symphonyoss.symphony.clients.model.SymMessage$Format/TEXT))
+)
     msg))
 
 

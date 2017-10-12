@@ -57,9 +57,9 @@ Note: if :pod-id is not provided, :session-auth-url and :key-auth-url and :agent
                                                                                  (first trust-store) (second trust-store))
         connection       (doto (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/V4)
                            (.setDefaultHttpClient http-client))
-        auth-client      (org.symphonyoss.symphony.clients.AuthorizationClient. session-auth-url key-auth-url http-client)
+        auth-client      (org.symphonyoss.symphony.clients.AuthenticationClient. session-auth-url key-auth-url http-client)
         auth             (.authenticate auth-client)
-        _                (.init connection http-client auth user-email agent-api-url pod-api-url)]
+        _                (.init connection http-client auth ^String user-email ^String agent-api-url ^String pod-api-url)]
       connection))
 
 (defn disconnect
