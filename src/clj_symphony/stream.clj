@@ -99,8 +99,6 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
   (map streamobj->map (streamobjs connection)))
 
 
-; Note: currently SJC doesn't seem to offer any way to get stream information
-; for a single stream, so we emulate it here until such time as it does
 (defn streamobj
   "Returns the given stream identifier as a org.symphonyoss.symphony.clients.model.SymStreamAttributes object, or nil if it doesn't exist / isn't accessible to the authenticated connection user."
   [^org.symphonyoss.client.SymphonyClient connection stream]
@@ -111,6 +109,15 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
   "Returns the given stream identifier as a map, or nil if it doesn't exist / isn't accessible to the authenticated connection user."
   [connection stream]
   (streamobj->map (streamobj connection stream)))
+
+
+(defn- stream-type-fn
+  "Returns the type of the given stream identifier (see stream-types for the full set of possible values)."
+  [connection stream]
+  (:type (stream connection stream)))
+(def stream-type
+  "Returns the type of the given stream identifier (see stream-types for the full set of possible values)."
+  (memoize stream-type-fn))
 
 
 (defn usersobjs-from-stream
