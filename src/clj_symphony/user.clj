@@ -21,116 +21,115 @@
 
 (defn userobj->map
   "Converts a SymUser object into a map."
-  [^org.symphonyoss.symphony.clients.model.SymUser user]
-  (if user
+  [^org.symphonyoss.symphony.clients.model.SymUser u]
+  (if u
     {
-      :user-id       (.getId           user)
-      :username      (.getUsername     user)
-      :email-address (.getEmailAddress user)
-      :title         (.getTitle        user)
-      :first-name    (.getFirstName    user)
-      :last-name     (.getLastName     user)
-      :display-name  (.getDisplayName  user)
-      :company       (.getCompany      user)
-      :location      (.getLocation     user)
+      :user-id       (.getId           u)
+      :username      (.getUsername     u)
+      :email-address (.getEmailAddress u)
+      :title         (.getTitle        u)
+      :first-name    (.getFirstName    u)
+      :last-name     (.getLastName     u)
+      :display-name  (.getDisplayName  u)
+      :company       (.getCompany      u)
+      :location      (.getLocation     u)
       :avatars       (map #(hash-map :size (.getSize ^org.symphonyoss.symphony.clients.model.SymAvatar %)
                                      :url  (.getUrl  ^org.symphonyoss.symphony.clients.model.SymAvatar %))
-                          (.getAvatars user))
+                          (.getAvatars u))
     }))
 
 
 (defmulti user-id
   "Returns the id (a Long) of the given user."
-  {:arglists '([user])}
-  (fn ([user] (type user))))
+  {:arglists '([u])}
+  (fn ([u] (type u))))
 
 (defmethod user-id nil
-  [user]
+  [u]
   nil)
 
 (defmethod user-id Long
-  [^Long user-id]
-  user-id)
+  [^Long u]
+  u)
 
 (defmethod user-id java.util.Map
   [{:keys [user-id]}]
   user-id)
 
 (defmethod user-id org.symphonyoss.symphony.clients.model.SymUser
-  [^org.symphonyoss.symphony.clients.model.SymUser user]
-  (.getId user))
+  [^org.symphonyoss.symphony.clients.model.SymUser u]
+  (.getId u))
 
 
 (defn userobjs
   "Returns all users in the pod, as org.symphonyoss.symphony.clients.model.SymUser objects.  Will throw an exception if the authenticated connection user doesn't have sufficient permissions."
-  [^org.symphonyoss.client.SymphonyClient connection]
-  (.getAllUsers (.getUsersClient connection)))
+  [^org.symphonyoss.client.SymphonyClient c]
+  (.getAllUsers (.getUsersClient c)))
 
 
 (defn users
   "Returns all users in the pod.  Will throw an exception if the authenticated connection user doesn't have sufficient permissions."
-  [connection]
-  (map userobj->map (userobjs connection)))
+  [c]
+  (map userobj->map (userobjs c)))
 
 
 (defmulti userobj
   "Returns a org.symphonyoss.symphony.clients.model.SymUser object for the given user identifier, or the authenticated connection user if a user id is not provided. User can be specified either as a user id (Long) or an email address (String). Returns nil if the user doesn't exist.
 
 Note: providing a user identifier requires calls to the server."
-  {:arglists '([connection]
-               [connection user])}
+  {:arglists '([c]
+               [c u])}
   (fn
-    ([connection]      :current-user)
-    ([connection user] (type user))))
+    ([c]   :current-user)
+    ([c u] (type u))))
 
 (defmethod userobj :current-user
-  [^org.symphonyoss.client.SymphonyClient connection]
-  (.getLocalUser connection))
+  [^org.symphonyoss.client.SymphonyClient c]
+  (.getLocalUser c))
 
 (defmethod userobj nil
-  [connection user-id]
+  [c u]
   nil)
 
 (defmethod userobj org.symphonyoss.symphony.clients.model.SymUser
-  [connection user]
-  user)
+  [c u]
+  u)
 
 (defmethod userobj Long
-  [^org.symphonyoss.client.SymphonyClient connection ^Long user-id]
+  [^org.symphonyoss.client.SymphonyClient c ^Long u]
   (try
-    (.getUserFromId (.getUsersClient connection) user-id)
+    (.getUserFromId (.getUsersClient c) u)
     (catch org.symphonyoss.client.exceptions.UserNotFoundException unfe
       nil)))
 
 (defmethod userobj String
-  [^org.symphonyoss.client.SymphonyClient connection ^String email-address]
+  [^org.symphonyoss.client.SymphonyClient c ^String u]
   (try
-    (.getUserFromEmail (.getUsersClient connection) email-address)
+    (.getUserFromEmail (.getUsersClient c) u)
     (catch org.symphonyoss.client.exceptions.UserNotFoundException unfe
       nil)))
 
 (defmethod userobj java.util.Map
-  [connection {:keys [user-id]}]
-  (if user-id
-    (userobj connection user-id)))
+  [c {:keys [user-id]}]
+  (userobj c user-id))
 
 
 (defn user
   "Returns a user for the given user identifier, or the authenticated connection user if a user id is not provided."
-  ([connection]                 (userobj->map (userobj connection)))
-  ([connection user-identifier] (userobj->map (userobj connection user-identifier))))
+  ([c]   (userobj->map (userobj c)))
+  ([c u] (userobj->map (userobj c u))))
 
 
 (defn userobj-by-username
   "Returns a org.symphonyoss.symphony.clients.model.SymUser object for the given username, or nil if the user doesn't exist."
-  [^org.symphonyoss.client.SymphonyClient connection ^String username]
-  (.getUserFromName (.getUsersClient connection) username))
+  [^org.symphonyoss.client.SymphonyClient c ^String u]
+  (.getUserFromName (.getUsersClient c) u))
 
 
 (defn user-by-username
   "Returns a user for the given username, or nil if the user doesn't exist."
-  [connection username]
-  (userobj->map (userobj-by-username connection username)))
+  [c u]
+  (userobj->map (userobj-by-username c u)))
 
 
 (defn- build-sym-user-obj
@@ -169,7 +168,7 @@ Note: providing a user identifier requires calls to the server."
 
 
 (defn update-user!
-  "Updates the details of an existing user, returning it as a map. user-details is a map with these keys:
+  "Updates the details of an existing user, returning it as a map. The new user details are provided as a map with these keys:
   :user-id       The id of the user to update.
   :username      The new username of the user.  #### This might be create-only?
   :email-address The new email address of the user.
@@ -182,25 +181,25 @@ Note: providing a user identifier requires calls to the server."
   :avatars       A sequence of avatar maps, each of which contains these keys:
     :size        The 'size string' of the avatar (e.g. 'small', 'original')
     :url         The URL of the new avatar image file.
-Note: calling this method requires the user administration entitlement."
-  [^org.symphonyoss.client.SymphonyClient connection user-details]
-  (if-let [user-id (:user-id user-details)]
-    (userobj->map (.updateUser (.getUsersClient connection) user-id (build-sym-user-obj :update user-details)))))
+Note: calling this method requires that the service account calling this fn have the 'user administration' entitlement."
+  [^org.symphonyoss.client.SymphonyClient c u]
+  (if-let [user-id (:user-id u)]
+    (userobj->map (.updateUser (.getUsersClient c) user-id (build-sym-user-obj :update u)))))
 
 
 (defn same-pod?
   "Returns true if the given user is in the same pod as the authenticated connection user, or nil if the user doesn't exist."
-  [connection user-identifier]
-  (let [me (user connection)]
-    (if-let [them (user connection user-identifier)]
+  [c u]
+  (let [me (user c)]
+    (if-let [them (user c u)]
       (= (:company me) (:company them)))))
 
 
 (defn cross-pod?
   "Returns true if the given user is in a different pod to the authenticated connection user, or nil if the user doesn't exist."
-  [connection user-identifier]
-  (let [me (user connection)]
-    (if-let [them (user connection user-identifier)]
+  [c u]
+  (let [me (user c)]
+    (if-let [them (user c u)]
       (not= (:company me) (:company them)))))
 
 
@@ -220,67 +219,70 @@ Note: calling this method requires the user administration entitlement."
 
 (defmulti presence
   "Returns the presence status of a single user, as a keyword.  If no user identifier is provided, returns the presence status of the authenticated connection user."
-  {:arglists '([connection]
-               [connection user-identifier])}
+  {:arglists '([c]
+               [c u])}
   (fn
-    ([connection]                 :current-user)
-    ([connection user-identifier] (type user-identifier))))
+    ([c]   :current-user)
+    ([c u] (type u))))
 
 (defmethod presence :current-user
-  [connection]
-  (presence connection (user connection)))
+  [c]
+  (presence c (user c)))
 
 (defmethod presence nil
-  [connection user-id]
+  [c u]
   nil)
 
 (defmethod presence org.symphonyoss.symphony.clients.model.SymUser
-  [connection ^org.symphonyoss.symphony.clients.model.SymUser user]
-  (presence connection (.getId user)))
+  [c ^org.symphonyoss.symphony.clients.model.SymUser u]
+  (presence c (.getId u)))
 
 (defmethod presence Long
-  [^org.symphonyoss.client.SymphonyClient connection ^Long user-id]
-  (keyword (str (.getCategory (.getUserPresence (.getPresenceClient connection) user-id)))))
+  [^org.symphonyoss.client.SymphonyClient c ^Long u]
+  (keyword (str (.getCategory (.getUserPresence (.getPresenceClient c) u)))))
 
 (defmethod presence String
-  [connection ^String user-email-address]
-  (presence connection (userobj connection user-email-address)))
+  [c ^String u]
+  (presence c (userobj c u)))
 
 (defmethod presence java.util.Map
-  [connection {:keys [user-id]}]
+  [c {:keys [user-id]}]
   (if user-id
-    (presence connection user-id)))
+    (presence c user-id)))
 
 
 (defmulti set-presence!
-  "Sets the presence status of the given user, or the authenticated connection user if not provided.  new-presence must be one of presence-states."
-  {:arglists '([connection new-presence]
-               [connection user-identifier new-presence])}
+  "Sets the presence status of the given user, or the authenticated connection user if not provided.  The new presence must be one of presence-states."
+  {:arglists '([c p]
+               [c u p])}
   (fn
-    ([connection new-presence]                 :current-user)
-    ([connection user-identifier new-presence] (type user-identifier))))
+    ([c p]   :current-user)
+    ([c u p] (type u))))
 
 (defmethod set-presence! :current-user
-  [connection new-presence]
-  (set-presence! connection (user connection) new-presence))
+  [c p]
+  (set-presence! c (user c) p))
+
+(defmethod set-presence! nil
+  [c u p]
+  nil)
 
 (defmethod set-presence! org.symphonyoss.symphony.clients.model.SymUser
-  [connection ^org.symphonyoss.symphony.clients.model.SymUser user new-presence]
-  (set-presence! connection (.getId user) new-presence))
+  [c ^org.symphonyoss.symphony.clients.model.SymUser u p]
+  (set-presence! c (.getId u) p))
 
 (defmethod set-presence! Long
-  [^org.symphonyoss.client.SymphonyClient connection ^Long user-id new-presence]
-  (let [presence-enum (org.symphonyoss.symphony.pod.model.Presence$CategoryEnum/valueOf (name new-presence))
-        user-presence (doto (org.symphonyoss.symphony.pod.model.Presence.)
-                            (.setCategory presence-enum))]
-    (.setUserPresence (.getPresenceClient connection) user-id user-presence)
+  [^org.symphonyoss.client.SymphonyClient c ^Long u p]
+  (let [presence (doto
+                   (org.symphonyoss.symphony.pod.model.Presence.)
+                   (.setCategory (org.symphonyoss.symphony.pod.model.Presence$CategoryEnum/valueOf (name p))))]
+    (.setUserPresence (.getPresenceClient c) u presence)
     nil))
 
 (defmethod set-presence! String
-  [connection ^String user-email-address new-presence]
-  (set-presence! connection (userobj connection user-email-address) new-presence))
+  [c ^String u p]
+  (set-presence! c (userobj c u) p))
 
 (defmethod set-presence! java.util.Map
-  [connection {:keys [user-id]} new-presence]
-  (if user-id
-    (set-presence! connection user-id new-presence)))
+  [c {:keys [user-id]} p]
+  (set-presence! c user-id p))

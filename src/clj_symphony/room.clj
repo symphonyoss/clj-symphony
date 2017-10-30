@@ -24,10 +24,10 @@
 
 (defn roomobj->map
   "Converts a org.symphonyoss.symphony.clients.model.SymRoomDetail object into a map."
-  [^org.symphonyoss.symphony.clients.model.SymRoomDetail room]
-  (if room
-    (let [sys-info (.getRoomSystemInfo room)
-          attrs    (.getRoomAttributes room)]
+  [^org.symphonyoss.symphony.clients.model.SymRoomDetail r]
+  (if r
+    (let [sys-info (.getRoomSystemInfo r)
+          attrs    (.getRoomAttributes r)]
       {
         :stream-id          (.getId              sys-info)
         :creation-date      (.getCreationDate    sys-info)
@@ -47,55 +47,55 @@
 
 
 (defmulti roomobj
-  "Returns a org.symphonyoss.symphony.clients.model.SymRoomDetail object for the given room identifier (as a stream id or map containing a :stream-id). Returns nil if the room doesn't exist."
-  {:arglists '([connection room-identifier])}
-  (fn [connection room-identifier] (type room-identifier)))
+  "Returns a org.symphonyoss.symphony.clients.model.SymRoomDetail object for the given room  (as a stream id or map containing a :stream-id). Returns nil if the room doesn't exist."
+  {:arglists '([c r])}
+  (fn [c r] (type r)))
 
 (defmethod roomobj nil
-  [connection room-id]
+  [c r]
   nil)
 
 (defmethod roomobj org.symphonyoss.symphony.clients.model.SymRoomDetail
-  [connection room]
-  room)
+  [c r]
+  r)
 
 (defmethod roomobj String
-  [^org.symphonyoss.client.SymphonyClient connection ^String stream-id]
-  (.getRoomDetail (.getStreamsClient connection) stream-id))
+  [^org.symphonyoss.client.SymphonyClient c ^String s]
+  (.getRoomDetail (.getStreamsClient c) s))
 
 (defmethod roomobj java.util.Map
-  [connection {:keys [stream-id]}]
+  [c {:keys [stream-id]}]
   (if stream-id
-    (roomobj connection stream-id)))
+    (roomobj c stream-id)))
 
 
 (defn room
-  "Returns a room as a map for the given room identifier. Returns nil if the room doesn't exist."
-  [connection room-identifier]
-  (roomobj->map (roomobj connection room-identifier)))
+  "Returns a room as a map for the given room. Returns nil if the room doesn't exist."
+  [c r]
+  (roomobj->map (roomobj c r)))
 
 
 (defn roomobjs
   "Returns a lazy sequence containing all org.symphonyoss.symphony.clients.model.SymRoomDetail objects for the authenticated connection user.
 
 WARNING: this methods results in many calls to the server.  Use with caution!"
-  [connection]
-  (let [rooms (filter #(= :ROOM (:type %)) (sys/streams connection))]
-    (map (partial roomobj connection) rooms)))
+  [c]
+  (let [rooms (filter #(= :ROOM (:type %)) (sys/streams c))]
+    (map (partial roomobj c) rooms)))
 
 
 (defn rooms
   "Returns a lazy sequence containing all rooms (as maps) for the authenticated connection user.
 
 WARNING: this methods results in many calls to the server.  Use with caution!"
-  [connection]
-  (map roomobj->map (roomobjs connection)))
+  [c]
+  (map roomobj->map (roomobjs c)))
 
 
 (defn room-members
   "Returns the users who are participants in the given roon."
-  [connection room]
-  (sys/users-from-stream connection room))
+  [c r]
+  (sys/users-from-stream c r))
 ;  (.getRoomMembership (.getRoomMembershipClient connection) (sys/stream-id room))
 
 
@@ -139,27 +139,27 @@ WARNING: this methods results in many calls to the server.  Use with caution!"
   :keywords           A map containing 'keywords' (key/value pairs, both of which must be strings) for the room.
 
 :name is mandatory (it must be present and cannot be nil)."
-  {:arglists '([connection room-details])}
-  (fn [connection room-details] (type room-details)))
+  {:arglists '([c r])}
+  (fn [c r] (type r)))
 
 (defmethod create-roomobj! org.symphonyoss.symphony.clients.model.SymRoomAttributes
-  [^org.symphonyoss.client.SymphonyClient                    connection
-   ^org.symphonyoss.symphony.clients.model.SymRoomAttributes room-details]
-  (.createChatRoom (.getStreamsClient connection) room-details))
+  [^org.symphonyoss.client.SymphonyClient                    c
+   ^org.symphonyoss.symphony.clients.model.SymRoomAttributes r]
+  (.createChatRoom (.getStreamsClient c) r))
 
 (defmethod create-roomobj! java.util.Map
-  [connection room-details-map]
-  (create-roomobj! connection (build-sym-room-attributes-obj :create room-details-map)))
+  [c r]
+  (create-roomobj! c (build-sym-room-attributes-obj :create r)))
 
 
 (defn create-room!
-  "Create a new room, returning it as a map.  See clj-symphony.room/create-roomobj! for details on 'room-details'."
-  [connection room-details]
-  (roomobj->map (create-roomobj! connection room-details)))
+  "Create a new room, returning it as a map.  See clj-symphony.room/create-roomobj! for details."
+  [c r]
+  (roomobj->map (create-roomobj! c r)))
 
 
 (defn update-room!
-  "Updates the details of an existing room, returning it as a map. room-details is a map with these keys (the additional flags available during creation cannot be modified):
+  "Updates the details of an existing room, returning it as a map. The map these keys (the additional flags available during creation cannot be modified):
   :stream-id          The stream id of the room.
   :name               The new name for the room.
   :description        The new description of the room.
@@ -167,49 +167,49 @@ WARNING: this methods results in many calls to the server.  Use with caution!"
   :copy-protected     Boolean indicating whether the room is to become copy protected.
   :can-members-invite Boolean indicating whether members will be allowed to invite others to the room.
   :keywords           A map containing the new 'keywords' (key/value pairs, both of which must be strings) for the room."
-  [^org.symphonyoss.client.SymphonyClient connection room-details]
-  (if-let [stream-id (:stream-id room-details)]
-    (roomobj->map (.updateChatRoom (.getStreamsClient connection) stream-id (build-sym-room-attributes-obj :update room-details)))))
+  [^org.symphonyoss.client.SymphonyClient c r]
+  (if-let [stream-id (:stream-id r)]
+    (roomobj->map (.updateChatRoom (.getStreamsClient c) stream-id (build-sym-room-attributes-obj :update r)))))
 
 
 (defn deactivate-room!
   "Deactivates the given room."
-  [^org.symphonyoss.client.SymphonyClient connection room]
-  (.deactivateRoom (.getStreamsClient connection) (sys/stream-id room))
+  [^org.symphonyoss.client.SymphonyClient c r]
+  (.deactivateRoom (.getStreamsClient c) (sys/stream-id r))
   nil)
 
 
 (defn add-user-to-room!
   "Add a user to the given room."
-  [^org.symphonyoss.client.SymphonyClient connection room user]
-  (let [stream-id (sys/stream-id room)
-        user-id   (if (instance? String user)
-                    (syu/user-id (syu/user connection user))
-                    (syu/user-id user))]
-    (.addMemberToRoom (.getRoomMembershipClient connection) stream-id user-id)
+  [^org.symphonyoss.client.SymphonyClient c r u]
+  (let [stream-id (sys/stream-id r)
+        user-id   (if (instance? String u)
+                    (syu/user-id (syu/user c u))
+                    (syu/user-id u))]
+    (.addMemberToRoom (.getRoomMembershipClient c) stream-id user-id)
     nil))
 
 
 (defn add-users-to-room!
   "Add all of the provided users to the given room."
-  [connection room users]
-  (doall (map (partial add-user-to-room! connection room) users))
+  [c r u]
+  (doall (map (partial add-user-to-room! c r) u))
   nil)
 
 
 (defn remove-user-from-room!
   "Remove a user from the given room."
-  [^org.symphonyoss.client.SymphonyClient connection room user]
-  (let [stream-id (sys/stream-id room)
-        user-id   (if (instance? String user)
-                    (syu/user-id (syu/user connection user))
-                    (syu/user-id user))]
-    (.removeMemberFromRoom (.getRoomMembershipClient connection) stream-id user-id)
+  [^org.symphonyoss.client.SymphonyClient c r u]
+  (let [stream-id (sys/stream-id r)
+        user-id   (if (instance? String u)
+                    (syu/user-id (syu/user c u))
+                    (syu/user-id u))]
+    (.removeMemberFromRoom (.getRoomMembershipClient c) stream-id user-id)
     nil))
 
 
 (defn remove-users-from-room!
   "Remove all of the provided users from the given room."
-  [connection room users]
-  (doall (map (partial remove-user-from-room! connection room) users))
+  [c r u]
+  (doall (map (partial remove-user-from-room! c r) u))
   nil)

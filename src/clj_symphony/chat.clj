@@ -24,87 +24,86 @@
 
 (defn chatobj->map
   "Converts a org.symphonyoss.client.model.Chat object into a map."
-  [^org.symphonyoss.client.model.Chat chat]
-  (if chat
+  [^org.symphonyoss.client.model.Chat ch]
+  (if ch
     {
-      :stream-id    (.getStreamId         chat)
-      :last-message (sym/msgobj->map      (.getLastMessage chat))
-      :other-users  (map syu/userobj->map (.getRemoteUsers chat))
+      :stream-id    (.getStreamId         ch)
+      :last-message (sym/msgobj->map      (.getLastMessage ch))
+      :other-users  (map syu/userobj->map (.getRemoteUsers ch))
     }))
 
 
 (defn chatobjs
   "Returns all org.symphonyoss.client.model.Chat objects for the given user.  If no user identifier is provided, returns the chats of the authenticated connection user."
-  ([connection] (chatobjs connection (syu/userobj connection)))
-  ([^org.symphonyoss.client.SymphonyClient connection user-id]
-    (let [user (syu/userobj connection user-id)]
-      (.getChats (.getChatService connection) user))))
+  ([c] (chatobjs c (syu/userobj c)))
+  ([^org.symphonyoss.client.SymphonyClient c u]
+    (.getChats (.getChatService c) (syu/userobj c u))))
 
 
 (defn chats
   "Returns all chats for the given user.  If no user identifier is provided, returns the chats of the authenticated connection user."
-  ([connection]         (chats connection (syu/user connection)))
-  ([connection user-id] (map chatobj->map (chatobjs connection user-id))))
+  ([c]   (chats c (syu/user c)))
+  ([c u] (map chatobj->map (chatobjs c u))))
 
 
 (defmulti chatobj
-  "Returns a Chat object for the given chat 'identifier' (a org.symphonyoss.client.model.Chat, stream id, or map containing a :stream-id). Returns nil if the chat doesn't exist."
-  {:arglists '([connection chat-identifier])}
-  (fn [connection chat-identifier] (type chat-identifier)))
+  "Returns a Chat object for the given chat identifier (a org.symphonyoss.client.model.Chat, stream id, or map containing a :stream-id). Returns nil if the chat doesn't exist."
+  {:arglists '([c ch])}
+  (fn [c ch] (type ch)))
 
 (defmethod chatobj nil
-  [connection chat-id]
+  [c ch]
   nil)
 
 (defmethod chatobj org.symphonyoss.client.model.Chat
-  [connection chat]
-  chat)
+  [c ch]
+  ch)
 
 (defmethod chatobj String
-  [^org.symphonyoss.client.SymphonyClient connection ^String stream-id]
-  (.getChatByStream (.getChatService connection) stream-id))
+  [^org.symphonyoss.client.SymphonyClient c ^String stream-id]
+  (.getChatByStream (.getChatService c) stream-id))
 
 (defmethod chatobj java.util.Map
-  [connection {:keys [stream-id]}]
+  [c {:keys [stream-id]}]
   (if stream-id
-    (chatobj connection stream-id)))
+    (chatobj c stream-id)))
 
 
 (defn chat
   "Returns a chat as a map for the given chat identifier. Returns nil if the chat doesn't exist."
-  [connection chat-identifier]
-  (chatobj->map (chatobj connection chat-identifier)))
+  [c ch]
+  (chatobj->map (chatobj c ch)))
 
 
 (defn start-chatobj!
-  "Starts an :IM or :MIM chat with the specified user(s), returning the new org.symphonyoss.client.model.Chat object. 'users' can be either a single user-identifier (as described in clj-symphony.user/userobj) or a sequence or set of such identifiers."
-  [^org.symphonyoss.client.SymphonyClient connection users]
-  (let [user-objs    (map (partial syu/userobj connection) users)
-        remote-users (if (or (sequential? users) (set? users))
-                       (set (map #(syu/userobj connection %) users))
-                       #{(syu/userobj connection users)})
-        chat-obj     (doto
-                       (org.symphonyoss.client.model.Chat.)
-                       (.setLocalUser (syu/userobj connection))
-                       (.setRemoteUsers remote-users))
-        _            (.addChat (.getChatService connection) chat-obj)]
+  "Starts an :IM or :MIM chat with the specified user(s), returning the new org.symphonyoss.client.model.Chat object. Users can be provided either as a single user (as described in clj-symphony.user/userobj) or a sequence or set of such identifiers."
+  [^org.symphonyoss.client.SymphonyClient c u]
+  (let [user-objs (if (or (sequential? u) (set? u))
+                    (set (map #(syu/userobj c %) u))
+                    #{ (syu/userobj c u) })
+        chat-obj  (doto
+                    (org.symphonyoss.client.model.Chat.)
+                    (.setLocalUser (syu/userobj c))
+                    (.setRemoteUsers user-objs))
+        _         (.addChat (.getChatService c) chat-obj)]
     chat-obj))
 
 
 (defn start-chat!
-  "Starts an :IM or :MIM chat with the specified user(s), returning the new chat as a map. 'users' can be either a single user-identifier (as described in clj-symphony.user/userobj) or a sequence or set of such identifiers."
-  [connection users]
-  (chatobj->map (start-chatobj! connection users)))
+  "Starts an :IM or :MIM chat with the specified user(s), returning the new chat as a map. Users can be provided either as a single user (as described in clj-symphony.user/userobj) or a sequence or set of such identifiers."
+  [c u]
+  (chatobj->map (start-chatobj! c u)))
 
 
 (defn stop-chatobj!
   "Stops a chat.  Returns true if the chat was successfully stopped."
-  [^org.symphonyoss.client.SymphonyClient connection ^org.symphonyoss.client.model.Chat chat]
-  (if chat
-    (.removeChat (.getChatService connection) chat)))
+  [^org.symphonyoss.client.SymphonyClient c ^org.symphonyoss.client.model.Chat ch]
+  (if ch
+    (.removeChat (.getChatService c) ch)))
 
 
 (defn stop-chat!
-  "Stops a chat, identified by the given chat identifier (as described in get-chatobj).  Returns true if the chat was successfully stopped, nil if the chat identifier was invalid."
-  [connection chat-identifier]
-  (stop-chatobj! connection (chatobj connection chat-identifier)))
+  "Stops a chat and returns true if the chat was successfully stopped, nil if the chat was invalid."
+  [c ch]
+  (if ch
+    (stop-chatobj! c (chatobj c ch))))

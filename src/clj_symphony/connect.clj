@@ -63,11 +63,11 @@ Note: if :pod-id is not provided, :session-auth-url and :key-auth-url and :agent
       connection))
 
 (defn disconnect
-  "Disconnect from a Symphony pod.  The 'connection' object should be discarded after this method is called."
-  [^org.symphonyoss.client.SymphonyClient connection]
-  (.shutdown connection))
+  "Disconnect from a Symphony pod.  The connection object should be discarded after this method is called."
+  [^org.symphonyoss.client.SymphonyClient c]
+  (.shutdown c))
 
 (defn version
   "Returns the version of Symphony at the other end of the given connection, as a String in major.minor.bugfix format."
-  [^org.symphonyoss.client.SymphonyClient connection]
-  (.getVersion (.v1HealthCheckGet (.getAgentSystemApi (.getSymphonyApis connection)))))
+  [^org.symphonyoss.client.SymphonyClient c]
+  (.getVersion (.v1HealthCheckGet (.getAgentSystemApi (.getSymphonyApis c)))))
