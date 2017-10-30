@@ -54,11 +54,11 @@
   (let [tmp (org.jsoup.Jsoup/clean m
                                    ""
                                    (.addTags (org.jsoup.safety.Whitelist/none) (into-array String ["br" "p"]))
-                                   (.prettyPrint (org.jsoup.nodes.Document.OutputSettings.) true))]
+                                   (.prettyPrint (org.jsoup.nodes.Document$OutputSettings.) true))]
     (org.jsoup.Jsoup/clean tmp
                            ""
                            (org.jsoup.safety.Whitelist/none)
-                           (.prettyPrint (org.jsoup.nodes.Document.OutputSettings.) false))))
+                           (.prettyPrint (org.jsoup.nodes.Document$OutputSettings.) false))))
 
 
 (defn- ^org.symphonyoss.symphony.clients.model.SymMessage build-sym-message
