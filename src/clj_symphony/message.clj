@@ -43,9 +43,22 @@
 
 (defn escape
   "Escapes the given string for MessageML."
-  [^String s]
-  (when s
-    (org.apache.commons.lang3.StringEscapeUtils/escapeXml11 s)))
+  [^String m]
+  (if m
+    (org.apache.commons.lang3.StringEscapeUtils/escapeXml11 m)))
+
+
+(defn to-plain-text
+  "Converts a MessageML message to plain text, converting <p> and <br/> tags into newlines."
+  [^String m]
+  (let [tmp (org.jsoup.Jsoup/clean m
+                                   ""
+                                   (.addTags (org.jsoup.safety.Whitelist/none) (into-array String ["br" "p"]))
+                                   (.prettyPrint (org.jsoup.nodes.Document.OutputSettings.) true))]
+    (org.jsoup.Jsoup/clean tmp
+                           ""
+                           (org.jsoup.safety.Whitelist/none)
+                           (.prettyPrint (org.jsoup.nodes.Document.OutputSettings.) false))))
 
 
 (defn- ^org.symphonyoss.symphony.clients.model.SymMessage build-sym-message
