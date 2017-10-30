@@ -58,16 +58,16 @@
 
 
 (defn send-message!
-  "Sends the given message (a String), optionally including entity data (a String containing JSON) to the given target (chat, room, or stream).
+  "Sends the given message (a String), optionally including entity data (a String containing JSON) to the given stream.
 
 See:
   * https://rest-api.symphony.com/docs/messagemlv2 for details on MessageMLv2's formatting capabilities
   * https://rest-api.symphony.com/docs/objects for details on MessageMLv2's entity data capabilities"
-  ([c t m] (send-message! c t m nil))
-  ([^org.symphonyoss.client.SymphonyClient c t ^String m ^String ed]
+  ([c s m] (send-message! c s m nil))
+  ([^org.symphonyoss.client.SymphonyClient c s ^String m ^String ed]
     (.sendMessage (.getMessagesClient c)
                   (doto (org.symphonyoss.symphony.pod.model.Stream.)
-                    (.setId (sys/stream-id t)))
+                    (.setId (sys/stream-id s)))
                   (build-sym-message m ed))
     nil))
 
