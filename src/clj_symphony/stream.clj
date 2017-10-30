@@ -35,53 +35,53 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 
 (defn streamobj->map
   "Converts a org.symphonyoss.symphony.clients.model.SymStreamAttributes object into a map."
-  [^org.symphonyoss.symphony.clients.model.SymStreamAttributes stream]
-  (if stream
+  [^org.symphonyoss.symphony.clients.model.SymStreamAttributes stream-attr]
+  (if stream-attr
     {
-      :stream-id          (.getId               stream)
-      :name               (if-let [room-attrs (.getSymRoomSpecificStreamAttributes stream)]
+      :stream-id          (.getId               stream-attr)
+      :name               (if-let [room-attrs (.getSymRoomSpecificStreamAttributes stream-attr)]
                             (.getName room-attrs))
-      :active             (.getActive           stream)
-      :type               (when-not (nil? (.getSymStreamTypes stream))
-                            (keyword (str (.getType (.getSymStreamTypes stream)))))
-      :cross-pod          (.getCrossPod         stream)
-      :member-user-ids    (if-let [chat-attrs (.getSymChatSpecificStreamAttributes stream)]
+      :active             (.getActive           stream-attr)
+      :type               (when-not (nil? (.getSymStreamTypes stream-attr))
+                            (keyword (str (.getType (.getSymStreamTypes stream-attr)))))
+      :cross-pod          (.getCrossPod         stream-attr)
+      :member-user-ids    (if-let [chat-attrs (.getSymChatSpecificStreamAttributes stream-attr)]
                             (vec (.getMembers chat-attrs)))
     }))
 
 
 (defmulti stream-id
-  "Returns the stream id of the given item."
+  "Returns the stream id of the given stream."
   {:arglists '([stream])}
   type)
 
 (defmethod stream-id nil
-  [stream]
+  [stream-obj]
   nil)
 
 (defmethod stream-id String
-  [^String stream]
-  stream)
+  [^String stream-obj]
+  stream-obj)
 
 (defmethod stream-id java.util.Map
-  [{:keys [stream-id]}]
-  stream-id)
+  [{:keys [stream-obj]}]
+  stream-obj)
 
 (defmethod stream-id org.symphonyoss.symphony.clients.model.SymStreamAttributes
-  [^org.symphonyoss.symphony.clients.model.SymStreamAttributes stream]
-  (.getId stream))
+  [^org.symphonyoss.symphony.clients.model.SymStreamAttributes stream-obj]
+  (.getId stream-obj))
 
 (defmethod stream-id org.symphonyoss.client.model.Chat
-  [^org.symphonyoss.client.model.Chat stream]
-  (.getStreamId stream))
+  [^org.symphonyoss.client.model.Chat stream-obj]
+  (.getStreamId stream-obj))
 
 (defmethod stream-id org.symphonyoss.symphony.clients.model.SymRoomDetail
-  [^org.symphonyoss.symphony.clients.model.SymRoomDetail stream]
-  (.getId (.getRoomSystemInfo stream)))
+  [^org.symphonyoss.symphony.clients.model.SymRoomDetail stream-obj]
+  (.getId (.getRoomSystemInfo stream-obj)))
 
 (defmethod stream-id org.symphonyoss.symphony.clients.model.SymMessage
-  [^org.symphonyoss.symphony.clients.model.SymMessage stream]
-  (.getStreamId stream))
+  [^org.symphonyoss.symphony.clients.model.SymMessage stream-obj]
+  (.getStreamId stream-obj))
 
 
 (defn streamobjs
@@ -101,20 +101,20 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 
 (defn streamobj
   "Returns the given stream identifier as a org.symphonyoss.symphony.clients.model.SymStreamAttributes object, or nil if it doesn't exist / isn't accessible to the authenticated connection user."
-  [^org.symphonyoss.client.SymphonyClient connection stream]
-  (.getStreamAttributes (.getStreamsClient connection) (stream-id stream)))
+  [^org.symphonyoss.client.SymphonyClient connection stream-obj]
+  (.getStreamAttributes (.getStreamsClient connection) (stream-id stream-obj)))
 
 
 (defn stream
   "Returns the given stream identifier as a map, or nil if it doesn't exist / isn't accessible to the authenticated connection user."
-  [connection stream]
-  (streamobj->map (streamobj connection stream)))
+  [connection stream-obj]
+  (streamobj->map (streamobj connection stream-obj)))
 
 
 (defn- stream-type-fn
   "Returns the type of the given stream identifier (see stream-types for the full set of possible values)."
-  [connection stream]
-  (:type (stream connection stream)))
+  [connection stream-obj]
+  (:type (stream connection stream-obj)))
 (def stream-type
   "Returns the type of the given stream identifier (see stream-types for the full set of possible values)."
   (memoize stream-type-fn))
@@ -122,11 +122,11 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 
 (defn usersobjs-from-stream
   "Returns all org.symphonyoss.symphony.clients.model.SymUser objects participating in the given stream."
-  [^org.symphonyoss.client.SymphonyClient connection stream]
-  (.getUsersFromStream (.getUsersClient connection) (stream-id stream)))
+  [^org.symphonyoss.client.SymphonyClient connection stream-obj]
+  (.getUsersFromStream (.getUsersClient connection) (stream-id stream-obj)))
 
 
 (defn users-from-stream
   "Returns all users participating in the given stream, as maps (see clj-symphony.user/userobj->map for details)."
-  [connection stream]
-  (map syu/userobj->map (usersobjs-from-stream connection stream)))
+  [connection stream-obj]
+  (map syu/userobj->map (usersobjs-from-stream connection stream-obj)))
