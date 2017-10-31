@@ -18,6 +18,7 @@
 (ns clj-symphony.message
   "Operations related to messages, which combine a human-message (encoded as a subset of HTML called 'MessageMLv2') and a machine readable JSON blob called the 'entity data'."
   (:require [clojure.string      :as s]
+            [clojure.java.io     :as io]
             [clj-symphony.user   :as syu]
             [clj-symphony.stream :as sys]))
 
@@ -59,20 +60,24 @@
 
 
 (defn send-message!
-  "Sends the given message (a String), optionally including entity data (a String containing JSON) to the given stream.
+   "Sends the given message (a String), optionally including entity data (a String containing JSON) and an attachment (something compatible with io/file) to the given stream.
 
 See:
   * https://rest-api.symphony.com/docs/messagemlv2 for details on MessageMLv2's formatting capabilities
   * https://rest-api.symphony.com/docs/objects for details on MessageMLv2's entity data capabilities"
-  ([c s m] (send-message! c s m nil))
-  ([^org.symphonyoss.client.SymphonyClient c s ^String m ^String ed]
-    (.sendMessage (.getMessagesClient c)
-                  (doto (org.symphonyoss.symphony.pod.model.Stream.)
-                    (.setId (sys/stream-id s)))
-                  (doto
-                    (org.symphonyoss.symphony.clients.model.SymMessage.)
-                    (.setMessage    m)
-                    (.setEntityData ed)))
+  ([c s m]    (send-message! c s m nil nil))
+  ([c s m ed] (send-message! c s m ed nil))
+  ([^org.symphonyoss.client.SymphonyClient c s ^String m ^String ed a]
+    (let [stream-id (sys/stream-id s)]
+      (.sendMessage (.getMessagesClient c)
+                    (doto (org.symphonyoss.symphony.pod.model.Stream.)
+                      (.setId stream-id))
+                    (doto
+                      (org.symphonyoss.symphony.clients.model.SymMessage.)
+                      (.setStreamId   stream-id)
+                      (.setMessage    m)
+                      (.setEntityData ed)
+                      (.setAttachment (io/file a)))))
     nil))
 
 
