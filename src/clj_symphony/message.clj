@@ -16,10 +16,7 @@
 ;
 
 (ns clj-symphony.message
-  "Operations related to messages.  Currently, Symphony supports these message formats:
-  1. plain text
-  2. messageML, which supports a small number of formatting tags
-  3. MessageMLv2 (as of Symphony v1.46)"
+  "Operations related to messages, which combine a human-message (encoded as a subset of HTML called 'MessageMLv2') and a machine readable JSON blob called the 'entity data'."
   (:require [clojure.string      :as s]
             [clj-symphony.user   :as syu]
             [clj-symphony.stream :as sys]))
@@ -61,15 +58,6 @@
                            (.prettyPrint (org.jsoup.nodes.Document$OutputSettings.) false))))
 
 
-(defn- ^org.symphonyoss.symphony.clients.model.SymMessage build-sym-message
-  "Builds a SymMessage object from the given message string and entity data (optional)."
-  [^String m ^String ed]
-  (doto
-    (org.symphonyoss.symphony.clients.model.SymMessage.)
-    (.setMessage    m)
-    (.setEntityData ed)))
-
-
 (defn send-message!
   "Sends the given message (a String), optionally including entity data (a String containing JSON) to the given stream.
 
@@ -81,7 +69,10 @@ See:
     (.sendMessage (.getMessagesClient c)
                   (doto (org.symphonyoss.symphony.pod.model.Stream.)
                     (.setId (sys/stream-id s)))
-                  (build-sym-message m ed))
+                  (doto
+                    (org.symphonyoss.symphony.clients.model.SymMessage.)
+                    (.setMessage    m)
+                    (.setEntityData ed)))
     nil))
 
 
