@@ -49,14 +49,15 @@
 (defn to-plain-text
   "Converts a MessageML message to plain text, converting <p> and <br/> tags into newlines."
   [^String m]
-  (let [tmp (org.jsoup.Jsoup/clean m
-                                   ""
-                                   (.addTags (org.jsoup.safety.Whitelist/none) (into-array String ["br" "p"]))
-                                   (.prettyPrint (org.jsoup.nodes.Document$OutputSettings.) true))]
-    (org.jsoup.Jsoup/clean tmp
-                           ""
-                           (org.jsoup.safety.Whitelist/none)
-                           (.prettyPrint (org.jsoup.nodes.Document$OutputSettings.) false))))
+  (if m
+    (let [tmp (org.jsoup.Jsoup/clean m
+                                     ""
+                                     (.addTags (org.jsoup.safety.Whitelist/none) (into-array String ["br" "p"]))
+                                     (.prettyPrint (org.jsoup.nodes.Document$OutputSettings.) true))]
+      (org.jsoup.Jsoup/clean tmp
+                             ""
+                             (org.jsoup.safety.Whitelist/none)
+                             (.prettyPrint (org.jsoup.nodes.Document$OutputSettings.) false)))))
 
 
 (defn send-message!
