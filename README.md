@@ -2,10 +2,9 @@
 [![Open Issues](https://img.shields.io/github/issues/symphonyoss/clj-symphony.svg)](https://github.com/symphonyoss/clj-symphony/issues)
 [![Average time to resolve an issue](http://isitmaintained.com/badge/resolution/symphonyoss/clj-symphony.svg)](http://isitmaintained.com/project/symphonyoss/clj-symphony "Average time to resolve an issue")
 [![License](https://img.shields.io/github/license/symphonyoss/clj-symphony.svg)](https://github.com/symphonyoss/clj-symphony/blob/master/LICENSE)
-[![Dependency Status](https://www.versioneye.com/clojure/org.symphonyoss:clj-symphony/badge)](https://www.versioneye.com/clojure/org.symphonyoss:clj-symphony/)
+[![Dependencies Status](https://versions.deps.co/symphonyoss/clj-symphony/status.svg)](https://versions.deps.co/symphonyoss/clj-symphony)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/996/badge)](https://bestpractices.coreinfrastructure.org/projects/996)
 [![Symphony Software Foundation - Incubating](https://cdn.rawgit.com/symphonyoss/contrib-toolbox/master/images/ssf-badge-incubating.svg)](https://symphonyoss.atlassian.net/wiki/display/FM/Incubating)
-<!--- [![Dependency Status (JarKeeper)](http://jarkeeper.com/symphonyoss/clj-symphony/status.svg)](http://jarkeeper.com/symphonyoss/clj-symphony) -->
 
 # clj-symphony
 
