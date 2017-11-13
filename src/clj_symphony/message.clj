@@ -45,20 +45,30 @@
   (if m
     (org.apache.commons.lang3.StringEscapeUtils/escapeXml11 m)))
 
+(def ^:private charset-utf8   (java.nio.charset.Charset/forName "UTF-8"))
+(def ^:private jsoup-settings (doto (org.jsoup.nodes.Document$OutputSettings.)
+                                (.prettyPrint false)))
 
 (defn to-plain-text
   "Converts a MessageML message to plain text, converting <p> and <br/> tags into newlines."
   [^String m]
   (if m
-    (let [tmp (org.jsoup.Jsoup/clean m
-                                     ""
-                                     (.addTags (org.jsoup.safety.Whitelist/none) (into-array String ["br" "p"]))
-                                     (.prettyPrint (org.jsoup.nodes.Document$OutputSettings.) true))]
-      (org.jsoup.Jsoup/clean tmp
-                             ""
-                             (org.jsoup.safety.Whitelist/none)
-                             (.prettyPrint (org.jsoup.nodes.Document$OutputSettings.) false)))))
-
+    (let [doc (doto (org.jsoup.Jsoup/parseBodyFragment m)
+                (.outputSettings jsoup-settings)
+                (.charset charset-utf8))
+          _   (.append (.select doc "br") "\n")
+          _   (.prepend (.select doc "p") "\n\n")
+          tmp (.html doc)]
+;          tmp (s/replace (.html doc) "\\n" "\n")]
+      (s/replace
+        (org.jsoup.parser.Parser/unescapeEntities
+          (org.jsoup.Jsoup/clean tmp
+                                 ""
+                                 (org.jsoup.safety.Whitelist/none)
+                                 jsoup-settings)
+          false)
+        "\u00A0"  ; Unicode non-breaking space character (i.e. &nbsp;)
+        " "))))
 
 (defn send-message!
    "Sends the given message (a String), optionally including entity data (a String containing JSON) and an attachment (something compatible with io/file) to the given stream.
