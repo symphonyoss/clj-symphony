@@ -27,7 +27,7 @@ The latest version is:
 Alternatively, you may prefer to kick the library's tyres without creating a project.  This is a snap with the awesome [`lein try` plugin](https://github.com/rkneufeld/lein-try):
 
 ```shell
-$ lein try org.symphonyoss/clj-symphony 0.2.0-SNAPSHOT
+$ lein try org.symphonyoss/clj-symphony
 ```
 
 You will be dropped in a REPL with the library downloaded and ready for use.
