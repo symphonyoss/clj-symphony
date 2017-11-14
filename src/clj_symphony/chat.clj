@@ -16,14 +16,24 @@
 ;
 
 (ns clj-symphony.chat
-  "Operations related to 'chats'.  A 'chat' may contain 2 or more participants from 1 or 2 pods, and are different to rooms in that their membership is fixed at creation time."
+  "Operations related to 'chats'.  A 'chat' may contain 2 or more participants
+  from 1 or 2 pods, and are different to rooms in that their membership is fixed
+  at creation time."
   (:require [clj-symphony.user    :as syu]
             [clj-symphony.stream  :as sys]
             [clj-symphony.message :as sym]))
 
 
 (defn chatobj->map
-  "Converts a org.symphonyoss.client.model.Chat object into a map."
+  "Converts a `org.symphonyoss.client.model.Chat` object into a map with these
+  keys:
+
+  | Key             | Description                                                                                                       |
+  |-----------------|-------------------------------------------------------------------------------------------------------------------|
+  | `:stream-id`    | The stream id of the chat.                                                                                        |
+  | `:last-message` | The last message sent to the chat, as a map (see [[clj-symphony.message/msgobj->map]] for details).               |
+  | `:other-users`  | A sequence of maps representing the other users in the chat (see [[clj-symphony.user/userobj->map]] for details). |
+  "
   [^org.symphonyoss.client.model.Chat ch]
   (if ch
     {
@@ -34,20 +44,26 @@
 
 
 (defn chatobjs
-  "Returns all org.symphonyoss.client.model.Chat objects for the given user.  If no user identifier is provided, returns the chats of the authenticated connection user."
+  "Returns all `org.symphonyoss.client.model.Chat` objects for the given user.
+  If no user identifier is provided, returns the chats of the authenticated
+  connection user."
   ([c] (chatobjs c (syu/userobj c)))
   ([^org.symphonyoss.client.SymphonyClient c u]
     (.getChats (.getChatService c) (syu/userobj c u))))
 
 
 (defn chats
-  "Returns all chats for the given user.  If no user identifier is provided, returns the chats of the authenticated connection user."
+  "Returns all chats for the given user, as a sequence of maps (see
+  [[chatobj->map]] for details).  If no user identifier is provided, returns the
+  chats of the authenticated connection user."
   ([c]   (chats c (syu/user c)))
   ([c u] (map chatobj->map (chatobjs c u))))
 
 
 (defmulti chatobj
-  "Returns a Chat object for the given chat identifier (a org.symphonyoss.client.model.Chat, stream id, or map containing a :stream-id). Returns nil if the chat doesn't exist."
+  "Returns a `org.symphonyoss.client.model.Chat` object for the given chat
+  identifier (a `org.symphonyoss.client.model.Chat` object, stream id, or map
+  containing a `:stream-id`). Returns `nil` if the chat doesn't exist."
   {:arglists '([c ch])}
   (fn [c ch] (type ch)))
 
@@ -70,13 +86,17 @@
 
 
 (defn chat
-  "Returns a chat as a map for the given chat identifier. Returns nil if the chat doesn't exist."
+  "Returns a chat as a map (see [[chatobj->map]] for details) for the given chat
+  identifier. Returns `nil` if the chat doesn't exist."
   [c ch]
   (chatobj->map (chatobj c ch)))
 
 
 (defn start-chatobj!
-  "Starts an :IM or :MIM chat with the specified user(s), returning the new org.symphonyoss.client.model.Chat object. Users can be provided either as a single user (as described in clj-symphony.user/userobj) or a sequence or set of such identifiers."
+  "Starts an `:IM` or `:MIM` chat with the specified user(s), returning the new
+  `org.symphonyoss.client.model.Chat` object. Users are identified as
+  described in [[clj-symphony.user/userobj]], and can either be a single item or
+  a sequence or set of such items."
   [^org.symphonyoss.client.SymphonyClient c u]
   (let [user-objs (if (or (sequential? u) (set? u))
                     (set (map #(syu/userobj c %) u))
@@ -90,20 +110,24 @@
 
 
 (defn start-chat!
-  "Starts an :IM or :MIM chat with the specified user(s), returning the new chat as a map. Users can be provided either as a single user (as described in clj-symphony.user/userobj) or a sequence or set of such identifiers."
+  "Starts an `:IM` or `:MIM` chat with the specified user(s), returning the new
+  chat as a map (see [[chatobj->map]] for details). Users are identified as
+  described in [[clj-symphony.user/userobj]], and can either be a single item or
+  a sequence or set of such items."
   [c u]
   (chatobj->map (start-chatobj! c u)))
 
 
 (defn stop-chatobj!
-  "Stops a chat.  Returns true if the chat was successfully stopped."
+  "Stops a chat.  Returns `true` if the chat was successfully stopped."
   [^org.symphonyoss.client.SymphonyClient c ^org.symphonyoss.client.model.Chat ch]
   (if ch
     (.removeChat (.getChatService c) ch)))
 
 
 (defn stop-chat!
-  "Stops a chat and returns true if the chat was successfully stopped, nil if the chat was invalid."
+  "Stops a chat and returns `true` if the chat was successfully stopped, `nil`
+  if the chat was invalid."
   [c ch]
   (if ch
     (stop-chatobj! c (chatobj c ch))))

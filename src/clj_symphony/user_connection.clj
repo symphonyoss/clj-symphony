@@ -16,12 +16,29 @@
 ;
 
 (ns clj-symphony.user-connection
-  "Operations related to user connections and requests for those connections.  In Symphony, a user connection is an explicitly established relationship between users in different pods."
+  "Operations related to user connections and requests for those connections.
+  In Symphony, a user connection is an explicitly established relationship
+  between users in different pods."
   (:require [clj-symphony.user :as syu]))
 
 
+(def user-connection-states
+  "The set of possible user connections states in Symphony, as keywords."
+  (set (map #(keyword (str %)) (org.symphonyoss.symphony.clients.model.SymUserConnection$Status/values))))
+
+
 (defn userconnectionobj->map
-  "Converts a org.symphonyoss.symphony.clients.model.SymUserConnection object into a map."
+  "Converts a `org.symphonyoss.symphony.clients.model.SymUserConnection` object
+  into a map  with these keys:
+
+  | Key                   | Description                                                         |
+  |-----------------------|---------------------------------------------------------------------|
+  | `:user-id`            | The id of the user to whom the request was made.                    |
+  | `:status`             | The current status of the request (see [[user-connection-states]]). |
+  | `:first-request-date` | The date a connection was first requested.                          |
+  | `:update-date`        | The date the last connection request was initiated.                 |
+  | `:request-count`      | The total number of connection requests made.                       |
+  "
   [^org.symphonyoss.symphony.clients.model.SymUserConnection uc]
   (if uc
     {
@@ -36,67 +53,76 @@
     }))
 
 
-(def user-connection-states
-  "The set of possible user connections states in Symphony, as keywords."
-  (set (map #(keyword (str %)) (org.symphonyoss.symphony.clients.model.SymUserConnection$Status/values))))
-
-
 (defn user-connectionsobjs
-  "Returns all org.symphonyoss.symphony.clients.model.SymUserConnection objects for the authenticated user."
+  "Returns all `org.symphonyoss.symphony.clients.model.SymUserConnection`
+  objects for the authenticated user."
   [^org.symphonyoss.client.SymphonyClient c]
   (.getAllConnections (.getConnectionsClient c)))
 
 
 (defn user-connections
-  "Returns all user connections for the authenticated user, as a lazy sequence of maps (see clj-symphony.user-connection/userconnectionobj->map for details)."
+  "Returns all user connections for the authenticated user, as a lazy sequence
+  of maps (see [[userconnectionobj->map]] for details)."
   [c]
   (map userconnectionobj->map (user-connectionsobjs c)))
 
 
 (defn accepted-requestsobjs
-  "Returns all accepted user connection requests as org.symphonyoss.symphony.clients.model.SymUserConnection objects for the authenticated user."
+  "Returns all accepted user connection requests as
+  `org.symphonyoss.symphony.clients.model.SymUserConnection` objects for the
+  authenticated user."
   [^org.symphonyoss.client.SymphonyClient c]
   (.getAcceptedRequests (.getConnectionsClient c)))
 
 
 (defn accepted-requests
-  "Returns all accepted user connection requests for the authenticated user, as a lazy sequence of maps (see clj-symphony.user-connection/userconnectionobj->map for details)."
+  "Returns all accepted user connection requests for the authenticated user, as
+  a lazy sequence of maps (see [[userconnectionobj->map]] for details)."
   [c]
   (map userconnectionobj->map (accepted-requestsobjs c)))
 
 
 (defn pending-requestsobjs
-  "Returns all pending user connection requests as org.symphonyoss.symphony.clients.model.SymUserConnection objects for the authenticated user."
+  "Returns all pending user connection requests as
+  `org.symphonyoss.symphony.clients.model.SymUserConnection` objects for the
+  authenticated user."
   [^org.symphonyoss.client.SymphonyClient c]
   (.getPendingRequests (.getConnectionsClient c)))
 
 
 (defn pending-requests
-  "Returns all pending user connection requests for the authenticated user, as a lazy sequence of maps (see clj-symphony.user-connection/userconnectionobj->map for details)."
+  "Returns all pending user connection requests for the authenticated user, as a
+  lazy sequence of maps (see [[userconnectionobj->map]] for details)."
   [c]
   (map userconnectionobj->map (pending-requestsobjs c)))
 
 
 (defn rejected-requestsobjs
-  "Returns all rejected user connection requests as org.symphonyoss.symphony.clients.model.SymUserConnection objects for the authenticated user."
+  "Returns all rejected user connection requests as
+  `org.symphonyoss.symphony.clients.model.SymUserConnection` objects for the
+  authenticated user."
   [^org.symphonyoss.client.SymphonyClient c]
   (.getRejectedRequests (.getConnectionsClient c)))
 
 
 (defn rejected-requests
-  "Returns all rejected user connection requests for the authenticated user, as a lazy sequence of maps (see clj-symphony.user-connection/userconnectionobj->map for details)."
+  "Returns all rejected user connection requests for the authenticated user, as
+  a lazy sequence of maps (see [[userconnectionobj->map]] for details)."
   [c]
   (map userconnectionobj->map (rejected-requestsobjs c)))
 
 
 (defn incoming-requestsobjs
-  "Returns all incoming user connection requests as org.symphonyoss.symphony.clients.model.SymUserConnection objects for the authenticated user."
+  "Returns all incoming user connection requests as
+  `org.symphonyoss.symphony.clients.model.SymUserConnection` objects for the
+  authenticated user."
   [^org.symphonyoss.client.SymphonyClient c]
   (.getIncomingRequests (.getConnectionsClient c)))
 
 
 (defn incoming-requests
-  "Returns all incoming user connection requests for the authenticated user, as a lazy sequence of maps (see clj-symphony.user-connection/userconnectionobj->map for details)."
+  "Returns all incoming user connection requests for the authenticated user, as
+  a lazy sequence of maps (see [[userconnectionobj->map]] for details)."
   [c]
   (map userconnectionobj->map (incoming-requestsobjs c)))
 
@@ -123,14 +149,16 @@
 
 
 (defn reject-connection-request!
-  "Rejects a connection request from the given user, and returns a SymUserConnection object."
+  "Rejects a connection request from the given user, and returns a
+  `org.symphonyoss.symphony.clients.model.SymUserConnection` object."
   [^org.symphonyoss.client.SymphonyClient c u]
   (.rejectConnectionRequest (.getConnectionsClient c) (build-connection-requestobj u))
   nil)
 
 
 (defn accept-all-connection-requests!
-  "Convenience method that unconditionally accepts all incoming user connection requests, returning the number accepted."
+  "Convenience method that unconditionally accepts all incoming user connection
+  requests, returning the number accepted."
   [c]
   (let [incoming-requests (incoming-requests c)]
     (doall (map (partial accept-connection-request! c) incoming-requests))
@@ -138,7 +166,8 @@
 
 
 (defn reject-all-connection-requests!
-  "Convenience method that unconditionally rejects all incoming user connection requests, returning the number rejected."
+  "Convenience method that unconditionally rejects all incoming user connection
+  requests, returning the number rejected."
   [c]
   (let [incoming-requests (incoming-requests c)]
     (doall (map (partial reject-connection-request! c) incoming-requests))

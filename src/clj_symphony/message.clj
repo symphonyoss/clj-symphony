@@ -16,7 +16,16 @@
 ;
 
 (ns clj-symphony.message
-  "Operations related to messages, which combine a human-message (encoded as a subset of HTML called 'MessageMLv2') and a machine readable JSON blob called the 'entity data'."
+  "Operations related to MessageMLv2 messages, which combine one or more of:
+
+   1. a human-readable message (formatted using a subset of HTML called 'PresentationML')
+   2. a machine readable JSON blob called the 'entity data'
+   3. an attachment
+
+  See:
+
+   * https://rest-api.symphony.com/docs/messagemlv2 for details on PresentationML's formatting capabilities
+   * https://rest-api.symphony.com/docs/objects for details on MessageMLv2's entity data capabilities"
   (:require [clojure.string      :as s]
             [clojure.java.io     :as io]
             [clj-symphony.user   :as syu]
@@ -24,23 +33,36 @@
 
 
 (defn msgobj->map
-  "Converts a SymMessage object into a map."
+  "Converts a `org.symphonyoss.symphony.clients.model.SymMessage` object into a
+  map with these keys:
+
+  | Key              | Description                                          |
+  |------------------|------------------------------------------------------|
+  | `:message-id`    | The id of the message.                               |
+  | `:timestamp`     | The timestamp of the message.                        |
+  | `:stream-id`     | The stream id of the stream the message was sent to. |
+  | `:user-id`       | The user id of the user who sent the message.        |
+  | `:type`          | The 'type' of the message. *(seems to be unused??)*  |
+  | `:text`          | The MessageMLv2 'text' of the message.               |
+  | `:attachment`    | The attachment for the message (if any).             |
+  | `:entity-data`   | The JSON 'entity data' for the message (if any).     |
+  "
   [^org.symphonyoss.symphony.clients.model.SymMessage m]
   (if m
     {
-      :message-id     (.getId          m)
-      :timestamp      (java.util.Date. (Long/valueOf (.getTimestamp m)))
-      :stream-id      (.getStreamId    m)
-      :user-id        (.getFromUserId  m)
-      :type           (.getMessageType m)   ; This seems to be null or blank most of the time...
-      :text           (.getMessage     m)
-      :attachment     (.getAttachment  m)
-      :entity-data    (.getEntityData  m)
+      :message-id  (.getId          m)
+      :timestamp   (java.util.Date. (Long/valueOf (.getTimestamp m)))
+      :stream-id   (.getStreamId    m)
+      :user-id     (.getFromUserId  m)
+      :type        (.getMessageType m)   ; This seems to be null or blank most of the time...
+      :text        (.getMessage     m)
+      :attachment  (.getAttachment  m)
+      :entity-data (.getEntityData  m)
     }))
 
 
 (defn escape
-  "Escapes the given string for MessageML."
+  "Escapes the given string as content in a MessageMLv2 message."
   [^String m]
   (if m
     (org.apache.commons.lang3.StringEscapeUtils/escapeXml11 m)))
@@ -50,7 +72,9 @@
                                 (.prettyPrint false)))
 
 (defn to-plain-text
-  "Converts a MessageML message to plain text, converting <p> and <br/> tags into newlines."
+  "Converts a MessageML message to plain text, by stripping most tags,
+  converting `<p>` and `<br/>` tags into newlines, and unescaping HTML entities
+  into their Unicode equivalents."
   [^String m]
   (if m
     (let [doc (doto (org.jsoup.Jsoup/parseBodyFragment m)
@@ -71,11 +95,12 @@
         " "))))
 
 (defn send-message!
-   "Sends the given message (a String), optionally including entity data (a String containing JSON) and an attachment (something compatible with io/file) to the given stream.
+   "Sends a message to the stream `s` (which can be anything supported by [[clj-symphony.stream/stream-id]]).
 
-See:
-  * https://rest-api.symphony.com/docs/messagemlv2 for details on MessageMLv2's formatting capabilities
-  * https://rest-api.symphony.com/docs/objects for details on MessageMLv2's entity data capabilities"
+    * `m` is a String containing MessageMLv2
+    * `ed` is a String containing entity data compatible JSON
+    * `a` is an attachment (something compatible with [clojure.java.io/file](https://clojure.github.io/clojure/clojure.java.io-api.html))
+   "
   ([c s m]    (send-message! c s m nil nil))
   ([c s m ed] (send-message! c s m ed nil))
   ([^org.symphonyoss.client.SymphonyClient c s ^String m ^String ed a]
@@ -92,12 +117,16 @@ See:
     nil))
 
 
-(defn register-listener
-  "Registers f, a function with 1 parameter, as a message listener (callback), and returns a handle to that listener so that it can be deregistered later on, if needed.  Listeners registered in this manner are not scoped to any particular stream - they will be sent all messages from all streams that the authenticated connection user is a participant in.
+(defn register-listener!
+  "Registers f, a function with 1 parameter, as a message listener (callback),
+  and returns a handle to that listener so that it can be deregistered later on,
+  if needed.  Listeners registered in this manner are not scoped to any
+  particular stream - they will be sent all messages from all streams that the
+  authenticated connection user is a participant in.
 
-The argument passed to f is a map generated by msgobj->map (see that fn for details).
+  The argument passed to f is a map generated by [[msgobj->map]].
 
-The value returned by f (if any) is ignored."
+  The value returned by f (if any) is ignored."
   [^org.symphonyoss.client.SymphonyClient c f]
   (let [listener (reify
                    org.symphonyoss.client.services.MessageListener
@@ -107,7 +136,9 @@ The value returned by f (if any) is ignored."
     listener))
 
 
-(defn deregister-listener
-  "Deregisters a previously-registered message listener.  Once deregistered, a listener should be discarded (they cannot be reused). Returns true if a valid message listener was deregistered, false otherwise."
+(defn deregister-listener!
+  "Deregisters a previously-registered message listener.  Once deregistered, a
+  listener should be discarded (they cannot be reused). Returns `true` if a
+  valid message listener was deregistered, `false` otherwise."
   [^org.symphonyoss.client.SymphonyClient c ^org.symphonyoss.client.services.MessageListener l]
   (.removeMessageListener (.getMessageService c) l))

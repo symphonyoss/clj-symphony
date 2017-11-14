@@ -16,11 +16,38 @@
 ;
 
 (ns clj-symphony.user
-  "Operations related to users.  A user can be either a human or a service account (bot).")
+  "Operations related to users.  A user can be either a human or a service
+  account (bot).  Users can be identified in 3 separate ways:
+
+  1. via a user id - a Long that is globally unique across all pods
+  2. via an email address - a String, though only unique within a pod
+  3. via a username - a String, though only unique within a pod")
 
 
 (defn userobj->map
-  "Converts a SymUser object into a map."
+  "Converts a `org.symphonyoss.symphony.clients.model.SymUser` object into a map
+  with these keys:
+
+  | Key              | Description                            |
+  |------------------|----------------------------------------|
+  | `:user-id`       | The id of the user.                    |
+  | `:username`      | The username of the user.              |
+  | `:email-address` | The email address of the user.         |
+  | `:title`         | The title of the user.                 |
+  | `:first-name`    | The first name of the user.            |
+  | `:last-name`     | The last name of the user.             |
+  | `:display-name`  | The display name of the user.          |
+  | `:company`       | The company of the user.               |
+  | `:location`      | The location of the user.              |
+  | `:avatars`       | A sequence of avatar maps (see below). |
+
+  Avatar maps contain these keys:
+
+  | Key     | Description                                                 |
+  |---------|-------------------------------------------------------------|
+  | `:size` | The 'size string' of the avatar (e.g. `small`, `original`). |
+  | `:url`  | The URL of the new avatar image file.                       |
+  "
   [^org.symphonyoss.symphony.clients.model.SymUser u]
   (if u
     {
@@ -40,7 +67,7 @@
 
 
 (defmulti user-id
-  "Returns the id (a Long) of the given user."
+  "Returns the id (a long) of the given user."
   {:arglists '([u])}
   (fn ([u] (type u))))
 
@@ -62,21 +89,28 @@
 
 
 (defn userobjs
-  "Returns all users in the pod, as org.symphonyoss.symphony.clients.model.SymUser objects.  Will throw an exception if the authenticated connection user doesn't have sufficient permissions."
+  "Returns all users in the pod, as `org.symphonyoss.symphony.clients.model.SymUser`
+  objects.  Will throw an exception if the authenticated connection user doesn't
+  have sufficient permissions."
   [^org.symphonyoss.client.SymphonyClient c]
   (.getAllUsers (.getUsersClient c)))
 
 
 (defn users
-  "Returns all users in the pod.  Will throw an exception if the authenticated connection user doesn't have sufficient permissions."
+  "Returns all users in the pod as maps (see [[userobj->map]]).  Will throw an
+  exception if the authenticated connection user doesn't have sufficient
+  permissions."
   [c]
   (map userobj->map (userobjs c)))
 
 
 (defmulti userobj
-  "Returns a org.symphonyoss.symphony.clients.model.SymUser object for the given user identifier, or the authenticated connection user if a user id is not provided. User can be specified either as a user id (Long) or an email address (String). Returns nil if the user doesn't exist.
+  "Returns a `org.symphonyoss.symphony.clients.model.SymUser` object for the
+  given user identifier, or the authenticated connection user if a user id is
+  not provided. User can be specified either as a user id (Long) or an email
+  address (String). Returns `nil` if the user doesn't exist.
 
-Note: providing a user identifier requires calls to the server."
+  Note: providing a user identifier requires calls to the server."
   {:arglists '([c]
                [c u])}
   (fn
@@ -115,19 +149,22 @@ Note: providing a user identifier requires calls to the server."
 
 
 (defn user
-  "Returns a user for the given user identifier, or the authenticated connection user if a user id is not provided."
+  "Returns a user as a map (see [[userobj->map]] for details) for the given user
+  identifier, or the authenticated connection user if a user id is not provided."
   ([c]   (userobj->map (userobj c)))
   ([c u] (userobj->map (userobj c u))))
 
 
 (defn userobj-by-username
-  "Returns a org.symphonyoss.symphony.clients.model.SymUser object for the given username, or nil if the user doesn't exist."
+  "Returns a `org.symphonyoss.symphony.clients.model.SymUser` object for the
+  given username, or `nil` if the user doesn't exist."
   [^org.symphonyoss.client.SymphonyClient c ^String u]
   (.getUserFromName (.getUsersClient c) u))
 
 
 (defn user-by-username
-  "Returns a user for the given username, or nil if the user doesn't exist."
+  "Returns a user as a map (see [[userobj->map]] for details) for the given
+  username, or `nil` if the user doesn't exist."
   [c u]
   (userobj->map (userobj-by-username c u)))
 
@@ -168,27 +205,43 @@ Note: providing a user identifier requires calls to the server."
 
 
 (defn update-user!
-  "Updates the details of an existing user, returning it as a map. The new user details are provided as a map with these keys:
-  :user-id       The id of the user to update.
-  :username      The new username of the user.  #### This might be create-only?
-  :email-address The new email address of the user.
-  :title         The new title of the user.
-  :first-name    The new first name of the user.
-  :last-name     The new last name of the user.
-  :display-name  The new display name of the user.
-  :company       The new company of the user.  #### This might be read-only?
-  :location      The new location of the user.
-  :avatars       A sequence of avatar maps, each of which contains these keys:
-    :size        The 'size string' of the avatar (e.g. 'small', 'original')
-    :url         The URL of the new avatar image file.
-Note: calling this method requires that the service account calling this fn have the 'user administration' entitlement."
+  "Updates the details of an existing user, returning it as a map (see
+  [[userobj->map]] for details). The new user details are provided as a map with
+  these keys:
+
+  | Key              | Description                                                      |
+  |------------------|------------------------------------------------------------------|
+  | `:user-id`       | The id of the user to update.                                    |
+  | `:username`      | The new username of the user.  *#### This might be create-only?* |
+  | `:email-address` | The new email address of the user.                               |
+  | `:title`         | The new title of the user.                                       |
+  | `:first-name`    | The new first name of the user.                                  |
+  | `:last-name`     | The new last name of the user.                                   |
+  | `:display-name`  | The new display name of the user.                                |
+  | `:company`       | The new company of the user.  *#### This might be read-only?*    |
+  | `:location`      | The new location of the user.                                    |
+  | `:avatars`       | A sequence of avatar maps (see below).                           |
+
+  `:user-id` is mandatory (it must be present and cannot be `nil`).
+
+  Avatar maps contain these keys:
+
+  | Key     | Description                                                 |
+  |---------|-------------------------------------------------------------|
+  | `:size` | The 'size string' of the avatar (e.g. `small`, `original`). |
+  | `:url`  | The URL of the new avatar image file.                       |
+
+
+  Note: calling this fn requires that the service account have the 'user
+  administration' entitlement."
   [^org.symphonyoss.client.SymphonyClient c u]
   (if-let [user-id (:user-id u)]
     (userobj->map (.updateUser (.getUsersClient c) user-id (build-sym-user-obj :update u)))))
 
 
 (defn same-pod?
-  "Returns true if the given user is in the same pod as the authenticated connection user, or nil if the user doesn't exist."
+  "Returns `true` if the given user is in the same pod as the authenticated
+  connection user, or `nil` if the user doesn't exist."
   [c u]
   (let [me (user c)]
     (if-let [them (user c u)]
@@ -196,7 +249,8 @@ Note: calling this method requires that the service account calling this fn have
 
 
 (defn cross-pod?
-  "Returns true if the given user is in a different pod to the authenticated connection user, or nil if the user doesn't exist."
+  "Returns `true` if the given user is in a different pod to the authenticated
+  connection user, or `nil` if the user doesn't exist."
   [c u]
   (let [me (user c)]
     (if-let [them (user c u)]
@@ -210,7 +264,9 @@ Note: calling this method requires that the service account calling this fn have
 
 (comment   ; Frank was asked to remove this from SJC circa v1.0.2...
 (defn presences
-  "Returns the presence status of all users visible to the authenticated connection user, as a seq of maps with keys :user-id (value is a long) and :presence (value is a keyword)."
+  "Returns the presence status of all users visible to the authenticated
+  connection user, as a seq of maps with keys `:user-id` (value is a long) and
+  `:presence` (value is a keyword)."
   [^org.symphonyoss.client.SymphonyClient connection]
   (map #(hash-map :user-id   (.getUid ^org.symphonyoss.symphony.pod.model.UserPresence %)
                   :presence (keyword (str (.getCategory ^org.symphonyoss.symphony.pod.model.UserPresence %))))
@@ -218,7 +274,9 @@ Note: calling this method requires that the service account calling this fn have
 )
 
 (defmulti presence
-  "Returns the presence status of a single user, as a keyword.  If no user identifier is provided, returns the presence status of the authenticated connection user."
+  "Returns the presence status of a single user, as a keyword.  If no user
+  identifier is provided, returns the presence status of the authenticated
+  connection user."
   {:arglists '([c]
                [c u])}
   (fn
@@ -252,7 +310,8 @@ Note: calling this method requires that the service account calling this fn have
 
 
 (defmulti set-presence!
-  "Sets the presence status of the given user, or the authenticated connection user if not provided.  The new presence must be one of presence-states."
+  "Sets the presence status of the given user, or the authenticated connection
+  user if not provided.  The new presence must be one of [[presence-states]]."
   {:arglists '([c p]
                [c u p])}
   (fn

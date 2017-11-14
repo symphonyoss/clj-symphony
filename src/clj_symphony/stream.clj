@@ -16,15 +16,20 @@
 ;
 
 (ns clj-symphony.stream
-  "Operations related to 'streams'.  A 'stream' is the generic term for any kind of message channel in the Symphony platform, and come in several flavours:
-1. 1:1 chat
-2. M:M chat
-3. room
-4. wall post
+  "Operations related to 'streams'.  A 'stream' is the generic term for any kind
+  of message channel in the Symphony platform, and comes in one of several
+  flavours:
 
-The primary difference between chats and rooms is that rooms have dynamic membership whereas the membership of a chat is fixed at creation time.
+  1. 1:1 chat
+  2. M:M chat
+  3. room
+  4. wall post
 
-In addition, each type of stream can be 'internal' (intra-pod) or 'external' (include users from 1 other pod)."
+  The primary difference between chats and rooms is that rooms have dynamic
+  membership whereas the membership of a chat is fixed at creation time.
+
+  In addition, each type of stream can be 'internal' (intra-pod) or 'external'
+  (include users from at most 1 other pod, aka 'cross-pod')."
   (:require [clj-symphony.user :as syu]))
 
 
@@ -34,7 +39,18 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 
 
 (defn streamobj->map
-  "Converts a org.symphonyoss.symphony.clients.model.SymStreamAttributes object into a map."
+  "Converts a `org.symphonyoss.symphony.clients.model.SymStreamAttributes` object
+  into a map with these keys:
+
+  | Key                | Description                                                  |
+  |--------------------|--------------------------------------------------------------|
+  | `:stream-id`       | The stream id of the room.                                   |
+  | `:name`            | The name of the stream (if any).                             |
+  | `:active`          | A boolean indicating whether the stream is active or not.    |
+  | `:type`            | The type of the stream (see [[stream-types]]).               |
+  | `:cross-pod`       | A boolean indicating whether the stream is cross-pod or not. |
+  | `:member-user-ids` | A sequence of the user ids of members of the stream.         |
+  "
   [^org.symphonyoss.symphony.clients.model.SymStreamAttributes s]
   (if s
     {
@@ -85,7 +101,8 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 
 
 (defn streamobjs
-  "Returns a list of org.symphonyoss.symphony.clients.model.SymStreamAttributes objects visible to the authenticated connection user."
+  "Returns a list of `org.symphonyoss.symphony.clients.model.SymStreamAttributes`
+  objects visible to the authenticated connection user."
   [^org.symphonyoss.client.SymphonyClient c]
   (.getStreams (.getStreamsClient c)
                nil
@@ -94,39 +111,47 @@ In addition, each type of stream can be 'internal' (intra-pod) or 'external' (in
 
 
 (defn streams
-  "Returns a lazy sequence of streams visible to the authenticated connection user."
+  "Returns a lazy sequence of streams visible to the authenticated connection
+  user."
   [c]
   (map streamobj->map (streamobjs c)))
 
 
 (defn streamobj
-  "Returns the given stream identifier as a org.symphonyoss.symphony.clients.model.SymStreamAttributes object, or nil if it doesn't exist / isn't accessible to the authenticated connection user."
+  "Returns the given stream identifier as a
+  `org.symphonyoss.symphony.clients.model.SymStreamAttributes` object, or `nil`
+  if it doesn't exist / isn't accessible to the authenticated connection user."
   [^org.symphonyoss.client.SymphonyClient c s]
   (.getStreamAttributes (.getStreamsClient c) (stream-id s)))
 
 
 (defn stream
-  "Returns the given stream identifier as a map, or nil if it doesn't exist / isn't accessible to the authenticated connection user."
+  "Returns the given stream identifier as a map, or `nil` if it doesn't exist /
+  isn't accessible to the authenticated connection user."
   [c s]
   (streamobj->map (streamobj c s)))
 
 
 (defn- stream-type-fn
-  "Returns the type of the given stream identifier (see stream-types for the full set of possible values)."
   [c s]
   (:type (stream c s)))
-(def stream-type
-  "Returns the type of the given stream identifier (see stream-types for the full set of possible values)."
+(def
+  ^{:arglists '([c s])}
+  stream-type
+  "Returns the type of the given stream identifier (see [[stream-types]] for the
+  full set of possible values). Results are cached (via `memoize`)."
   (memoize stream-type-fn))
 
 
 (defn usersobjs-from-stream
-  "Returns all org.symphonyoss.symphony.clients.model.SymUser objects participating in the given stream."
+  "Returns all `org.symphonyoss.symphony.clients.model.SymUser` objects
+  participating in the given stream."
   [^org.symphonyoss.client.SymphonyClient c s]
   (.getUsersFromStream (.getUsersClient c) (stream-id s)))
 
 
 (defn users-from-stream
-  "Returns all users participating in the given stream, as maps (see clj-symphony.user/userobj->map for details)."
+  "Returns all users participating in the given stream, as a sequence of maps (see
+  [[clj-symphony.user/userobj->map]] for details on the map structure)."
   [c s]
   (map syu/userobj->map (usersobjs-from-stream c s)))
