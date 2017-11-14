@@ -19,7 +19,7 @@ Plonk the following in your project.clj :dependencies, `lein deps` and you shoul
 [org.symphonyoss/clj-symphony "#.#.#"]   ; Where #.#.# is replaced with an actual version number
 ```
 
-The latest version is:
+The latest released version is:
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.symphonyoss/clj-symphony.svg)](https://clojars.org/org.symphonyoss/clj-symphony)
 
