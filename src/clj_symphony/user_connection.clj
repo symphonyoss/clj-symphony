@@ -149,8 +149,7 @@
 
 
 (defn reject-connection-request!
-  "Rejects a connection request from the given user, and returns a
-  `org.symphonyoss.symphony.clients.model.SymUserConnection` object."
+  "Rejects a connection request from the given user."
   [^org.symphonyoss.client.SymphonyClient c u]
   (.rejectConnectionRequest (.getConnectionsClient c) (build-connection-requestobj u))
   nil)
