@@ -8,7 +8,7 @@
 
 # clj-symphony
 
-This WIP library is intended to be an idiomatic Clojure wrapper for the [symphony-java-client](https://github.com/symphonyoss/symphony-java-client) library.
+This library is an idiomatic Clojure wrapper for the [symphony-java-client](https://github.com/symphonyoss/symphony-java-client) library, a client binding and SDK for the [Symphony chat platform's REST API](https://rest-api.symphony.com/).
 
 ## Installation
 
