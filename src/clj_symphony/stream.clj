@@ -111,8 +111,8 @@
 
 
 (defn streams
-  "Returns a lazy sequence of streams visible to the authenticated connection
-  user."
+  "Returns a lazy sequence of streams (as maps, see [[streamobj->map]] for
+  details) visible to the authenticated connection user."
   [c]
   (map streamobj->map (streamobjs c)))
 
@@ -126,8 +126,9 @@
 
 
 (defn stream
-  "Returns the given stream identifier as a map, or `nil` if it doesn't exist /
-  isn't accessible to the authenticated connection user."
+  "Returns the given stream identifier as a map (see [[streamobj->map]] for
+  details), or `nil` if it doesn't exist / isn't accessible to the authenticated
+  connection user."
   [c s]
   (streamobj->map (streamobj c s)))
 
@@ -152,6 +153,6 @@
 
 (defn users-from-stream
   "Returns all users participating in the given stream, as a sequence of maps (see
-  [[clj-symphony.user/userobj->map]] for details on the map structure)."
+  [[clj-symphony.user/userobj->map]] for details)."
   [c s]
   (map syu/userobj->map (usersobjs-from-stream c s)))
