@@ -33,13 +33,11 @@
                          [org.clojure/clojure                      "1.8.0"]
                          [org.symphonyoss.symphony/symphony-client "1.1.0-SNAPSHOT"]
                          [org.apache.commons/commons-lang3         "3.7"]
-                         [org.jsoup/jsoup                          "1.11.1"]
+                         [org.jsoup/jsoup                          "1.11.2"]
                          [cheshire                                 "5.8.0"]
                        ]
   :profiles            {
-                         :dev     {:dependencies [[midje         "1.8.3"]]
-                                   :plugins      [[lein-midje    "3.2.1"]
-                                                  [lein-licenses "0.2.1"]]}
+                         :dev     {:plugins [[lein-licenses "0.2.1"]]}
                          :uberjar {:aot :all}
                        }
   :deploy-repositories [
