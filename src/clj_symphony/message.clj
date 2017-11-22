@@ -28,6 +28,7 @@
    * https://rest-api.symphony.com/docs/objects for details on MessageMLv2's entity data capabilities"
   (:require [clojure.string      :as s]
             [clojure.java.io     :as io]
+            [cheshire.core       :as ch]
             [clj-symphony.user   :as syu]
             [clj-symphony.stream :as sys]))
 
@@ -36,16 +37,16 @@
   "Converts a `org.symphonyoss.symphony.clients.model.SymMessage` object into a
   map with these keys:
 
-  | Key              | Description                                          |
-  |------------------|------------------------------------------------------|
-  | `:message-id`    | The id of the message.                               |
-  | `:timestamp`     | The timestamp of the message.                        |
-  | `:stream-id`     | The stream id of the stream the message was sent to. |
-  | `:user-id`       | The user id of the user who sent the message.        |
-  | `:type`          | The 'type' of the message. *(seems to be unused??)*  |
-  | `:text`          | The MessageMLv2 'text' of the message.               |
-  | `:attachment`    | The attachment for the message (if any).             |
-  | `:entity-data`   | The JSON 'entity data' for the message (if any).     |
+  | Key              | Description                                                      |
+  |------------------|------------------------------------------------------------------|
+  | `:message-id`    | The id of the message.                                           |
+  | `:timestamp`     | The timestamp of the message.                                    |
+  | `:stream-id`     | The stream id of the stream the message was sent to.             |
+  | `:user-id`       | The user id of the user who sent the message.                    |
+  | `:type`          | The 'type' of the message. *(seems to be unused??)*              |
+  | `:text`          | The MessageMLv2 'text' of the message.                           |
+  | `:attachment`    | The attachment for the message (if any).                         |
+  | `:entity-data`   | The parsed JSON 'entity data' for the message as a map (if any). |
   "
   [^org.symphonyoss.symphony.clients.model.SymMessage m]
   (if m
@@ -57,7 +58,8 @@
       :type        (.getMessageType m)   ; This seems to be null or blank most of the time...
       :text        (.getMessage     m)
       :attachment  (.getAttachment  m)
-      :entity-data (.getEntityData  m)
+      :entity-data (when-not (s/blank? (.getEntityData m))
+                     (ch/parse-string (.getEntityData m)))
     }))
 
 
@@ -94,17 +96,21 @@
         "\u00A0"  ; Unicode non-breaking space character (i.e. &nbsp;)
         " "))))
 
+
 (defn send-message!
    "Sends a message to the stream `s` (which can be anything supported by [[clj-symphony.stream/stream-id]]).
 
     * `m` is a String containing MessageMLv2
-    * `ed` is a String containing entity data compatible JSON
+    * `ed` is a map or a JSON String containing entity data (a map will be converted to a String)
     * `a` is an attachment (something compatible with [clojure.java.io/file](https://clojure.github.io/clojure/clojure.java.io-api.html))
    "
   ([c s m]    (send-message! c s m nil nil))
   ([c s m ed] (send-message! c s m ed nil))
-  ([^org.symphonyoss.client.SymphonyClient c s ^String m ^String ed a]
-    (let [stream-id (sys/stream-id s)]
+  ([^org.symphonyoss.client.SymphonyClient c s ^String m ed a]
+    (let [stream-id (sys/stream-id s)
+          ed-str    (if (instance? java.util.Map ed)
+                      (ch/generate-string ed)
+                      ed)]
       (.sendMessage (.getMessagesClient c)
                     (doto (org.symphonyoss.symphony.pod.model.Stream.)
                       (.setId stream-id))
@@ -112,7 +118,7 @@
                       (org.symphonyoss.symphony.clients.model.SymMessage.)
                       (.setStreamId   stream-id)
                       (.setMessage    m)
-                      (.setEntityData ed)
+                      (.setEntityData ed-str)
                       (.setAttachment (io/file a)))))
     nil))
 

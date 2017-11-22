@@ -34,6 +34,7 @@
                          [org.symphonyoss.symphony/symphony-client "1.1.0-SNAPSHOT"]
                          [org.apache.commons/commons-lang3         "3.7"]
                          [org.jsoup/jsoup                          "1.11.1"]
+                         [cheshire                                 "5.8.0"]
                        ]
   :profiles            {
                          :dev     {:dependencies [[midje         "1.8.3"]]
