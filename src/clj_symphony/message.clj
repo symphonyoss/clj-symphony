@@ -33,6 +33,13 @@
             [clj-symphony.stream :as sys]))
 
 
+(defn- parse-entity-data
+  "Parses the given entity data JSON string into a Clojure data structure."
+  [^String ed]
+  (if-not (s/blank? ed)
+    (ch/parse-string ed)))
+
+
 (defn msgobj->map
   "Converts a `org.symphonyoss.symphony.clients.model.SymMessage` object into a
   map with these keys:
@@ -58,9 +65,29 @@
       :type        (.getMessageType m)   ; This seems to be null or blank most of the time...
       :text        (.getMessage     m)
       :attachment  (.getAttachment  m)
-      :entity-data (when-not (s/blank? (.getEntityData m))
-                     (ch/parse-string (.getEntityData m)))
+      :entity-data (parse-entity-data (.getEntityData m))
     }))
+
+
+(defmulti mentions
+  "Returns the list of user ids mentioned in the message (or nil if there aren't any)."
+  {:arglists '([m])}
+  type)
+
+(defmethod mentions nil
+  [m]
+  nil)
+
+(defmethod mentions java.util.Map
+  [{:keys [entity-data]}]
+  (if entity-data
+    (seq
+      (map #(Long/parseLong (get (first (get (second %) "id")) "value"))
+           (filter #(= "com.symphony.user.mention" (get (val %) "type")) entity-data)))))
+
+(defmethod mentions org.symphonyoss.symphony.clients.model.SymMessage
+  [^org.symphonyoss.symphony.clients.model.SymMessage m]
+  (mentions { :entity-data (parse-entity-data (.getEntityData m)) }))
 
 
 (defn escape

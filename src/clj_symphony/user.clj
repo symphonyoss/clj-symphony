@@ -69,7 +69,7 @@
 (defmulti user-id
   "Returns the id (a long) of the given user."
   {:arglists '([u])}
-  (fn ([u] (type u))))
+  type)
 
 (defmethod user-id nil
   [u]
