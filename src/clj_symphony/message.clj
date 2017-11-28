@@ -125,10 +125,10 @@
 
 
 (defn tokens
-  [^String m]
   "Returns the tokens (words) in the given MessageML message, in all lower case.  Splits on whitespace and punctuation
   (as per the the Java regex pattern '\\p{Punct}').  Note that message content that contains whitespace within a single
   tag will also be split - this is especially noticable for @mentions containing a person's first and last names."
+  [^String m]
   (if m
     (s/split (s/lower-case (to-plain-text m)) #"[\p{Punct}\s]+")))
 
