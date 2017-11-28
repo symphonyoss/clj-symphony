@@ -96,6 +96,7 @@
   (if m
     (org.apache.commons.lang3.StringEscapeUtils/escapeXml11 m)))
 
+
 (def ^:private charset-utf8   (java.nio.charset.Charset/forName "UTF-8"))
 (def ^:private jsoup-settings (doto (org.jsoup.nodes.Document$OutputSettings.)
                                 (.prettyPrint false)))
@@ -112,7 +113,6 @@
           _   (.append (.select doc "br") "\n")
           _   (.prepend (.select doc "p") "\n\n")
           tmp (.html doc)]
-;          tmp (s/replace (.html doc) "\\n" "\n")]
       (s/replace
         (org.jsoup.parser.Parser/unescapeEntities
           (org.jsoup.Jsoup/clean tmp
@@ -122,6 +122,15 @@
           false)
         "\u00A0"  ; Unicode non-breaking space character (i.e. &nbsp;)
         " "))))
+
+
+(defn tokens
+  [^String m]
+  "Returns the tokens (words) in the given MessageML message, in all lower case.  Splits on whitespace and punctuation
+  (as per the the Java regex pattern '\\p{Punct}').  Note that message content that contains whitespace within a single
+  tag will also be split - this is especially noticable for @mentions containing a person's first and last names."
+  (if m
+    (s/split (s/lower-case (to-plain-text m)) #"[\p{Punct}\s]+")))
 
 
 (defn send-message!
