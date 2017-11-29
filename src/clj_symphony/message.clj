@@ -80,10 +80,35 @@
 
 (defmethod mentions java.util.Map
   [{:keys [entity-data]}]
+  ; Entity data is horrendous - here's a (partly made up) example:
+  ; {
+  ;   "mention1" {
+  ;     "type"    "com.symphony.user.mention",
+  ;     "version" "1.0",
+  ;     "id"      [ { "type"  "com.symphony.user.userId",
+  ;                   "value" "346621040656389"},
+  ;                 { "type"  "com.acme.userId",
+  ;                   "value" "bdd03eb6-32c0-4781-bf8e-1ad3053533c5" } ]
+  ;   },
+  ;   "mention2" {
+  ;     "type"    "com.symphony.user.mention",
+  ;     "version" "1.0",
+  ;     "id"      [ { "type"  "com.symphony.user.userId",
+  ;                   "value" "346621040656385" } ]
+  ;   },
+  ;   "foo1" {
+  ;     "type"    "com.acme.foo",
+  ;     "version" "1.0"
+  ;   }
+  ; }
   (if entity-data
-    (seq
-      (map #(Long/parseLong (get (first (get (second %) "id")) "value"))
-           (filter #(= "com.symphony.user.mention" (get (val %) "type")) entity-data)))))
+    (let [mention-ids ; Flat seq of maps within the "id" arrays, where the top-level type="com.symphony.user.mention"
+                      (flatten
+                        (map (fn [x] (get (val x) "id"))
+                          (filter #(= "com.symphony.user.mention" (get (val %) "type")) entity-data)))]
+      (seq
+        (map #(Long/parseLong (get % "value"))
+          (filter #(= "com.symphony.user.userId" (get % "type")) mention-ids))))))
 
 (defmethod mentions org.symphonyoss.symphony.clients.model.SymMessage
   [^org.symphonyoss.symphony.clients.model.SymMessage m]
