@@ -80,7 +80,7 @@
 
 (defmethod mentions java.util.Map
   [{:keys [entity-data]}]
-  ; Entity data is horrendous - here's a (partly made up) example:
+  ; Entity data is horrendous - here's an example (augmented with dummy data for testing purposes):
   ; {
   ;   "mention1" {
   ;     "type"    "com.symphony.user.mention",
