@@ -70,7 +70,9 @@
 
 
 (defmulti mentions
-  "Returns the list of user ids mentioned in the message (or nil if there aren't any)."
+  "Returns the list of user ids mentioned in the message (or nil if there aren't any). Note that due to a bug in
+  Symphony, @mentions of cross-pod users that the author of the message isn't connected to will be missing from the
+  result."
   {:arglists '([m])}
   type)
 
@@ -80,7 +82,7 @@
 
 (defmethod mentions java.util.Map
   [{:keys [entity-data]}]
-  ; Entity data is horrendous - here's an example (augmented with dummy data for testing purposes):
+  ; Entity data for @mentions is horrendous - here's an example (augmented with dummy data for testing purposes):
   ; {
   ;   "mention1" {
   ;     "type"    "com.symphony.user.mention",
@@ -102,13 +104,17 @@
   ;   }
   ; }
   (if entity-data
-    (let [mention-ids ; Flat seq of maps within the "id" arrays, where the top-level type="com.symphony.user.mention"
+    (let [mention-ids ; Flat sequence of all maps within the "id" arrays, where type="com.symphony.user.mention" and version="1.x"
                       (flatten
-                        (map (fn [x] (get (val x) "id"))
-                          (filter #(= "com.symphony.user.mention" (get (val %) "type")) entity-data)))]
+                        (map #(get (val %) "id")
+                             (filter #(and (=              (get (val %) "type")    "com.symphony.user.mention")
+                                           (s/starts-with? (get (val %) "version") "1."))
+                                     entity-data)))]
+      ; Now pull out all the type="com.symphony.user.userId", version="1.x" values and convert them to a long
       (seq
         (map #(Long/parseLong (get % "value"))
-          (filter #(= "com.symphony.user.userId" (get % "type")) mention-ids))))))
+          (filter #(= (get % "type") "com.symphony.user.userId")
+                  mention-ids))))))
 
 (defmethod mentions org.symphonyoss.symphony.clients.model.SymMessage
   [^org.symphonyoss.symphony.clients.model.SymMessage m]
