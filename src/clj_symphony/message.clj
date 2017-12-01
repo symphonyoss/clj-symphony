@@ -105,11 +105,12 @@
   [{:keys [text entity-data]}]
   ; The way @mentions are stored in Symphony messages is *hot garbage*.  Order of @mentions is only guaranteed in the
   ; presentationML, so we have to parse that for entity ids first (noting that presentationML doesn't provide any way to
-  ; distinguish between different types/versions of entity, so we have to process all of them - not just @mentions).
+  ; distinguish between different types/versions of entity, so we have to process all of them - not just @mentions,
+  ; even though that's all we're interested in).
   ;
   ; Once we have the ordered set of entity ids, we can go and figure out which ones are actually @mentions, and
   ; then (is anyone losing interest yet? I am!) we destructure the over-engineered mess that is the @mentions entity
-  ; JSON structure to pull out the actual user ids we were after in the first place.
+  ; JSON structure to pull out the actual user id long values we were after in the first place.
 
   ; Here's an example of the data structure (augmented with dummy data for testing purposes):
   ; {
