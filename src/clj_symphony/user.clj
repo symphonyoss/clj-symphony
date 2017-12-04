@@ -259,19 +259,8 @@
 
 (def presence-states
   "The set of possible presence states in Symphony, as keywords."
-  (set (map #(keyword (str %)) (org.symphonyoss.symphony.pod.model.Presence$CategoryEnum/values))))
+  (set (map #(keyword (str %)) (org.symphonyoss.symphony.clients.model.SymPresence$Category/values))))
 
-
-(comment   ; Frank was asked to remove this from SJC circa v1.0.2...
-(defn presences
-  "Returns the presence status of all users visible to the authenticated
-  connection user, as a seq of maps with keys `:user-id` (value is a long) and
-  `:presence` (value is a keyword)."
-  [^org.symphonyoss.client.SymphonyClient connection]
-  (map #(hash-map :user-id   (.getUid ^org.symphonyoss.symphony.pod.model.UserPresence %)
-                  :presence (keyword (str (.getCategory ^org.symphonyoss.symphony.pod.model.UserPresence %))))
-       (.getAllUserPresence (.getPresenceService connection))))
-)
 
 (defmulti presence
   "Returns the presence status of a single user, as a keyword.  If no user
@@ -297,7 +286,7 @@
 
 (defmethod presence Long
   [^org.symphonyoss.client.SymphonyClient c ^Long u]
-  (keyword (str (.getCategory (.getUserPresence (.getPresenceClient c) u)))))
+  (keyword (str (.getCategory (.getUserPresence (.getPresenceClient c) u false)))))
 
 (defmethod presence String
   [c ^String u]
@@ -309,39 +298,13 @@
     (presence c user-id)))
 
 
-(defmulti set-presence!
-  "Sets the presence status of the given user, or the authenticated connection
-  user if not provided.  The new presence must be one of [[presence-states]]."
-  {:arglists '([c p]
-               [c u p])}
-  (fn
-    ([c p]   :current-user)
-    ([c u p] (type u))))
-
-(defmethod set-presence! :current-user
-  [c p]
-  (set-presence! c (user c) p))
-
-(defmethod set-presence! nil
-  [c u p]
-  nil)
-
-(defmethod set-presence! org.symphonyoss.symphony.clients.model.SymUser
-  [c ^org.symphonyoss.symphony.clients.model.SymUser u p]
-  (set-presence! c (.getId u) p))
-
-(defmethod set-presence! Long
-  [^org.symphonyoss.client.SymphonyClient c ^Long u p]
+(defn set-presence!
+  "Sets the presence status of the authenticated connection user.  The new
+  presence must be one of [[presence-states]].
+  Note: as of SJC 1.1.0, setting presences of other users is no longer supported."
+  [^org.symphonyoss.client.SymphonyClient c p]
   (let [presence (doto
-                   (org.symphonyoss.symphony.pod.model.Presence.)
-                   (.setCategory (org.symphonyoss.symphony.pod.model.Presence$CategoryEnum/valueOf (name p))))]
-    (.setUserPresence (.getPresenceClient c) u presence)
+                   (org.symphonyoss.symphony.clients.model.SymPresence.)
+                   (.setCategory (org.symphonyoss.symphony.clients.model.SymPresence$Category/valueOf (name p))))]
+    (.setUserPresence (.getPresenceClient c) presence)
     nil))
-
-(defmethod set-presence! String
-  [c ^String u p]
-  (set-presence! c (userobj c u) p))
-
-(defmethod set-presence! java.util.Map
-  [c {:keys [user-id]} p]
-  (set-presence! c user-id p))
