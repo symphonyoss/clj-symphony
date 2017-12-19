@@ -21,7 +21,7 @@
   :license             {:spdx-license-expression "Apache-2.0"
                         :name                    "Apache License, Version 2.0"
                         :url                     "http://www.apache.org/licenses/LICENSE-2.0"}
-  :min-lein-version    "2.7.0"
+  :min-lein-version    "2.8.1"
   :repositories        [
                          ["sonatype-snapshots" {:url "https://oss.sonatype.org/content/groups/public" :snapshots true}]
                          ["jitpack"            {:url "https://jitpack.io"                             :snapshots true}]
