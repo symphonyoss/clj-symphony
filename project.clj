@@ -40,6 +40,11 @@
                          :dev     {:plugins [[lein-licenses "0.2.1"]]}
                          :uberjar {:aot :all}
                        }
+  :jvm-opts            ~(let [version     (System/getProperty "java.version")
+                              [major _ _] (clojure.string/split version #"\.")]
+                          (if (= major "9")
+                            ["--add-modules" "java.xml.bind"]
+                            []))
   :deploy-repositories [
                          ["snapshots" {:url      "https://clojars.org/repo"
                                        :username :env/clojars_username
