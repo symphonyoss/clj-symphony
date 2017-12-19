@@ -30,8 +30,8 @@
                          [lein-codox "0.10.3"]
                        ]
   :dependencies        [
-                         [org.clojure/clojure                      "1.8.0"]
-                         [org.symphonyoss.symphony/symphony-client "1.1.0"]
+                         [org.clojure/clojure                      "1.9.0"]
+                         [org.symphonyoss.symphony/symphony-client "1.1.1"]
                          [org.apache.commons/commons-lang3         "3.7"]
                          [org.jsoup/jsoup                          "1.11.2"]
                          [cheshire                                 "5.8.0"]
