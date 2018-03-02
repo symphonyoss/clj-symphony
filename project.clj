@@ -31,13 +31,13 @@
                        ]
   :dependencies        [
                          [org.clojure/clojure                      "1.9.0"]
-                         [org.symphonyoss.symphony/symphony-client "1.1.1"]
+                         [org.symphonyoss.symphony/symphony-client "1.1.2"]
                          [org.apache.commons/commons-lang3         "3.7"]
                          [org.jsoup/jsoup                          "1.11.2"]
                          [cheshire                                 "5.8.0"]
                        ]
   :profiles            {
-                         :dev     {:plugins [[lein-licenses "0.2.1"]]}
+                         :dev     {:plugins [[lein-licenses "0.2.2"]]}
                          :uberjar {:aot :all}
                        }
   :jvm-opts            ~(let [version     (System/getProperty "java.version")
