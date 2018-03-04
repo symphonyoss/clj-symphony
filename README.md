@@ -71,7 +71,7 @@ Require them in your project:
 
 ## License
 
-Copyright © 2016, 2017 Symphony Software Foundation
+Copyright © 2016 Symphony Software Foundation
 
 Distributed under the [Apache License, Version 2.0](http://www.apache.org/licenses/LICENSE-2.0).
 
