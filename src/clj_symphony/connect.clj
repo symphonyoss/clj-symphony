@@ -73,7 +73,18 @@
   [^org.symphonyoss.client.SymphonyClient c]
   (.shutdown c))
 
-(defn version
-  "Returns the version of Symphony at the other end of the given connection, as a string in `major.minor.bugfix` format."
+(defn pod-version
+  "Returns the version of the Symphony pod at the other end of the given connection, as a string in `major.minor.bugfix` format."
   [^org.symphonyoss.client.SymphonyClient c]
-  (.getVersion (.v1HealthCheckGet (.getAgentSystemApi (.getSymphonyApis c)))))
+  (.getPodVersion (.v2HealthCheckGet (.getAgentSystemApi (.getSymphonyApis c)) nil nil)))
+
+(defn agent-version
+  "Returns the version of the Symphony agent at the other end of the given connection, as a string in `major.minor.bugfix` format."
+  [^org.symphonyoss.client.SymphonyClient c]
+  (.getAgentVersion (.v2HealthCheckGet (.getAgentSystemApi (.getSymphonyApis c)) nil nil)))
+
+(defn version
+  "Deprecated - please use pod-version instead."
+  { :deprecated "0.5.0" }
+  [c]
+  (pod-version c))
