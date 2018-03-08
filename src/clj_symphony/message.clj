@@ -159,11 +159,13 @@
     (org.apache.commons.lang3.StringEscapeUtils/escapeXml11 s)))
 
 
-(defn sanitise-hashtag
-  "Sanitises the given string for use in a Symphony hashtag."
+(defn sanitise-tag
+  "Sanitises the given string for use in a Symphony hashtag or cashtag."
   [^String s]
-  (s/join (re-seq #"[a-zA-Z0-9]+" s)))
-(def sanitize-hashtag sanitise-hashtag)
+  (s/join (re-seq #"[\p{Alnum}_.-]+" s)))
+(def sanitize-tag
+  "English (simplified) version of sanitise-tag.  See that fn for details."
+  sanitise-tag)
 
 
 (defn to-plain-text
