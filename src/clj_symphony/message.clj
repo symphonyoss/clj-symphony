@@ -159,10 +159,11 @@
     (org.apache.commons.lang3.StringEscapeUtils/escapeXml11 s)))
 
 
-(defn escape-hashtag
-  "Escapes the given string for use in a Symphony hashtag."
+(defn sanitise-hashtag
+  "Sanitises the given string for use in a Symphony hashtag."
   [^String s]
-  (apply str (re-seq #"[a-zA-Z0-9]" s)))
+  (s/join (re-seq #"[a-zA-Z0-9]+" s)))
+(def sanitize-hastag sanitise-hashtag)
 
 
 (defn to-plain-text
