@@ -159,6 +159,12 @@
     (org.apache.commons.lang3.StringEscapeUtils/escapeXml11 s)))
 
 
+(defn escape-hashtag
+  "Escapes the given string for use in a Symphony hashtag."
+  [^String s]
+  (apply str (re-seq #"[a-zA-Z0-9]" s)))
+
+
 (defn to-plain-text
   "Converts a MessageML message to plain text, by stripping most tags,
   converting `<p>` and `<br/>` tags into newlines, and unescaping HTML entities
@@ -187,7 +193,7 @@
   (via the Java regex pattern `[\\p{Punct}\\s]+`).  Note that message content that contains whitespace within a single
   tag will also be split - this is especially noticable for @mentions containing a person's first and last names."
   [^String m]
-  (if (not (blank? m))
+  (if-not (s/blank? m)
     (s/split (s/lower-case (to-plain-text m)) #"[\p{Punct}\s]+")))
 
 
