@@ -187,7 +187,7 @@
   (via the Java regex pattern `[\\p{Punct}\\s]+`).  Note that message content that contains whitespace within a single
   tag will also be split - this is especially noticable for @mentions containing a person's first and last names."
   [^String m]
-  (if m
+  (if (not (blank? m))
     (s/split (s/lower-case (to-plain-text m)) #"[\p{Punct}\s]+")))
 
 
