@@ -163,7 +163,7 @@
   "Sanitises the given string for use in a Symphony hashtag."
   [^String s]
   (s/join (re-seq #"[a-zA-Z0-9]+" s)))
-(def sanitize-hastag sanitise-hashtag)
+(def sanitize-hashtag sanitise-hashtag)
 
 
 (defn to-plain-text
