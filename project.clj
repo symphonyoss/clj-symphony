@@ -42,7 +42,7 @@
                        }
   :jvm-opts            ~(let [version     (System/getProperty "java.version")
                               [major _ _] (clojure.string/split version #"\.")]
-                          (if (= major "9")
+                          (if (>= (java.lang.Integer/parseInt major) 9)
                             ["--add-modules" "java.xml.bind"]
                             []))
   :deploy-repositories [
