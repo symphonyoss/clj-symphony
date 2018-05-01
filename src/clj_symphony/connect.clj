@@ -1,5 +1,5 @@
 ;
-; Copyright © 2017 Symphony Software Foundation
+; Copyright 2017 Fintech Open Source Foundation
 ; SPDX-License-Identifier: Apache-2.0
 ;
 ; Licensed under the Apache License, Version 2.0 (the "License");
@@ -61,6 +61,21 @@
         user-email       (:user-email       params)
         http-client      (org.symphonyoss.client.impl.CustomHttpClient/getClient (first user-cert)   (second user-cert)
                                                                                  (first trust-store) (second trust-store))
+; Awaiting fix for https://github.com/symphonyoss/symphony-java-client/issues/104
+;        sjc-config       (-> (org.symphonyoss.client.SymphonyClientConfigBuilder/newBuilder)
+;                             (.withSessionAuthUrl session-auth-url)
+;                             (.withKeyAuthUrl     key-auth-url)
+;                             (.withPodUrl         pod-api-url)
+;                             (.withAgentUrl       agent-api-url)
+;                             (.withTrustStore     (first trust-store) (.toCharArray ^String (second trust-store)))
+;                             (.withUserCreds      user-email (first user-cert) (.toCharArray ^String (second user-cert)))
+;                             (.withJMXHealthcheck true)
+;                             (.withServices       true)
+;                             (.build))
+;        connection       (doto (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/V4)
+;                           (.init http-client sjc-config))]
+;      connection))
+
         connection       (doto (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/V4)
                            (.setDefaultHttpClient http-client))
         auth-client      (org.symphonyoss.symphony.clients.AuthenticationClient. session-auth-url key-auth-url http-client)

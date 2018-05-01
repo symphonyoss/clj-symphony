@@ -37,8 +37,8 @@ deploy:
   - provider: pages
     skip_cleanup: true
     github_token: $GITHUB_TOKEN
-    email: travis+clj-symphony@symphony.foundation
-    name: Travis CI - Symphony Software Foundation
+    email: travis+clj-symphony@finos.org
+    name: Travis CI - Fintech Open Source Foundation
     local_dir: target/doc
     on:
       branch: master
