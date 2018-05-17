@@ -6,6 +6,8 @@
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/996/badge)](https://bestpractices.coreinfrastructure.org/projects/996)
 [![FINOS - Incubating](https://cdn.rawgit.com/finos/contrib-toolbox/master/images/badge-incubating.svg)](https://finosfoundation.atlassian.net/wiki/display/FINOS/Incubating)
 
+<img align="right" width="40%" src="https://www.finos.org/hubfs/FINOS/finos-logo/FINOS_Icon_Wordmark_Name_RGB_horizontal.png">
+
 # clj-symphony
 
 This library is an idiomatic Clojure wrapper for the [symphony-java-client](https://github.com/symphonyoss/symphony-java-client) library, a client binding and SDK for the [Symphony chat platform's REST API](https://rest-api.symphony.com/).
