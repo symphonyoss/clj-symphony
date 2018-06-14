@@ -51,36 +51,39 @@
   Note: if `:pod-id` is not provided, `:session-auth-url` and `:key-auth-url`
   and `:agent-api-url` and `:pod-api-url` are all mandatory."
   [params]
-  (let [params           (parse-params params)
-        session-auth-url (:session-auth-url params)
-        key-auth-url     (:key-auth-url     params)
-        agent-api-url    (:agent-api-url    params)
-        pod-api-url      (:pod-api-url      params)
-        trust-store      (:trust-store      params)
-        user-cert        (:user-cert        params)
-        user-email       (:user-email       params)
-        http-client      (org.symphonyoss.client.impl.CustomHttpClient/getClient (first user-cert)   (second user-cert)
-                                                                                 (first trust-store) (second trust-store))
-; Awaiting fix for https://github.com/symphonyoss/symphony-java-client/issues/104
-;        sjc-config       (-> (org.symphonyoss.client.SymphonyClientConfigBuilder/newBuilder)
-;                             (.withSessionAuthUrl session-auth-url)
-;                             (.withKeyAuthUrl     key-auth-url)
-;                             (.withPodUrl         pod-api-url)
-;                             (.withAgentUrl       agent-api-url)
-;                             (.withTrustStore     (first trust-store) (.toCharArray ^String (second trust-store)))
-;                             (.withUserCreds      user-email (first user-cert) (.toCharArray ^String (second user-cert)))
-;                             (.withJMXHealthcheck true)
-;                             (.withServices       true)
-;                             (.build))
-;        connection       (doto (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/V4)
-;                           (.init http-client sjc-config))]
+  (let [params               (parse-params params)
+        session-auth-url     (:session-auth-url params)
+        key-auth-url         (:key-auth-url     params)
+        agent-api-url        (:agent-api-url    params)
+        pod-api-url          (:pod-api-url      params)
+        trust-store          (:trust-store      params)
+        user-cert            (:user-cert        params)
+        user-email           (:user-email       params)
+        jersey-client-config (doto (org.glassfish.jersey.client.ClientConfig.)  ; Note: redundant as of SJC v1.1.5
+                               (.register (org.symphonyoss.symphony.agent.invoker.JSON.)))
+        http-client          (org.symphonyoss.client.impl.CustomHttpClient/getClient ^String (first user-cert)   ^String (second user-cert)
+                                                                                     ^String (first trust-store) ^String (second trust-store)
+                                                                                     jersey-client-config)
+; Awaiting release of the fix for https://github.com/symphonyoss/symphony-java-client/issues/104
+;        sjc-config           (-> (org.symphonyoss.client.SymphonyClientConfigBuilder/newBuilder)
+;                                 (.withSessionAuthUrl session-auth-url)
+;                                 (.withKeyAuthUrl     key-auth-url)
+;                                 (.withPodUrl         pod-api-url)
+;                                 (.withAgentUrl       agent-api-url)
+;                                 (.withTrustStore     (first trust-store) (.toCharArray ^String (second trust-store)))
+;                                 (.withUserCreds      user-email (first user-cert) (.toCharArray ^String (second user-cert)))
+;                                 (.withJMXHealthcheck true)
+;                                 (.withServices       true)
+;                                 (.build))
+;        connection           (doto (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/V4)
+;                               (.init http-client sjc-config))]
 ;      connection))
 
-        connection       (doto (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/V4)
-                           (.setDefaultHttpClient http-client))
-        auth-client      (org.symphonyoss.symphony.clients.AuthenticationClient. session-auth-url key-auth-url http-client)
-        auth             (.authenticate auth-client)
-        _                (.init connection http-client auth ^String user-email ^String agent-api-url ^String pod-api-url)]
+        connection           (doto (org.symphonyoss.client.SymphonyClientFactory/getClient org.symphonyoss.client.SymphonyClientFactory$TYPE/V4)
+                               (.setDefaultHttpClient http-client))
+        auth-client          (org.symphonyoss.symphony.clients.AuthenticationClient. session-auth-url key-auth-url http-client)
+        auth                 (.authenticate auth-client)
+        _                    (.init connection http-client auth ^String user-email ^String agent-api-url ^String pod-api-url)]
       connection))
 
 (defn disconnect
