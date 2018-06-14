@@ -197,7 +197,7 @@
   tag will also be split - this is especially noticable for @mentions containing a person's first and last names."
   [^String m]
   (if-not (s/blank? m)
-    (s/split (s/lower-case (to-plain-text m)) #"[\p{Punct}\s]+")))
+    (remove s/blank? (s/split (s/lower-case (to-plain-text m)) #"[\p{Punct}\s]+"))))
 
 
 (defn send-message!
