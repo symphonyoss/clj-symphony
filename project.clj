@@ -15,7 +15,7 @@
 ; limitations under the License.
 ;
 
-(defproject org.symphonyoss/clj-symphony "0.8.0"
+(defproject org.symphonyoss/clj-symphony "0.9.0-SNAPSHOT"
   :description         "A Clojure wrapper around the symphony-java-client library."
   :url                 "https://github.com/symphonyoss/clj-symphony"
   :license             {:spdx-license-expression "Apache-2.0"
