@@ -32,9 +32,9 @@
   :dependencies        [
                          [org.clojure/clojure                      "1.9.0"]
                          [org.symphonyoss.symphony/symphony-client "1.1.4"]
-                         [org.apache.commons/commons-lang3         "3.8"]
+                         [org.apache.commons/commons-lang3         "3.8.1"]
                          [org.jsoup/jsoup                          "1.11.3"]
-                         [cheshire                                 "5.8.0"]
+                         [cheshire                                 "5.8.1"]
                        ]
   :profiles            {
                          :dev     {:plugins [[lein-licenses "0.2.2"]]}
