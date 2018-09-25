@@ -35,16 +35,13 @@
                          [org.apache.commons/commons-lang3         "3.8.1"]
                          [org.jsoup/jsoup                          "1.11.3"]
                          [cheshire                                 "5.8.1"]
+                         [javax.xml.bind/jaxb-api                  "2.4.0-b180830.0359"]   ; Required as of JDK11
+                         [org.glassfish.jaxb/jaxb-runtime          "2.4.0-b180830.0438"]   ; Required as of JDK11
                        ]
   :profiles            {
                          :dev     {:plugins [[lein-licenses "0.2.2"]]}
                          :uberjar {:aot :all}
                        }
-  :jvm-opts            ~(let [version     (System/getProperty "java.version")
-                              [major _ _] (clojure.string/split version #"\.")]
-                          (if (>= (java.lang.Integer/parseInt major) 9)
-                            ["--add-modules" "java.xml.bind"]
-                            []))
   :deploy-repositories [
                          ["snapshots" {:url      "https://clojars.org/repo"
                                        :username :env/clojars_username
