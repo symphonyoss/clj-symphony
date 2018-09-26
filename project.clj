@@ -27,7 +27,7 @@
                          ["jitpack"            {:url "https://jitpack.io"                             :snapshots true}]
                        ]
   :plugins             [
-                         [lein-codox "0.10.3"]
+                         [lein-codox "0.10.4"]
                        ]
   :dependencies        [
                          [org.clojure/clojure                      "1.9.0"]
