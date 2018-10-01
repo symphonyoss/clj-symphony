@@ -14,31 +14,30 @@ This library is an idiomatic Clojure wrapper for the [symphony-java-client](http
 
 ## Installation
 
-clj-symphony is available as a Maven artifact from [Clojars](https://clojars.org/org.symphonyoss/clj-symphony).
-Plonk the following in your project.clj :dependencies, `lein deps` and you should be good to go:
-
-```clojure
-[org.symphonyoss/clj-symphony "#.#.#"]   ; Where #.#.# is replaced with an actual version number
-```
-
-The latest released version is:
+clj-symphony is available as a Maven artifact from [Clojars](https://clojars.org/org.symphonyoss/clj-symphony).  The latest released version is:
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.symphonyoss/clj-symphony.svg)](https://clojars.org/org.symphonyoss/clj-symphony)
 
 ### Trying it Out
-Alternatively, you may prefer to kick the library's tyres without creating a project.  This is a snap with the awesome [`lein try` plugin](https://github.com/rkneufeld/lein-try):
+If you prefer to kick the library's tyres without creating a project, you can use the [`lein try` plugin](https://github.com/rkneufeld/lein-try):
 
 ```shell
 $ lein try org.symphonyoss/clj-symphony
 ```
 
-You will be dropped in a REPL with the library downloaded and ready for use.
+or (as of v0.11.0), if you have installed the [Clojure CLI tools](https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools):
+
+```shell
+$ clj -Sdeps '{:deps {org.symphonyoss/clj-symphony {:mvn/version "#.#.#"}}}'  # Where #.#.# is replaced with an actual version number >= 0.11.0
+```
+
+Either way, you will be dropped in a REPL with the library downloaded and ready for use.
 
 ## Usage
 
 The functionality is provided by several `clj-symphony._____` namespaces.
 
-Require them in the REPL (incl. a `lein try` REPL):
+Require them in the REPL:
 
 ```clojure
 (require '[clj-symphony.connect         :as syc]  :reload-all)
@@ -64,6 +63,26 @@ Require them in your project:
 ```
 
 [Detailed API documentation is published here](https://symphonyoss.github.io/clj-symphony/).
+
+## Tested Versions
+
+clj-symphony is [tested on](https://travis-ci.org/symphonyoss/clj-symphony):
+
+|                           | JVM v1.6         | JVM v1.7       | JVM v1.8        | JVM v9         | JVM v10        | JVM v11         |
+|                      ---: |  :---:           |  :---:         |  :---:          |  :---:         |  :---:         |  :---:          |
+| Clojure 1.4.0             | ❌<sup>1,2</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> |
+| Clojure 1.5.1             | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             | ✅             |
+| Clojure 1.6.0             | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             | ✅             |
+| Clojure 1.7.0             | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             | ✅             |
+| Clojure 1.8.0             | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             | ✅             |
+| Clojure 1.9.0             | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             | ✅             |
+| Clojure 1.10.0 (snapshot) | ❌<sup>2,3</sup> | ❌<sup>3</sup> | ✅             | ✅             | ✅             | ✅             |
+
+<sup>1</sup> I chose to only go back as far as Clojure v1.5.1.  If anyone needs this on older versions, PRs are welcome!
+
+<sup>2</sup> Leiningen v2.8 only supports JVM v1.7 and up
+
+<sup>3</sup> Clojure v1.10 only supports JVM v1.8 and up
 
 ## Contributor Information
 

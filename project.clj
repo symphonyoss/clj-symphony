@@ -22,36 +22,28 @@
                         :name                    "Apache License, Version 2.0"
                         :url                     "http://www.apache.org/licenses/LICENSE-2.0"}
   :min-lein-version    "2.8.1"
-  :repositories        [
-                         ["sonatype-snapshots" {:url "https://oss.sonatype.org/content/groups/public" :snapshots true}]
-                         ["jitpack"            {:url "https://jitpack.io"                             :snapshots true}]
-                       ]
-  :plugins             [
-                         [lein-codox "0.10.4"]
-                       ]
-  :dependencies        [
-                         [org.clojure/clojure                      "1.9.0"]
-                         [org.symphonyoss.symphony/symphony-client "1.1.4"]
-                         [org.apache.commons/commons-lang3         "3.8.1"]
-                         [org.jsoup/jsoup                          "1.11.3"]
-                         [cheshire                                 "5.8.1"]
-                         [javax.xml.bind/jaxb-api                  "2.4.0-b180830.0359"]   ; Required as of JDK11
-                         [org.glassfish.jaxb/jaxb-runtime          "2.4.0-b180830.0438"]   ; Required as of JDK11
-                       ]
-  :profiles            {
-                         :dev     {:plugins [[lein-licenses "0.2.2"]]}
-                         :uberjar {:aot :all}
-                       }
-  :deploy-repositories [
-                         ["snapshots" {:url      "https://clojars.org/repo"
-                                       :username :env/clojars_username
-                                       :password :env/clojars_password}]
-                         ["releases"  {:url      "https://clojars.org/repo"
-                                       :username :env/clojars_username
-                                       :password :env/clojars_password}]
-                       ]
-  :codox               {
-                         :metadata {:doc/format :markdown}
-                         :source-uri "https://github.com/symphonyoss/clj-symphony/blob/master/{filepath}#L{line}"
-                       })
-
+  :repositories        [["sonatype-snapshots" {:url "https://oss.sonatype.org/content/groups/public" :snapshots true}]
+                        ["jitpack"            {:url "https://jitpack.io"}]]
+  :dependencies        [[org.clojure/clojure                      "1.9.0"]
+                        [org.symphonyoss.symphony/symphony-client "1.1.4"]
+                        [org.apache.commons/commons-lang3         "3.8.1"]
+                        [org.jsoup/jsoup                          "1.11.3"]
+                        [cheshire                                 "5.8.1"]
+                        [javax.xml.bind/jaxb-api                  "2.4.0-b180830.0359"]   ; Required as of JDK11
+                        [org.glassfish.jaxb/jaxb-runtime          "2.4.0-b180830.0438"]]   ; Required as of JDK11
+  :profiles            {:dev  {:plugins      [[lein-licenses "0.2.2"]
+                                              [lein-codox    "0.10.4"]]}
+                        :1.5  {:dependencies [[org.clojure/clojure "1.5.1"]]}
+                        :1.6  {:dependencies [[org.clojure/clojure "1.6.0"]]}
+                        :1.7  {:dependencies [[org.clojure/clojure "1.7.0"]]}
+                        :1.8  {:dependencies [[org.clojure/clojure "1.8.0"]]}
+                        :1.9  {:dependencies [[org.clojure/clojure "1.9.0"]]}
+                        :1.10 {:dependencies [[org.clojure/clojure "1.10.0-master-SNAPSHOT"]]}}
+  :deploy-repositories [["snapshots" {:url      "https://clojars.org/repo"
+                                      :username :env/clojars_username
+                                      :password :env/clojars_password}]
+                        ["releases"  {:url      "https://clojars.org/repo"
+                                      :username :env/clojars_username
+                                      :password :env/clojars_password}]]
+  :codox               {:metadata {:doc/format :markdown}
+                        :source-uri "https://github.com/symphonyoss/clj-symphony/blob/master/{filepath}#L{line}"})
