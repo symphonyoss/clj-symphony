@@ -25,10 +25,10 @@ If you prefer to kick the library's tyres without creating a project, you can us
 $ lein try org.symphonyoss/clj-symphony
 ```
 
-or (as of v0.11.0), if you have installed the [Clojure CLI tools](https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools):
+or (as of v0.10.0), if you have installed the [Clojure CLI tools](https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools):
 
 ```shell
-$ clj -Sdeps '{:deps {org.symphonyoss/clj-symphony {:mvn/version "#.#.#"}}}'  # Where #.#.# is replaced with an actual version number >= 0.11.0
+$ clj -Sdeps '{:deps {org.symphonyoss/clj-symphony {:mvn/version "#.#.#"}}}'  # Where #.#.# is replaced with an actual version number >= 0.10.0
 ```
 
 Either way, you will be dropped in a REPL with the library downloaded and ready for use.
