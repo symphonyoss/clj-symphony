@@ -22,4 +22,4 @@
 
 ; This is a placeholder for now that simply confirms that the right matrix of JVM and Clojure versions is being used by Travis CI
 
-(println "\n☔️ Running tests on Clojure" (clojure-version) "/ JVM" (System/getProperty "java.version"))
+(println "\n☔️ Running tests on Clojure" (clojure-version) "/ JVM" (System/getProperty "java.version") (str "(" (System/getProperty "java.vm.name") " v" (System/getProperty "java.vm.version") ")"))
