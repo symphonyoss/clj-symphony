@@ -18,6 +18,12 @@ env:
     # Encrypted GITHUB_TOKEN for gh-pages deployment
     - secure: "DyEoEUrxq3axPX6cX1zUqgdlcpXtA8YG56QuNWtFRtAIwYwyAe47owUQJrAFHFPNmuLUhAlQnC9Lb+MzkR187dsKLoNb4/mJP50PZdPqDAo1XYZIfZXQc6CXjq0UV4B1I2P2TKnur5QcIk5SaFuoePzqudyow1c0b8PHg9jLb6U5NPUs4bzVQ0ntuqok+5IiHKsS2xUUGn1jRYSYUZkEQDjya9XOFW+7hPbGaSb3n7c1a/CbsTeRW0mxHWxMwm8qMF7up9s+ApByqqWVnTng+ce+qYaoMNAQDHe+Sp3A7E2tnwK61qvlsbiYij8FP+MLURBijcrshcheDHikl5NhOZofrD0Bgx+PWtzyOeAcIZ38Ubqx6SYbYHkKnms+btRn0p7F+ClKDThebPcnFvlQWnUTLhVjXPQqIOBQOjOtmmE3eD2dAREcbre0mzLKObGa+IscZZ72rqtzSNyzDcgyqyzg/wYqw7POefGngI6y6qOsRHwrMRhAKx5A238KHgH4Wh3H1sgiwxsF7P0HGqmPGes9F65mzF3fV3el8HGsjE3oMYhViImyhiN37ONE1rDfuL6f0VGnZFDkV4zP7tySq+UKThjCkGmXhmrP2gHo6n8LDiA4tD0VMmSY4Hn8l8wbIYTlMMgVX5wisQ8Cy6vSZfBNcVR/WNpOoh4644W6isA="
 
+before_install:
+  # Install Clojure CLI tools
+  - curl -O https://download.clojure.org/install/linux-install-1.9.0.394.sh
+  - chmod +x linux-install-1.9.0.394.sh
+  - sudo ./linux-install-1.9.0.394.sh
+
 script:
   - export PROFILES=+1.8:+1.9
   - if [[ $JAVA_HOME != *java-7* ]]; then export PROFILES=${PROFILES}:+1.10; fi
