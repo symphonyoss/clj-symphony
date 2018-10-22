@@ -9,7 +9,7 @@ jdk:
 
 env:
   global:
-    # Encrupted WHITESOURCE_TOKEN for updating Whitesource licensing information
+    # Encrypted WHITESOURCE_TOKEN for updating Whitesource licensing information
     - secure: "vmRjdv44PcPSyg1durtf5c4t1tzS+OZFegl0oliO0B+ENL4zF7JVxQAZoyLPuLLgBVwfUI3+JQ3CJZdr94/Bvywm+d/N9WMQDtlm23CpefBb5k4nsc/QoKpEAe4wS7BdZKyw4Jas9kKWsXaAg9l3/ACTDxiuztKOnV/4CpxazCytDLGD465U2SCsMMTqiKvFuJrfSt7KruCa8Rh5Z5D4lIT2zhJcJyiYS9IyJ2Ow3cslm2TSRIIgkKE4b81FuC3ng+Rd59WzLJjkI/pTJM3fUolF8T8xPTMfvy//LSWFutCCy9wXzPPaqx7Y99DknpPERFin43orIMhBTaop3O/r1FSJ0od8esvfgs7T08E9q+Q1j4zWYin4L31rKBJpMNpNXMN3EUMoo9kQaqV0tLnzfntxXV2/yBdQuYHBciAu0q7Hlw8Cy32Yb02tagv5oaPthHiloJimHcKVUIzPe1/dggzHEor58SL0ovE4bwzuLOWfFIH6YGg33rklhjEjdifv0Bz//eo4dUUIKKj60CF1DKg3xvdPAMmPHqGGzJunaZHrSo97NSHWFvUYp/wa0V9b1X80bD+Xtp7frXicqiAXaQK3rHne9vKTEgMj4VAGOJLIxDwAssQFnOqG15oW4D/2zrzLmCZN+NQVJuiJ+31C65xa8HO9ReX7jyaKUXCvGbM="
     # Encrypted CLOJARS_USERNAME for Clojars deployment
     - secure: "gqREOzwNqQ4IMLLG3YInGep8xP0Rmj3iiNYoss6oLcQQ9CQvJ0CW5Nqh7hbTl6DuJ4YLtn5eKnQvHmkUyQ+CfTesJnl27Cbc2xvaNEjGXVGE4YQfywpyxAZ0TReAULhEvPE8OvdU3bBy3AKzwqH6bsgKOIqDepG+YKjfnSVS7+YdE7ptGal+NU0Yc4xzKkRQxgKNZsM5AWoTMNqvSq6y7O5qTtBtOO9LZFvDiLi9B99GAibKGFjIAXamtmnF19Zu3e9eD/Lf6Vq9WCfxwkL3b+ScLqNgScBpek5fm00rvYdHSOpu9LgV73n3ZIaomlMaduta35UhIM25AeFwvTnNt2pB8BkIg2jEL5Zhjj0NSEs18Wru2hyWN8rQm2Tw0GibOhXE6kJHjEd9VVgnwRKVViO4y9/VPC5+IzU59Es8a1A5ekn2sLzQyL+kvnc9o5gJOGVlPSt8rD7+Si3Pbr/1cAciGBCeA98X/oRTeg8gE3t93a+27pp4Tmv/88GDmuSRQ02BmCfNGcZ/1qh9jtjEtRYbakbmhMjffObOAlhjNM9lZBAXp+Fj1yTQwOBoXc3+g/1m602WWbvcDiI8fuICoXbVSAjePYHgPKhYTFJYD8/DbWW+VtVtXRuxzFCYTXv11ykIQkdfv3f0kY7i+Grddg7G7KL11TRIDDSlEhFpR6I="
@@ -28,6 +28,8 @@ script:
   - export PROFILES=+1.8:+1.9
   - if [[ $JAVA_HOME != *java-7* ]]; then export PROFILES=${PROFILES}:+1.10; fi
   - lein with-profile ${PROFILES} do version, check, test
+  # Check NVD database, but only on latest JDK and Clojure versions (this step takes a long time)
+  - if [[ $JAVA_HOME == *java-11* ]]; then lein with-profile +1.9 nvd check; fi
 
 deploy:
   # Deploy binaries to Clojars
