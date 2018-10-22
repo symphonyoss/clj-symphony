@@ -29,7 +29,7 @@ script:
   - if [[ $JAVA_HOME != *java-7* ]]; then export PROFILES=${PROFILES}:+1.10; fi
   - lein with-profile ${PROFILES} do version, check, test
   # Check NVD database, but only on latest JDK and Clojure versions (this step takes a long time)
-  - if [[ $JAVA_HOME == *java-11* ]]; then lein with-profile +1.9 nvd check; fi
+  - if [[ $JAVA_HOME == *openjdk11* ]]; then lein with-profile +1.9 nvd check; fi
 
 deploy:
   # Deploy binaries to Clojars
