@@ -4,7 +4,8 @@ lein: 2.8.1
 jdk:
   - oraclejdk8
   - oraclejdk9
-  - openjdk10   # TravisCI no longer supports Oracle JDK 10
+# Drop Java 10 since it wasn't around long and TravisCI support for it is crappy
+#  - openjdk10
   - openjdk11   # Don't fall for Oracle's trick: https://blog.joda.org/2018/09/do-not-fall-into-oracles-java-11-trap.html
 
 env:
@@ -20,15 +21,15 @@ env:
 
 before_install:
   # Install Clojure CLI tools
-  - curl -O https://download.clojure.org/install/linux-install-1.9.0.394.sh
-  - chmod +x linux-install-1.9.0.394.sh
-  - sudo ./linux-install-1.9.0.394.sh
+  - curl -O https://download.clojure.org/install/linux-install-1.9.0.397.sh
+  - chmod +x linux-install-1.9.0.397.sh
+  - sudo ./linux-install-1.9.0.397.sh
 
 script:
   - export PROFILES=+1.8:+1.9
   - if [[ $JAVA_HOME != *java-7* ]]; then export PROFILES=${PROFILES}:+1.10; fi
   - lein with-profile ${PROFILES} do version, check, test
-  # Check NVD database, but only on latest JDK and Clojure versions (this step takes a long time)
+  # Check NVD database, but only on latest JDK and Clojure versions, since this step is neither version-specific, nor fast
   - if [[ $JAVA_HOME == *openjdk11* ]]; then lein with-profile +1.9 nvd check; fi
 
 deploy:

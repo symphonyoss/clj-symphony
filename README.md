@@ -68,16 +68,18 @@ Require them in your project:
 
 clj-symphony is [tested on](https://travis-ci.org/symphonyoss/clj-symphony):
 
-|                           | JVM v1.7         | JVM v1.8       | JVM v9         | JVM v10        | JVM v11         |
-|                      ---: | :---:            | :---:          |  :---:         |  :---:         |  :---:          |
-| Clojure 1.7.0             | ❌<sup>1,2</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> |
-| Clojure 1.8.0             | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             |
-| Clojure 1.9.0             | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             |
-| Clojure 1.10.0 (snapshot) | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             |
+|                           | JVM v1.7         | JVM v1.8       | JVM v9         | JVM v10           | JVM v11         |
+|                      ---: | :---:            | :---:          |  :---:         |  :---:            |  :---:          |
+| Clojure 1.7.0             | ❌<sup>1,2</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> | ❌<sup>1,3</sup> | ❌<sup>1</sup> |
+| Clojure 1.8.0             | ❌<sup>2</sup>   | ✅             | ✅             | ❌<sup>3</sup>   | ✅             |
+| Clojure 1.9.0             | ❌<sup>2</sup>   | ✅             | ✅             | ❌<sup>3</sup>   | ✅             |
+| Clojure 1.10.0 (snapshot) | ❌<sup>2</sup>   | ✅             | ✅             | ❌<sup>3</sup>   | ✅             |
 
 <sup>1</sup> clj-symphony only supports Clojure 1.8 and up
 
 <sup>2</sup> [symphony-java-client](https://github.com/symphonyoss/symphony-java-client) only supports JVM v1.8 and up
+
+<sup>3</sup> Java 10 is not supported by Oracle, and [Travis CI](https://www.travis-ci.com/)'s support for it is poor, so keeping this configuration testable has not been worth the effort
 
 ## Contributor Information
 
