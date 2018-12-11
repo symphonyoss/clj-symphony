@@ -86,7 +86,7 @@ clj-symphony is [tested on](https://travis-ci.org/symphonyoss/clj-symphony):
 
 ## Contributor Information
 
-[Contributing Guidelines](https://github.com/symphonyoss/bot-unfurl/blob/master/.github/CONTRIBUTING.md)
+[Contributing Guidelines](https://github.com/symphonyoss/clj-symphony/blob/master/.github/CONTRIBUTING.md)
 
 [GitHub project](https://github.com/symphonyoss/clj-symphony)
 
