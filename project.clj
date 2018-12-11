@@ -1,5 +1,5 @@
 ;
-; Copyright 2016, 2017 Fintech Open Source Foundation
+; Copyright 2016 Fintech Open Source Foundation
 ; SPDX-License-Identifier: Apache-2.0
 ;
 ; Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,7 +15,7 @@
 ; limitations under the License.
 ;
 
-(defproject org.symphonyoss/clj-symphony "0.11.0-SNAPSHOT"
+(defproject org.symphonyoss/clj-symphony "1.0.0"
   :description            "A Clojure wrapper around the symphony-java-client library."
   :url                    "https://github.com/symphonyoss/clj-symphony"
   :license                {:spdx-license-expression "Apache-2.0"
