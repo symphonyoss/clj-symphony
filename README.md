@@ -4,28 +4,33 @@
 [![License](https://img.shields.io/github/license/symphonyoss/clj-symphony.svg)](https://github.com/symphonyoss/clj-symphony/blob/master/LICENSE)
 [![Dependencies Status](https://versions.deps.co/symphonyoss/clj-symphony/status.svg)](https://versions.deps.co/symphonyoss/clj-symphony)
 [![CII Best Practices](https://bestpractices.coreinfrastructure.org/projects/996/badge)](https://bestpractices.coreinfrastructure.org/projects/996)
-[![FINOS - Incubating](https://cdn.jsdelivr.net/gh/finos/contrib-toolbox@master/images/badge-incubating.svg)](https://finosfoundation.atlassian.net/wiki/display/FINOS/Incubating)
+[![FINOS - Released](https://cdn.jsdelivr.net/gh/finos/contrib-toolbox@master/images/badge-released.svg)](https://finosfoundation.atlassian.net/wiki/display/FINOS/Released)
 
 <img align="right" width="40%" src="https://www.finos.org/hubfs/FINOS/finos-logo/FINOS_Icon_Wordmark_Name_RGB_horizontal.png">
 
 # clj-symphony
 
-This library is an idiomatic Clojure wrapper for the [symphony-java-client](https://github.com/symphonyoss/symphony-java-client) library, a client binding and SDK for the [Symphony chat platform's REST API](https://rest-api.symphony.com/).
+This library is an idiomatic Clojure wrapper for the [symphony-java-client](https://github.com/symphonyoss/symphony-java-client)
+library, a client binding and SDK for the [Symphony chat platform's REST API](https://rest-api.symphony.com/).
 
 ## Installation
 
-clj-symphony is available as a Maven artifact from [Clojars](https://clojars.org/org.symphonyoss/clj-symphony).  The latest released version is:
+clj-symphony is available as a Maven artifact from [Clojars](https://clojars.org/org.symphonyoss/clj-symphony).  The
+latest released version is:
 
 [![Clojars Project](https://img.shields.io/clojars/v/org.symphonyoss/clj-symphony.svg)](https://clojars.org/org.symphonyoss/clj-symphony)
 
 ### Trying it Out
-If you prefer to kick the library's tyres without creating a project, you can use the [`lein try` plugin](https://github.com/rkneufeld/lein-try):
+
+If you prefer to kick the library's tyres without creating a project, you can use the [`lein try`
+plugin](https://github.com/rkneufeld/lein-try):
 
 ```shell
 $ lein try org.symphonyoss/clj-symphony
 ```
 
-or (as of v0.10.0), if you have installed the [Clojure CLI tools](https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools):
+or (as of v0.10.0), if you have installed the [Clojure CLI
+tools](https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools):
 
 ```shell
 $ clj -Sdeps '{:deps {org.symphonyoss/clj-symphony {:mvn/version "#.#.#"}}}'  # Where #.#.# is replaced with an actual version number >= 0.10.0
@@ -80,6 +85,8 @@ clj-symphony is [tested on](https://travis-ci.org/symphonyoss/clj-symphony):
 <sup>2</sup> [symphony-java-client](https://github.com/symphonyoss/symphony-java-client) only supports JVM v1.8 and up
 
 ## Contributor Information
+
+[Contributing Guidelines](https://github.com/symphonyoss/bot-unfurl/blob/master/.github/CONTRIBUTING.md)
 
 [GitHub project](https://github.com/symphonyoss/clj-symphony)
 

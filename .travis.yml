@@ -33,12 +33,12 @@ script:
   - if [[ $JAVA_HOME == *openjdk11* ]]; then lein with-profile +1.9 nvd check; fi
 
 deploy:
-  # Deploy binaries to Clojars
+  # Deploy SNAPSHOT binaries to Clojars (releases are manual, for now)
   - provider: script
     skip_cleanup: true
     script: lein deploy
     on:
-      branch: master
+      branch: dev
       jdk: openjdk11
   # Generate documentation
   - provider: script

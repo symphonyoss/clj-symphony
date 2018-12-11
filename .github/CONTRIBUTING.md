@@ -10,7 +10,8 @@ contribution; they are commonly used in many open source projects.
 a [Foundation CLA](https://finosfoundation.atlassian.net/wiki/spaces/FINOS/pages/75530375/Legal+Requirements#LegalRequirements-ContributorLicenseAgreement)
 in place, and there are [additional legal requirements](https://finosfoundation.atlassian.net/wiki/spaces/FINOS/pages/75530375/Legal+Requirements) that must also be met.**
 
-As a result, PRs submitted to the clj-symphony project cannot be accepted until you have a CLA in place with the Foundation.
+PRs submitted to the clj-symphony project will be automatically scanned for a FINOS CLA.  If a CLA is not found, you will
+be prompted to complete one.  Further details on this process are described [here](https://www.finos.org/blog/meet-cla-bot-our-ip-compliance-minion).
 
 # Contributing Issues
 
@@ -22,14 +23,33 @@ As a result, PRs submitted to the clj-symphony project cannot be accepted until 
 
 ## Raising an Issue
 * Create your issue [here](https://github.com/symphonyoss/clj-symphony/issues/new).
-* New issues contain two templates in the description: bug report and enhancement request. Please pick the most appropriate for your issue, **then delete the other**.
-  * Please also tag the new issue with either "Bug" or "Enhancement".
+* The project provides several issue templates to assist in issue creation. Please pick the most appropriate for your issue, and provide all of the information described therein.
 * Please use [Markdown formatting](https://help.github.com/categories/writing-on-github/)
 liberally to assist in readability.
   * [Code fences](https://help.github.com/articles/creating-and-highlighting-code-blocks/) for exception stack traces and log entries, for example, massively improve readability.
 
-# Contributing Pull Requests (Code & Docs)
-To make review of PRs easier, please:
+# Contributing Code or Documentation Changes via Pull Request (PR)
+
+## Branching Structure
+
+This project has two permanent branches called `master` and `dev`.  `master` is a [GitHub protected
+branch](https://help.github.com/articles/about-protected-branches/) that contains the latest released version of the
+code and cannot be pushed to directly - all development work must be staged into the `dev` branch first.  Releases are
+periodically prepared by the project team in the `dev` branch and [tagged and released over to
+`master`](https://github.com/symphonyoss/clj-symphony/releases).
+
+**We require all contributors, whether a project team member or a community contributor, to prepare individual bug fixes
+or new features in a branch of the `dev` branch, and submit PRs back to that branch.**
+
+## Continuous Delivery
+
+All commits to the `dev` branches automatically trigger deployment of a new build of the latest SNAPSHOT version of the
+library to [Clojars](https://clojars.org/org.symphonyoss/clj-symphony).  All commits to the `master` branch automatically
+trigger regeneration of the [API documentation](https://symphonyoss.github.io/clj-symphony/) on GitHub pages.
+
+For now, deployment of release versions (i.e. from `master`, when a new version is released) is manual.
+
+## PR Guidelines
 
  * Please make sure your PRs will merge cleanly - PRs that don't are unlikely to be accepted.
  * For code contributions, follow the existing code layout.
@@ -39,7 +59,7 @@ To make review of PRs easier, please:
  * Minimise non-functional changes (e.g. whitespace shenanigans).
  * Ensure all new files include a header comment block containing the [Apache License v2.0 and your copyright information](http://www.apache.org/licenses/LICENSE-2.0#apply).
  * If necessary (e.g. due to 3rd party dependency licensing requirements), update the [NOTICE file](https://github.com/symphonyoss/clj-symphony/blob/master/NOTICE) with any new attribution or other notices
-
+ * If your PR adds dependencies, please call attention to that in the description of the PR.
 
 ## Commit and PR Messages
 
