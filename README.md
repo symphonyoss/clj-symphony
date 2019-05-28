@@ -78,11 +78,13 @@ clj-symphony is [tested on](https://travis-ci.org/symphonyoss/clj-symphony):
 | Clojure 1.7.0             | ❌<sup>1,2</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> |
 | Clojure 1.8.0             | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             |
 | Clojure 1.9.0             | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             |
-| Clojure 1.10.0 (snapshot) | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             |
+| Clojure 1.10.0            | ❌<sup>2,3</sup> | ✅             | ✅             | ✅             | ✅             |
 
 <sup>1</sup> clj-symphony only supports Clojure 1.8 and up
 
 <sup>2</sup> [symphony-java-client](https://github.com/symphonyoss/symphony-java-client) only supports JVM v1.8 and up
+
+<sup>3</sup> Clojure v1.10 only supports JVM v1.8 and up
 
 ## Contributor Information
 
