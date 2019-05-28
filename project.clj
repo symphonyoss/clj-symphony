@@ -22,12 +22,12 @@
                            :name                    "Apache License, Version 2.0"
                            :url                     "http://www.apache.org/licenses/LICENSE-2.0"}
   :min-lein-version       "2.8.1"
-  :plugins                [[lein-tools-deps "0.4.1"]]
+  :plugins                [[lein-tools-deps "0.4.5"]]
   :middleware             [lein-tools-deps.plugin/resolve-dependencies-with-deps-edn]
   :lein-tools-deps/config {:config-files [:install :user :project]}
   :profiles               {:dev  {:plugins [[lein-licenses "0.2.2"]
-                                            [lein-codox    "0.10.4"]
-                                            [lein-nvd      "0.5.5"]]}
+                                            [lein-codox    "0.10.7"]
+                                            [lein-nvd      "1.0.0"]]}
                             :1.8  {:lein-tools-deps/config {:aliases [:1.8]}}
                             :1.9  {:lein-tools-deps/config {:aliases [:1.9]}}
                             :1.10 {:lein-tools-deps/config {:aliases [:1.10]}}}
