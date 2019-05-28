@@ -2,13 +2,13 @@
              "jitpack"            {:url "https://jitpack.io"}}
  :deps {org.clojure/clojure                      {:mvn/version "1.10.0"}
         org.symphonyoss.symphony/symphony-client {:mvn/version "1.1.4"}
-        org.apache.commons/commons-lang3         {:mvn/version "3.8.1"}
-        org.jsoup/jsoup                          {:mvn/version "1.11.3"}
+        org.apache.commons/commons-lang3         {:mvn/version "3.9"}
+        org.jsoup/jsoup                          {:mvn/version "1.12.1"}
         cheshire/cheshire                        {:mvn/version "5.8.1"}
         javax.xml.bind/jaxb-api                  {:mvn/version "2.4.0-b180830.0359"}   ; Required as of JDK11
         org.glassfish.jaxb/jaxb-runtime          {:mvn/version "2.4.0-b180830.0438"}}  ; Required as of JDK11
  :aliases {:1.8     {:override-deps {org.clojure/clojure {:mvn/version "1.8.0"}}}
            :1.9     {:override-deps {org.clojure/clojure {:mvn/version "1.9.0"}}}
            :1.10    {:override-deps {org.clojure/clojure {:mvn/version "1.10.0"}}}
-           :ancient {:extra-deps {olical/depot {:mvn/version "1.7.0"}}
+           :ancient {:extra-deps {olical/depot {:mvn/version "1.8.2"}}
                      :main-opts  ["-m" "depot.outdated.main"]}}}   ; To use, run: clj -Aancient -a ancient
