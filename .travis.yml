@@ -17,9 +17,9 @@ env:
 
 before_install:
   # Install Clojure CLI tools
-  - curl -O https://download.clojure.org/install/linux-install-1.9.0.397.sh
-  - chmod +x linux-install-1.9.0.397.sh
-  - sudo ./linux-install-1.9.0.397.sh
+  - curl -O https://download.clojure.org/install/linux-install-1.10.1.447.sh
+  - chmod +x linux-install-1.10.1.447.sh
+  - sudo ./linux-install-1.10.1.447.sh
   # Workaround for TravisCI's garbage openjdk10 base image
   - if [[ $JAVA_HOME == *openjdk10* ]]; then rm "${JAVA_HOME}/lib/security/cacerts"; ln -s /etc/ssl/certs/java/cacerts "${JAVA_HOME}/lib/security/cacerts"; fi
 
