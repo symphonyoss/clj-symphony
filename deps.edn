@@ -4,7 +4,7 @@
         org.symphonyoss.symphony/symphony-client {:mvn/version "1.1.4"}
         org.apache.commons/commons-lang3         {:mvn/version "3.9"}
         org.jsoup/jsoup                          {:mvn/version "1.12.1"}
-        cheshire/cheshire                        {:mvn/version "5.8.1"}
+        cheshire/cheshire                        {:mvn/version "5.9.0"}
         javax.xml.bind/jaxb-api                  {:mvn/version "2.4.0-b180830.0359"}   ; Required as of JDK11
         org.glassfish.jaxb/jaxb-runtime          {:mvn/version "2.4.0-b180830.0438"}}  ; Required as of JDK11
  :aliases {:1.8     {:override-deps {org.clojure/clojure {:mvn/version "1.8.0"}}}
