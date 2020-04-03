@@ -17,9 +17,9 @@ env:
 
 before_install:
   # Install Clojure CLI tools
-  - curl -O https://download.clojure.org/install/linux-install-1.10.1.447.sh
-  - chmod +x linux-install-1.10.1.447.sh
-  - sudo ./linux-install-1.10.1.447.sh
+  - curl -O https://download.clojure.org/install/linux-install-1.10.1.536.sh
+  - chmod +x linux-install-1.10.1.536.sh
+  - sudo ./linux-install-1.10.1.536.sh
   # Workaround for TravisCI's garbage openjdk10 base image
   - if [[ $JAVA_HOME == *openjdk10* ]]; then rm "${JAVA_HOME}/lib/security/cacerts"; ln -s /etc/ssl/certs/java/cacerts "${JAVA_HOME}/lib/security/cacerts"; fi
 
@@ -58,7 +58,7 @@ deploy:
   # Update Whitesource
   - provider: script
     skip_cleanup: true
-    script: lein pom && mvn org.whitesource:whitesource\-maven\-plugin:18.11.1:update -Dorg.whitesource.orgToken=$WHITESOURCE_TOKEN -Dorg.whitesource.ignoredScopes=test,runtime,provided,system
+    script: lein pom && mvn org.whitesource:whitesource\-maven\-plugin:19.5.1:update -Dorg.whitesource.orgToken=$WHITESOURCE_TOKEN -Dorg.whitesource.ignoredScopes=test,runtime,provided,system
     on:
       branch: master
       jdk: openjdk11
