@@ -71,17 +71,12 @@ Require them in your project:
 
 ## Roadmap
 
-This project's roadmap is managed exclusively via [the project's GitHub issue tracker](https://github.com/symphonyoss/clj-symphony/issues), and involves the following two categories of changes:
+This project's roadmap is managed exclusively via [milestones in the project's GitHub issue tracker](https://github.com/symphonyoss/clj-symphony/milestones?direction=asc&sort=due_date).  Typically there will be two milestones that are being tracked at most points in time:
 
-### Next Maintenance Release (v1.0.1)
+1. The next maintenance (patch) release.
+2. The next feature (minor or major) release.
 
-  - Dependency upgrades since last release (not explicitly tracked in issue tracker)
-  - [These tracked issues](https://github.com/symphonyoss/clj-symphony/milestone/1)
-
-### Next Feature Release (v1.1.0 or v2.0.0, depending on backwards compatibility)
-
-  - Dependency upgrades since last release (not explicitly tracked in issue tracker)
-  - [These tracked issues](https://github.com/symphonyoss/clj-symphony/milestone/2)
+This project strictly follows [semantic versioning rules](https://semver.org/#summary) for determining how issues are assigned to each of these milestones, and what impact that will have on the release's version number (including whether a feature release is major or minor, depending on whether backwards compatibility is broken or not).
 
 ## Tested Versions
 
