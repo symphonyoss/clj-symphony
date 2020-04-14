@@ -69,6 +69,18 @@ Require them in your project:
 
 [Detailed API documentation is published here](https://symphonyoss.github.io/clj-symphony/).
 
+## Roadmap
+
+This project's roadmap is managed exclusively via [the project's GitHub issue tracker](https://github.com/symphonyoss/clj-symphony/issues), and involves the following two categories of changes:
+
+### Next Maintenance Release (v1.0.1)
+
+  - [Issues list](https://github.com/symphonyoss/clj-symphony/milestone/1)
+
+### Next Feature Release (v1.1.0 or v2.0.0, depending on backwards compatibility)
+
+  - [Issues list](https://github.com/symphonyoss/clj-symphony/milestone/2)
+
 ## Tested Versions
 
 clj-symphony is [tested on](https://travis-ci.org/symphonyoss/clj-symphony):
