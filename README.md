@@ -75,11 +75,13 @@ This project's roadmap is managed exclusively via [the project's GitHub issue tr
 
 ### Next Maintenance Release (v1.0.1)
 
-  - [Issues list](https://github.com/symphonyoss/clj-symphony/milestone/1)
+  - Dependency upgrades since last release (not explicitly tracked in issue tracker)
+  - [These tracked issues](https://github.com/symphonyoss/clj-symphony/milestone/1)
 
 ### Next Feature Release (v1.1.0 or v2.0.0, depending on backwards compatibility)
 
-  - [Issues list](https://github.com/symphonyoss/clj-symphony/milestone/2)
+  - Dependency upgrades since last release (not explicitly tracked in issue tracker)
+  - [These tracked issues](https://github.com/symphonyoss/clj-symphony/milestone/2)
 
 ## Tested Versions
 
