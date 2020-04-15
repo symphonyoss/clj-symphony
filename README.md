@@ -82,12 +82,12 @@ This project strictly follows [semantic versioning rules](https://semver.org/#su
 
 clj-symphony is [tested on](https://travis-ci.org/symphonyoss/clj-symphony):
 
-|                           | JVM v1.7         | JVM v1.8       | JVM v9            | JVM v10          | JVM v11        |
-|                      ---: | :---:            | :---:          | :---:             | :---:            | :---:          |
-| Clojure 1.7.0             | ❌<sup>1,2</sup> | ❌<sup>1</sup> | ❌<sup>1,3</sup> | ❌<sup>1,3</sup> | ❌<sup>1</sup> |
-| Clojure 1.8.0             | ❌<sup>2</sup>   | ✅             | ❌<sup>3</sup>   | ❌<sup>3</sup>   | ✅             |
-| Clojure 1.9.0             | ❌<sup>2</sup>   | ✅             | ❌<sup>3</sup>   | ❌<sup>3</sup>   | ✅             |
-| Clojure 1.10.1            | ❌<sup>2,4</sup> | ✅             | ❌<sup>3</sup>   | ❌<sup>3</sup>   | ✅             |
+|                           | JVM v1.7         | JVM v1.8 (LTS) | JVM v9 & v10 (FR) | JVM v11 (LTS)  | JVM v12 & V13 (FR)| JVM v14 (FR)   |
+|                      ---: | :---:            | :---:          | :---:             | :---:          | :---:             | :---:          |
+| Clojure 1.7.0             | ❌<sup>1,2</sup> | ❌<sup>1</sup> | ❌<sup>1,3</sup> | ❌<sup>1</sup> | ❌<sup>1,4</sup>  | ❌<sup>1</sup> |
+| Clojure 1.8.0             | ❌<sup>2</sup>   | ✅             | ❌<sup>3</sup>   | ✅             | ❌<sup>1,4</sup>  | ✅             |
+| Clojure 1.9.0             | ❌<sup>2</sup>   | ✅             | ❌<sup>3</sup>   | ✅             | ❌<sup>1,4</sup>  | ✅             |
+| Clojure 1.10.1            | ❌<sup>2,5</sup> | ✅             | ❌<sup>3</sup>   | ✅             | ❌<sup>1,4</sup>  | ✅             |
 
 <sup>1</sup> clj-symphony only supports Clojure 1.8 and up
 
@@ -95,7 +95,9 @@ clj-symphony is [tested on](https://travis-ci.org/symphonyoss/clj-symphony):
 
 <sup>3</sup> Java FRs 9 & 10 have been superceded by the latest Java LTS (v11), and are no longer supported by Oracle
 
-<sup>4</sup> Clojure v1.10 only supports JVM v1.8 and up
+<sup>4</sup> Java FRs 12 & 13 have been superceded by the latest Java FR (v14), and are no longer supported by Oracle
+
+<sup>5</sup> Clojure v1.10 only supports JVM v1.8 and up
 
 ## Contributor Information
 
