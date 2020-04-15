@@ -1,6 +1,8 @@
 {
   "scanSettings": {
-    "configMode": "LOCAL"
+    "configMode": "AUTO",
+    "configExternalURL": "",
+    "projectToken" : ""
   },
   "checkRunSettings": {
     "vulnerableCheckRunConclusionLevel": "failure"
