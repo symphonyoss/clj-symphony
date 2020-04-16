@@ -33,7 +33,7 @@ deploy:
   # Deploy SNAPSHOT binaries to Clojars (releases are manual, for now)
   - provider: script
     skip_cleanup: true
-    script: lein deploy
+    script: lein deploy || true   # Ignore errors, since Travis CI can't currently deploy anything but snapshot versions
     on:
       branch: dev
       jdk: openjdk11
