@@ -1,10 +1,9 @@
 language: clojure
 lein: 2.8.1
-jdk:
-  - oraclejdk8
-  - oraclejdk9
-  - openjdk10
-  - openjdk11   # Don't fall for Oracle's trick: https://blog.joda.org/2018/09/do-not-fall-into-oracles-java-11-trap.html
+jdk:  # We only use OpenJDKs because of these shenanigans: https://blog.joda.org/2018/09/do-not-fall-into-oracles-java-11-trap.html
+  - openjdk8
+  - openjdk11
+  - openjdk14
 
 env:
   global:
@@ -19,24 +18,22 @@ env:
 
 before_install:
   # Install Clojure CLI tools
-  - curl -O https://download.clojure.org/install/linux-install-1.9.0.397.sh
-  - chmod +x linux-install-1.9.0.397.sh
-  - sudo ./linux-install-1.9.0.397.sh
-  # Workaround for TravisCI's garbage openjdk10 base image
-  - if [[ $JAVA_HOME == *openjdk10* ]]; then rm "${JAVA_HOME}/lib/security/cacerts"; ln -s /etc/ssl/certs/java/cacerts "${JAVA_HOME}/lib/security/cacerts"; fi
+  - curl -O https://download.clojure.org/install/linux-install-1.10.1.536.sh
+  - chmod +x linux-install-1.10.1.536.sh
+  - sudo ./linux-install-1.10.1.536.sh
 
 script:
   - export PROFILES=+1.8:+1.9
   - if [[ $JAVA_HOME != *java-7* ]]; then export PROFILES=${PROFILES}:+1.10; fi
   - lein with-profile ${PROFILES} do version, check, test
   # Check NVD database, but only on latest JDK and Clojure versions, since this step is neither version-specific, nor fast
-  - if [[ $JAVA_HOME == *openjdk11* ]]; then lein with-profile +1.9 nvd check; fi
+  - if [[ $JAVA_HOME == *openjdk11* ]]; then lein with-profile +1.10 nvd check; fi
 
 deploy:
   # Deploy SNAPSHOT binaries to Clojars (releases are manual, for now)
   - provider: script
     skip_cleanup: true
-    script: lein deploy
+    script: lein deploy || true   # Ignore errors, since Travis CI can't currently deploy anything but snapshot versions
     on:
       branch: dev
       jdk: openjdk11
@@ -54,13 +51,6 @@ deploy:
     email: travis+clj-symphony@finos.org
     name: Travis CI - Fintech Open Source Foundation
     local_dir: target/doc
-    on:
-      branch: master
-      jdk: openjdk11
-  # Update Whitesource
-  - provider: script
-    skip_cleanup: true
-    script: lein pom && mvn org.whitesource:whitesource\-maven\-plugin:18.6.2:update -Dorg.whitesource.orgToken=$WHITESOURCE_TOKEN -Dorg.whitesource.ignoredScopes=test,runtime,provided,system
     on:
       branch: master
       jdk: openjdk11

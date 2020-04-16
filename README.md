@@ -69,24 +69,39 @@ Require them in your project:
 
 [Detailed API documentation is published here](https://symphonyoss.github.io/clj-symphony/).
 
+## Roadmap
+
+This project's roadmap is managed exclusively via [milestones in the project's GitHub issue tracker](https://github.com/symphonyoss/clj-symphony/milestones?direction=asc&sort=due_date).  Typically there will be two milestones that are being tracked at most points in time:
+
+1. The next maintenance (patch) release.
+2. The next feature (minor or major) release.
+
+This project strictly follows [semantic versioning rules](https://semver.org/#summary) for determining how issues are assigned to each of these milestones, and what impact that will have on the release's version number (including whether a feature release is major or minor, depending on whether backwards compatibility is broken or not).
+
 ## Tested Versions
 
 clj-symphony is [tested on](https://travis-ci.org/symphonyoss/clj-symphony):
 
-|                           | JVM v1.7         | JVM v1.8       | JVM v9         | JVM v10         | JVM v11        |
-|                      ---: | :---:            | :---:          |  :---:         |  :---:          |  :---:         |
-| Clojure 1.7.0             | ❌<sup>1,2</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> | ❌<sup>1</sup> |
-| Clojure 1.8.0             | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             |
-| Clojure 1.9.0             | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             |
-| Clojure 1.10.0 (snapshot) | ❌<sup>2</sup>   | ✅             | ✅             | ✅             | ✅             |
+|                           | JVM v1.7         | JVM v1.8 (LTS) | JVM v9 & v10 (FR) | JVM v11 (LTS)  | JVM v12 & v13 (FR)| JVM v14 (FR)   |
+|                      ---: | :---:            | :---:          | :---:             | :---:          | :---:             | :---:          |
+| Clojure 1.7.0             | ❌<sup>1,2</sup> | ❌<sup>1</sup> | ❌<sup>1,3</sup> | ❌<sup>1</sup> | ❌<sup>1,4</sup> | ❌<sup>1</sup> |
+| Clojure 1.8.0             | ❌<sup>2</sup>   | ✅             | ❌<sup>3</sup>   | ✅             | ❌<sup>4</sup>   | ✅             |
+| Clojure 1.9.0             | ❌<sup>2</sup>   | ✅             | ❌<sup>3</sup>   | ✅             | ❌<sup>4</sup>   | ✅             |
+| Clojure 1.10.1            | ❌<sup>2,5</sup> | ✅             | ❌<sup>3</sup>   | ✅             | ❌<sup>4</sup>   | ✅             |
 
 <sup>1</sup> clj-symphony only supports Clojure 1.8 and up
 
 <sup>2</sup> [symphony-java-client](https://github.com/symphonyoss/symphony-java-client) only supports JVM v1.8 and up
 
+<sup>3</sup> Java FRs 9 & 10 have been superceded by the latest Java LTS (v11), and are no longer supported by Oracle
+
+<sup>4</sup> Java FRs 12 & 13 have been superceded by the latest Java FR (v14), and are no longer supported by Oracle
+
+<sup>5</sup> Clojure v1.10 only supports JVM v1.8 and up
+
 ## Contributor Information
 
-[Contributing Guidelines](https://github.com/symphonyoss/bot-unfurl/blob/master/.github/CONTRIBUTING.md)
+[Contributing Guidelines](https://github.com/symphonyoss/clj-symphony/blob/master/.github/CONTRIBUTING.md)
 
 [GitHub project](https://github.com/symphonyoss/clj-symphony)
 
